@@ -1,10 +1,12 @@
 package com.github.tim91690.eclipse.mobs;
 
 
+import com.github.tim91690.misc.WeightCollection;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityZombie;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.LivingEntity;
@@ -34,24 +36,36 @@ public class Zombie extends EntityZombie {
         ((LivingEntity) this.getBukkitEntity()).addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,2000000,1));
 
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setBoots(randomArmor("boots"));
+        ((LivingEntity) this.getBukkitEntity()).getEquipment().setLeggings(randomArmor("leggings"));
+        ((LivingEntity) this.getBukkitEntity()).getEquipment().setChestplate(randomArmor("chestplate"));
+        ((LivingEntity) this.getBukkitEntity()).getEquipment().setHelmet(randomArmor("helmet"));
+
+        ((LivingEntity) this.getBukkitEntity()).getEquipment().setBootsDropChance(0.005F);
+        ((LivingEntity) this.getBukkitEntity()).getEquipment().setLeggingsDropChance(0.005F);
+        ((LivingEntity) this.getBukkitEntity()).getEquipment().setChestplateDropChance(0.005F);
+        ((LivingEntity) this.getBukkitEntity()).getEquipment().setHelmetDropChance(0.005F);
+
+        ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
 
     }
 
     private ItemStack randomArmor(String piece) {
+        WeightCollection<ItemStack> rc;
         switch (piece) {
             case "boots":
-
-
+                rc = new WeightCollection<ItemStack>().add(90,new ItemStack(Material.LEATHER_BOOTS)).add(9,new ItemStack(Material.IRON_BOOTS)).add(0.9,new ItemStack(Material.DIAMOND_BOOTS)).add(0.1,new ItemStack(Material.NETHERITE_BOOTS));
+                return rc.next();
             case "leggings":
-
-
+                rc = new WeightCollection<ItemStack>().add(90,new ItemStack(Material.LEATHER_LEGGINGS)).add(9,new ItemStack(Material.IRON_LEGGINGS)).add(0.9,new ItemStack(Material.DIAMOND_LEGGINGS)).add(0.1,new ItemStack(Material.NETHERITE_LEGGINGS));
+                return rc.next();
             case "chestplate":
-
-
+                rc = new WeightCollection<ItemStack>().add(90,new ItemStack(Material.LEATHER_CHESTPLATE)).add(9,new ItemStack(Material.IRON_CHESTPLATE)).add(0.9,new ItemStack(Material.DIAMOND_CHESTPLATE)).add(0.1,new ItemStack(Material.NETHERITE_CHESTPLATE));
+                return rc.next();
             case "helmet":
-
-
+                rc = new WeightCollection<ItemStack>().add(90,new ItemStack(Material.LEATHER_HELMET)).add(9,new ItemStack(Material.IRON_HELMET)).add(0.9,new ItemStack(Material.DIAMOND_HELMET)).add(0.1,new ItemStack(Material.NETHERITE_HELMET));
+                return rc.next();
         }
+        return null;
     }
 
 }
