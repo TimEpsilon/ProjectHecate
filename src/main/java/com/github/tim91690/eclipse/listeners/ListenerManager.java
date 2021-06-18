@@ -9,5 +9,6 @@ public class ListenerManager {
     public static void registerEvents(EventManager plugin) {
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new Loot(),plugin);
+        pm.registerEvents(new Spawn(),plugin);
     }
 }

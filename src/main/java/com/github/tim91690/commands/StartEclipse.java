@@ -1,6 +1,6 @@
 package com.github.tim91690.commands;
 
-import com.github.tim91690.eclipse.mobs.Zombie;
+import com.github.tim91690.eclipse.mobs.ZombieTank;
 import net.minecraft.server.level.WorldServer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -13,7 +13,7 @@ public class StartEclipse implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            Zombie test = new Zombie(p.getLocation());
+            ZombieTank test = new ZombieTank(p.getLocation());
             WorldServer world = ((CraftWorld) p.getWorld()).getHandle();
             world.addEntity(test);
             return true;
