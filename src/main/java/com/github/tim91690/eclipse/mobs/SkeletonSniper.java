@@ -48,8 +48,6 @@ public class SkeletonSniper extends EntitySkeleton {
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
 
-
-
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setItemInMainHand(Bow());
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setItemInMainHandDropChance(0f);
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setItemInOffHand(Arrow());
@@ -59,6 +57,7 @@ public class SkeletonSniper extends EntitySkeleton {
 
         this.setSilent(true);
         this.setHealth(50);
+
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
 
     }

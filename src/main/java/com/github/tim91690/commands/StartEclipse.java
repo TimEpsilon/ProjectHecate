@@ -1,11 +1,9 @@
 package com.github.tim91690.commands;
 
-import com.github.tim91690.eclipse.mobs.ZombieTank;
-import net.minecraft.server.level.WorldServer;
+import com.github.tim91690.eclipse.mobs.boss.kingslime.KingSlime;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.Player;
 
 public class StartEclipse implements CommandExecutor {
@@ -13,9 +11,8 @@ public class StartEclipse implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (sender instanceof Player) {
             Player p = (Player) sender;
-            ZombieTank test = new ZombieTank(p.getLocation());
-            WorldServer world = ((CraftWorld) p.getWorld()).getHandle();
-            world.addEntity(test);
+            new KingSlime(p.getLocation());
+
             return true;
         }
         return false;

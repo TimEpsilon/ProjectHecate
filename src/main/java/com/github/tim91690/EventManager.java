@@ -22,4 +22,8 @@ public final class EventManager extends JavaPlugin {
     private void registerCommands() {
         getCommand("eclipse").setExecutor(new StartEclipse());
     }
+
+    public static EventManager getPlugin() {
+        return plugin;
+    }
 }

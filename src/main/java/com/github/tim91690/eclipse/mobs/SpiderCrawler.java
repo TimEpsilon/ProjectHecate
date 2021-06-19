@@ -20,6 +20,7 @@ public class SpiderCrawler extends EntitySpider {
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
 
         this.setHealth(35);
+
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
 
         ((LivingEntity) this.getBukkitEntity()).addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,2000000,2,true,true));

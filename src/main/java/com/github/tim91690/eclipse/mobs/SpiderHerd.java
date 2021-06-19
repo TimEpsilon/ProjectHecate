@@ -20,6 +20,7 @@ public class SpiderHerd extends EntityCaveSpider {
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
 
         this.setHealth(30);
+
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
         ((LivingEntity) this.getBukkitEntity()).addPotionEffect(new PotionEffect(PotionEffectType.JUMP,2000000,4,true,true));
     }

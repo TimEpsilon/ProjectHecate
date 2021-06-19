@@ -23,13 +23,14 @@ public class IllusionerMage extends EntityIllagerIllusioner {
         super(EntityTypes.O,((CraftWorld)loc.getWorld()).getHandle());
         this.setPosition(loc.getX(),loc.getY(),loc.getZ());
 
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(180);
+        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(150);
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30);
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.9);
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(8);
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(7);
 
-        this.setHealth(180);
+        this.setHealth(150);
+
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setItemInMainHand(Bow());
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setItemInMainHandDropChance(0.06f);
 

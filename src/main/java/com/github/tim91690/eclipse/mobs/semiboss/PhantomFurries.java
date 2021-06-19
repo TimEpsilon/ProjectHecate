@@ -13,7 +13,7 @@ public class PhantomFurries extends EntityPhantom {
 
     public PhantomFurries(Location loc) {
         super(EntityTypes.am,((CraftWorld)loc.getWorld()).getHandle());
-        this.setPosition(loc.getX(),loc.getWorld().getHighestBlockYAt(loc)+10, loc.getZ());
+        this.setPosition(loc.getX(),loc.getWorld().getHighestBlockYAt(loc)+30, loc.getZ());
 
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(100);
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(3);

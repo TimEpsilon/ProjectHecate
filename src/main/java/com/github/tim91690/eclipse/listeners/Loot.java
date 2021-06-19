@@ -13,6 +13,7 @@ import java.util.Random;
 
 public class Loot implements Listener {
 
+    // Définition mcoin
     private ItemStack mcoin(int n) {
         ItemStack mcoin = new ItemStack(Material.EMERALD,n);
         ItemMeta Mmeta = mcoin.getItemMeta();
@@ -26,11 +27,15 @@ public class Loot implements Listener {
     @EventHandler
     public void mobDeath(EntityDeathEvent event) {
         LivingEntity e = event.getEntity();
-
         if (!e.getScoreboardTags().contains("Eclipse")) return;
+
+        // [0-2] mcoins par mobs de l'éclipse
         int n = new Random().nextInt(3);
 
-        if(e.getScoreboardTags().contains("SemiBoss")) n += new Random().nextInt(15) + 5;
+        // [5-10] + [0-2] mcoins par semi boss
+        if(e.getScoreboardTags().contains("SemiBoss")) n += new Random().nextInt(6) + 5;
+
+        if(e.getScoreboardTags().contains("Boss")) n += new Random().nextInt(11) + 20;
 
         if (n==0) return;
 

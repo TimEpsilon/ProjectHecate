@@ -21,6 +21,7 @@ public class RavagerBeast extends EntityRavager {
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(5);
 
         this.setHealth(120);
+
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("SemiBoss");
 
