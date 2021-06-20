@@ -35,7 +35,11 @@ public class Loot implements Listener {
         // [5-10] + [0-2] mcoins par semi boss
         if(e.getScoreboardTags().contains("SemiBoss")) n += new Random().nextInt(6) + 5;
 
+        // [20 - 30] + [0-2] mcoins par boss
         if(e.getScoreboardTags().contains("Boss")) n += new Random().nextInt(11) + 20;
+
+        // 5 + [20 - 30] + [0-2] mcoins par phantom
+        if(e.getCustomName().equals(ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord")) n += 5;
 
         if (n==0) return;
 

@@ -24,7 +24,7 @@ public class Spawn implements Listener {
          * 4) -> Drowned Overlord (70%), Illusioner Mage (20%), Ravager Beast (7%), Phantom Furries (3%)
          * 5) -> Shadows (70%), Drowned Overlord (15%), Illusioner Mage (8%), Ravager Beast (5%), Phantom Furries (2%)
          */
-        if ((int)(Math.random()*100) < 10) {
+        if ((int)(Math.random()*100) < 1) {
             event.setCancelled(true);
             DrownedOverlord Do = new DrownedOverlord(event.getLocation());
             WorldServer world = ((CraftWorld) event.getLocation().getWorld()).getHandle();
@@ -60,7 +60,7 @@ public class Spawn implements Listener {
 
         /**Skeleton Sniper remplace skeletons
          */
-        if (event.getEntity() instanceof Skeleton) {
+        if (event.getEntity() instanceof Skeleton && !(event.getEntity() instanceof WitherSkeleton)) {
             event.setCancelled(true);
             SkeletonSniper ss = new SkeletonSniper(event.getLocation());
             WorldServer world = ((CraftWorld) event.getLocation().getWorld()).getHandle();

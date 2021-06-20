@@ -2,17 +2,17 @@ package com.github.tim91690.eclipse;
 
 public class Eclipse {
 
-    private double time;
+    private int phase;
 
-    public Eclipse(double time) {
-        this.time = time;
+    public Eclipse() {
+        this.phase = 0;
     }
 
-    public double getTime() {
-        return time;
+    public int getPhase() {
+        return phase;
     }
 
-    public void setTime(double time) {
-        this.time = time;
+    public void setPhase(int phase) {
+        this.phase = phase;
     }
 }

@@ -18,13 +18,13 @@ import org.bukkit.potion.PotionType;
 
 public class SkeletonSniper extends EntitySkeleton {
 
-    private ItemStack Bow() {
+    public static ItemStack Bow() {
         ItemStack bow = new ItemStack(Material.BOW);
         bow.addEnchantment(Enchantment.ARROW_KNOCKBACK,2);
         return bow;
     }
 
-    private ItemStack Arrow() {
+    public static ItemStack Arrow() {
         ItemStack arrow = new ItemStack(Material.TIPPED_ARROW);
         PotionMeta meta = (PotionMeta) arrow.getItemMeta();
         WeightCollection<PotionData> rc;
