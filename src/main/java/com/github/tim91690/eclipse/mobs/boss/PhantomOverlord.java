@@ -32,7 +32,6 @@ public class PhantomOverlord extends Boss {
 
     @Override
     public void attack(Player p) {
-        System.out.println("attack");
         int n = (int)(Math.random()*10);
         switch (n) {
             case 0:
@@ -45,7 +44,7 @@ public class PhantomOverlord extends Boss {
     }
 
     private void summonSoldiers() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 2; i++) {
             Phantom ph = (Phantom) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.PHANTOM);
             ph.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(75);
             ph.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(4);
@@ -59,6 +58,7 @@ public class PhantomOverlord extends Boss {
 
             WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
 
+            s.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,true,true));
             s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60);
             s.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
 

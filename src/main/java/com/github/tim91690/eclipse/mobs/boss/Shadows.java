@@ -12,22 +12,15 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-public class ScarletRabbit extends Boss {
+public class Shadows extends Boss {
 
-    public ScarletRabbit(Location loc) {
+    public Shadows(Location loc) {
 
-        super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"), BarColor.RED);
+        super(loc.getWorld().spawnEntity(loc, EntityType.PLAYER),350,ChatColor.translateAlternateColorCodes('&',"&0&lShadow"), BarColor.WHITE);
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
+        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
 
-        Team scarlet;
-        //team
-        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        scarlet.setColor(ChatColor.DARK_RED);
-        scarlet.addEntry(this.getEntity().getUniqueId().toString());
-
-       //killer bunny
+       /*//killer bunny
         ((Rabbit) this.entity).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
 
         //nom
@@ -41,7 +34,7 @@ public class ScarletRabbit extends Boss {
         ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
         ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
         ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(14);
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(4);
+        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(4);*/
     }
 
     /** 5 attaques différentes
@@ -51,41 +44,41 @@ public class ScarletRabbit extends Boss {
      */
     @Override
     public void attack(Player p) {
-        WeightCollection<String> rc;
-        rc = new WeightCollection<String>().add(11,"shockwave").add(10,"lightning").add(9,"spores").add(8,"souls").add(1,"wither").add(60,"void");
-        String attack = rc.next();
-        switch (attack) {
-            case "shockwave":
-                this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 400, 8, 2, 8, 0, Material.DIRT.createBlockData());
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    shockwave(p);
-                },60);
-                break;
-            case "lightning":
-                this.getEntity().getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 50, 1, 1, 1, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    lightning(p);
-                },60);
-                break;
-            case "spores":
-                this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 500, 2, 2, 2, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    spores(p);
-                },60);
-                break;
-            case "souls":
-                this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    souls(p);
-                },60);
-                break;
-            case "wither":
-                this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),200,2,2,2,0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    wither(p);
-                },60);
-                break;
-        }
+//        WeightCollection<String> rc;
+//        rc = new WeightCollection<String>().add(11,"shockwave").add(10,"lightning").add(9,"spores").add(8,"souls").add(1,"wither").add(60,"void");
+//        String attack = rc.next();
+//        switch (attack) {
+//            case "shockwave":
+//                this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 400, 8, 2, 8, 0, Material.DIRT.createBlockData());
+//                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+//                    shockwave(p);
+//                },60);
+//                break;
+//            case "lightning":
+//                this.getEntity().getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 50, 1, 1, 1, 0);
+//                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+//                    lightning(p);
+//                },60);
+//                break;
+//            case "spores":
+//                this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 500, 2, 2, 2, 0);
+//                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+//                    spores(p);
+//                },60);
+//                break;
+//            case "souls":
+//                this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
+//                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+//                    souls(p);
+//                },60);
+//                break;
+//            case "wither":
+//                this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),200,2,2,2,0);
+//                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+//                    wither(p);
+//                },60);
+//                break;
+//        }
     }
 
     /** Propulse le joueur en l'air
