@@ -1,40 +1,84 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
-import com.github.tim91690.EventManager;
-import com.github.tim91690.misc.WeightCollection;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 public class Shadows extends Boss {
+    ArmorStand body;
+    ArmorStand arms;
 
     public Shadows(Location loc) {
 
-        super(loc.getWorld().spawnEntity(loc, EntityType.PLAYER),350,ChatColor.translateAlternateColorCodes('&',"&0&lShadow"), BarColor.WHITE);
+        super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,ChatColor.translateAlternateColorCodes('&',"&0&lShadow"), BarColor.WHITE);
 
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
 
-       /*//killer bunny
-        ((Rabbit) this.entity).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
+       //shadow appearance
+        ItemStack shadow = new ItemStack(Material.NETHERITE_HOE);
+        ItemMeta meta = shadow.getItemMeta();
+        meta.setCustomModelData(1);
+        shadow.setItemMeta(meta);
+        ((WitherSkeleton)this.entity).getEquipment().setItemInMainHand(null);
+        ((WitherSkeleton)this.entity).getEquipment().setHelmet(shadow);
+        ((WitherSkeleton)this.entity).getEquipment().setHelmetDropChance(0f);
 
         //nom
         this.entity.setCustomName(this.name);
         this.entity.setCustomNameVisible(true);
-        this.entity.setGlowing(true);
 
-        ((Rabbit) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.JUMP,2000000,2));
-        ((Rabbit) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0));
+        ((WitherSkeleton) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,2000000,0,false,false));
+        ((WitherSkeleton) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,false,false));
 
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(14);
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(4);*/
+        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
+        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
+        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(15);
+        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(5);
+
+        loc.add(0,0.2,0);
+
+        this.body = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
+        this.body.setInvisible(true);
+        this.body.setMarker(true);
+        this.body.setGravity(false);
+        this.body.getEquipment().setHelmet(shadow);
+        this.body.getEquipment().getHelmet().getItemMeta().setCustomModelData(2);
+
+        this.arms = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
+        this.arms.setInvisible(true);
+        this.arms.setMarker(true);
+        this.arms.setArms(true);
+        this.body.setGravity(false);
+        this.arms.getEquipment().setItemInMainHand(shadow);
+        this.arms.getEquipment().getItemInMainHand().getItemMeta().setCustomModelData(3);
+        this.arms.getEquipment().setItemInOffHand(shadow);
+        this.arms.getEquipment().getItemInOffHand().getItemMeta().setCustomModelData(3);
+
+
+    }
+
+    public void idle() {
+        this.entity.getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation().getX(), this.getEntity().getLocation().getY()+1, this.getEntity().getLocation().getZ(),
+                10, 0.4, 0.5,0.4,0, new Particle.DustOptions(Color.BLACK,1),true);
+        this.body.teleport(this.entity);
+        this.arms.teleport(this.entity);
+        this.body.setRotation(this.entity.getLocation().getYaw(),this.entity.getLocation().getPitch());
+        this.arms.setRotation(this.entity.getLocation().getYaw(),this.entity.getLocation().getPitch());
+    }
+
+    @Override
+    public void death() {
+        bossList.remove(this);
+        this.bossbar.removeAll();
+        this.body.remove();
+        this.arms.remove();
     }
 
     /** 5 attaques différentes

@@ -17,7 +17,7 @@ import java.util.List;
 public class Boss {
     protected static final List<Boss> bossList = new ArrayList<>();
     protected Entity entity;
-    private final BossBar bossbar;
+    protected final BossBar bossbar;
     private double maxHealth;
     protected String name;
 
