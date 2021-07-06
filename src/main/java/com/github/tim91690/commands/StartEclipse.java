@@ -12,6 +12,7 @@ public class StartEclipse implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             new Shadows(p.getLocation());
+            System.out.println();
 
             return true;
         }
