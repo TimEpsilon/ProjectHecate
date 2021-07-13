@@ -12,6 +12,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Boss {
@@ -77,7 +78,7 @@ public class Boss {
         return this.maxHealth;
     }
 
-    public void attack(Player p) {
+    public void attack(List<Player> proxPlayer) {
         //Utiliser un @override dans la sous classe du boss pour définir ses attaques
     }
 }

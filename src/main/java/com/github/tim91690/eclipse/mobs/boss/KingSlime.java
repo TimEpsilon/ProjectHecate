@@ -9,6 +9,9 @@ import org.bukkit.entity.Slime;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import java.util.Collection;
+import java.util.List;
+
 public class KingSlime extends Boss {
 
     public KingSlime(Location loc) {
@@ -35,12 +38,14 @@ public class KingSlime extends Boss {
     }
 
     @Override
-    public void attack(Player p) {
-        //Slowness aux joueurs alentours, désactive elytra
-        p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,140,3));
-        if (p.isGliding()) {
-            p.setGliding(false);
-            p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "Le King Slime souhaite vous voir ramper...");
+    public void attack(List<Player> proxPlayer) {
+        for (Player p : proxPlayer) {
+            //Slowness aux joueurs alentours, désactive elytra
+            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,140,3));
+            if (p.isGliding()) {
+                p.setGliding(false);
+                p.sendMessage(ChatColor.GRAY + "" + ChatColor.ITALIC + "Le King Slime souhaite vous voir ramper...");
+            }
         }
         //son et particles
         this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK,this.getEntity().getLocation(),500,20,20,20,0, Material.SLIME_BLOCK.createBlockData(),true);

@@ -12,6 +12,9 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
+import java.util.Collection;
+import java.util.List;
+
 public class ScarletRabbit extends Boss {
 
     public ScarletRabbit(Location loc) {
@@ -47,87 +50,87 @@ public class ScarletRabbit extends Boss {
     /** 5 attaques différentes
      * possible de les prévoir à l'aide des particules annonçant l'attaque
      * remaster du boss final de la V1, pas de triple wither parce que c'est pas drôle et devoir frapper un lapin est infiniment plus galère
-     * @param p
      */
     @Override
-    public void attack(Player p) {
+    public void attack(List<Player> proxPlayer) {
         WeightCollection<String> rc;
         rc = new WeightCollection<String>().add(11,"shockwave").add(10,"lightning").add(9,"spores").add(8,"souls").add(1,"wither").add(60,"void");
         String attack = rc.next();
         switch (attack) {
             case "shockwave":
-                this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 400, 8, 2, 8, 0, Material.DIRT.createBlockData());
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    shockwave(p);
-                },60);
+                shockwave(proxPlayer);
                 break;
             case "lightning":
-                this.getEntity().getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 50, 1, 1, 1, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    lightning(p);
-                },60);
+                lightning(proxPlayer);
                 break;
             case "spores":
-                this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 500, 2, 2, 2, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    spores(p);
-                },60);
+                spores(proxPlayer);
                 break;
             case "souls":
-                this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    souls(p);
-                },60);
+                souls();
                 break;
             case "wither":
-                this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),200,2,2,2,0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    wither(p);
-                },60);
+                wither();
                 break;
         }
     }
 
     /** Propulse le joueur en l'air
-     * @param p
      */
-    private void shockwave(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 64) {
-            Vector d = new Vector(0, 2, 0);
-            p.setVelocity(d);
-            this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 300, 8, 2, 8, 0, Material.DIRT.createBlockData());
-            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 2f, 0.8f);
+    private void shockwave(List<Player> proxPlayer) {
+        for (Player p : proxPlayer) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 64) {
+                this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 400, 8, 2, 8, 0, Material.DIRT.createBlockData());
+                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                    Vector d = new Vector(0, 2, 0);
+                    p.setVelocity(d);
+                    this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 300, 8, 2, 8, 0, Material.DIRT.createBlockData());
+                    this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 2f, 0.8f);
+                },60);
+            }
         }
+
+
     }
 
     /** Envoi un éclair sur le joueur
-     * @param p
      */
-    private void lightning(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 100) {
-            Location loc = p.getLocation();
-            loc.add(new Vector(Math.random()*4-2,0,Math.random()*4-2));
-            p.getWorld().strikeLightning(loc);
+    private void lightning(List<Player> proxPlayer) {
+        for (Player p : proxPlayer) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 100) {
+                this.getEntity().getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 50, 1, 1, 1, 0);
+                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                    Location loc = p.getLocation();
+                    loc.add(new Vector(Math.random()*4-2,0,Math.random()*4-2));
+                    p.getWorld().strikeLightning(loc);
+                },60);
+            }
         }
     }
 
     /** Inflige wither 3 pour 3s
-     * @param p
      */
-    private void spores(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));
-            this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 1500, 5, 5, 5, 10);
-            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 3f, 0f);
+    private void spores(List<Player> proxPlayer) {
+        for (Player p : proxPlayer) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
+                this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 500, 2, 2, 2, 0);
+                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));
+                    this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 1500, 5, 5, 5, 10);
+                    this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 3f, 0f);
+                },60);
+
+            }
         }
+
     }
 
     /** Invoque 2 wither squelettes par joueurs
-     * @param p
      */
-    private void souls(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
-            for (int i = 0; i < 2; i++) {
+    private void souls() {
+        this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+            for (int i = 0; i < 3; i++) {
                 WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
 
                 s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80);
@@ -147,14 +150,14 @@ public class ScarletRabbit extends Boss {
                 this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),500,10,10,10,0);
                 this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_HURT,3f,0f);
             }
-        }
+        },60);
     }
 
     /** Invoque un wither (semiboss)
-     * @param p
      */
-    private void wither(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 225) {
+    private void wither() {
+        this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),200,2,2,2,0);
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
             Wither s = (Wither) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER);
 
             s.setCustomName(ChatColor.DARK_RED + "Wrath Spirit");
@@ -167,7 +170,7 @@ public class ScarletRabbit extends Boss {
             scarlet.addEntry(s.getUniqueId().toString());
 
             this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),500,5,5,5,0);
-        }
+        },60);
     }
 
 }

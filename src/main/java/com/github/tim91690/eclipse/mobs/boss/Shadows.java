@@ -11,8 +11,10 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
-import org.bukkit.util.Vector;
+import org.bukkit.util.EulerAngle;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 public class Shadows extends Boss {
@@ -64,6 +66,9 @@ public class Shadows extends Boss {
         meta.setCustomModelData(2);
         shadow.setItemMeta(meta);
         this.body.getEquipment().setHelmet(shadow);
+        this.body.setArms(true);
+        this.body.setRightArmPose(new EulerAngle(0,0,135*Math.PI/180));
+        this.body.setLeftArmPose(new EulerAngle(0,0,225*Math.PI/180));
 
         idle();
     }
@@ -74,7 +79,7 @@ public class Shadows extends Boss {
     public void idle() {
         this.position_task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
             this.entity.getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation(),
-                    10, 0.4, 0.5,0.4,0, new Particle.DustOptions(Color.BLACK,1),true);
+                    30, 0.4, 0.5,0.4,0, new Particle.DustOptions(Color.BLACK,1),true);
             this.body.teleport(this.entity.getLocation().add(0,0.2,0));
         },0,1).getTaskId();
     }
@@ -92,76 +97,130 @@ public class Shadows extends Boss {
 
     /** 5 attaques différentes
      * possible de les prévoir à l'aide des particules annonçant l'attaque
-     * @param p
      */
     @Override
-    public void attack(Player p) {
+    public void attack(List<Player> proxPlayer) {
         WeightCollection<String> rc;
-        rc = new WeightCollection<String>().add(50,"despair");
+        rc = new WeightCollection<String>()
+                .add(50,"despair")
+                .add(40,"teleport")
+                .add(50,"void");
         String attack = rc.next();
         switch (attack) {
             case "despair":
-                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, this.getEntity().getLocation(), 1000, 5, 5, 5, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    despair(p);
-                },40);
+                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) anguish(proxPlayer);
+                else despair(proxPlayer);
+                break;
+            case "teleport":
+                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2);
+                else shadowTeleport();
                 break;
         }
     }
 
     /** Draine l'énergie mentale du joueur
-     * @param p
      */
-    private void despair(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 400) {
-            //Effect
-            this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 400, 0.5, 1, 0.5, 0);
-            p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 1f, 0.7f);
+    private void despair(List<Player> proxPlayer) {
+        for (Player p : proxPlayer) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 400) {
+                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, this.getEntity().getLocation(), 1000, 5, 5, 5, 0);
+                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                    //Effect
+                    this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 400, 0.5, 1, 0.5, 0);
+                    p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 1f, 0.7f);
 
-            //Potion
-            p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,0));
-            p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,100,2));
-            p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,100,0));
-            p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,100,0));
+                    //Potion
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,0));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,100,2));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,100,0));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,100,0));
 
-            //Random Message
-            WeightCollection<String> rc = (new WeightCollection<String>().add(1,"Tu es à bout de forces...")
-                    .add(1,"Abandonnes...")
-                    .add(1,"Sacrifies toi au vide...")
-                    .add(1,"Jettes ton épée...")
-                    .add(1,"La lune demande un sacrifice...")
-                    .add(1,"Retires ton armure..."));
+                    //Random Message
+                    WeightCollection<String> rc = (new WeightCollection<String>().add(1,"Tu es à bout de forces...")
+                            .add(1,"Abandonnes...")
+                            .add(1,"Sacrifies toi au vide...")
+                            .add(1,"Jettes ton épée...")
+                            .add(1,"La lune demande un sacrifice...")
+                            .add(1,"Retires ton armure..."));
 
-            //Title
-            p.sendTitle(ChatColor.DARK_GRAY+rc.next(),"",5,80,0);
+                    //Title
+                    p.sendTitle(ChatColor.DARK_GRAY+rc.next(),"",5,80,0);
 
-            //Fake message
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[(new Random()).nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next());
-            },60);
+                    //Fake message
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                        p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[(new Random()).nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next());
+                    },60);
+                },40);
+            }
         }
     }
 
-    /** Envoi un éclair sur le joueur
-     * @param p
+    /** Version phase 2 de despair
      */
-    private void lightning(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 100) {
-            Location loc = p.getLocation();
-            loc.add(new Vector(Math.random()*4-2,0,Math.random()*4-2));
-            p.getWorld().strikeLightning(loc);
+    private void anguish(List<Player> proxPlayer) {
+        for (Player p : proxPlayer) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 625) {
+                //Effect
+                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 500, 0.5, 1, 0.5, 0);
+                p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 1f, 0.7f);
+
+                //Potion
+                p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,0));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW,100,3));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,100,1));
+                p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,100,0));
+
+                //Title
+                p.sendTitle(ChatColor.DARK_RED+""+ChatColor.MAGIC+"Feed the void","",5,80,0);
+                p.sendMessage(ChatColor.ITALIC+""+ChatColor.GRAY+"Vous ressentez une soudaine pulsion de jeter quelque chose...");
+
+                //Fake message
+                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                    p.sendMessage("<"+p.getName()+"> Je n'ai pas besoin de ça...");
+                    p.dropItem(false);
+                },60);
+            }
         }
     }
 
-    /** Inflige wither 3 pour 3s
-     * @param p
+    /** Téléportation et clone
      */
-    private void spores(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
-            p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));
-            this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 1500, 5, 5, 5, 10);
-            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 3f, 0f);
+    private void shadowTeleport() {
+        ((LivingEntity)this.entity).setAI(false);
+        ((LivingEntity)this.entity).addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,40,100));
+
+        List<Location> randomLoc = new ArrayList<>();
+        for (int i=0;i<3;i++) {
+            Location loc = this.entity.getLocation().add(Math.random()*20-10,Math.random()*6-3,Math.random()*20-10);
+            if (loc.getBlock().isEmpty() && loc.add(0,1,0).getBlock().isEmpty()) randomLoc.add(loc);
+            else {
+                for (double y = loc.getY();y<256;y++) {
+                    loc.setY(y);
+                    if (loc.getBlock().isEmpty() && loc.add(0,1,0).getBlock().isEmpty()) {
+                        randomLoc.add(loc);
+                        break;
+                    }
+                }
+            }
         }
+        randomLoc.add(this.entity.getLocation());
+        this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1,0.5f);
+
+        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+            for (Location loc : randomLoc) {
+                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,100,0.2,1,0.2,0);
+            }
+        },0,1).getTaskId();
+
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            this.getEntity().teleport(randomLoc.get(1));
+            this.body.teleport(this.entity.getLocation().add(0,0.2,0));
+            this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,1,2);
+            ((LivingEntity)this.getEntity()).setAI(true);
+            Bukkit.getScheduler().cancelTask(task);
+        },40);
+
+
     }
 
     /** Invoque 2 wither squelettes par joueurs

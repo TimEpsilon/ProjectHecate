@@ -9,6 +9,9 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import java.util.Collection;
+import java.util.List;
+
 public class PhantomOverlord extends Boss {
 
     public PhantomOverlord(Location loc) {
@@ -31,20 +34,20 @@ public class PhantomOverlord extends Boss {
     }
 
     @Override
-    public void attack(Player p) {
-        int n = (int)(Math.random()*10);
+    public void attack(List<Player> proxPlayer) {
+        int n = (int)(Math.random()*7);
         switch (n) {
             case 0:
                 summonSoldiers();
                 break;
             case 1:
-                succ(p);
+                succ(proxPlayer);
                 break;
         }
     }
 
     private void summonSoldiers() {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < 5; i++) {
             Phantom ph = (Phantom) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.PHANTOM);
             ph.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(75);
             ph.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(4);
@@ -79,11 +82,13 @@ public class PhantomOverlord extends Boss {
         }
     }
 
-    private void succ(Player p) {
-        //Vector unitaire du boss au joueur multiplié par -2
-        Vector d = p.getLocation().subtract(this.getEntity().getLocation()).toVector().normalize().multiply(-2);
-        p.setVelocity(d);
-        this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE,this.getEntity().getLocation(),500,20,20,20,0);
-        this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,4f,0.1f);
+    private void succ(List<Player> proxPlayer) {
+        for (Player p : proxPlayer) {
+            //Vector unitaire du boss au joueur multiplié par -2
+            Vector d = p.getLocation().subtract(this.getEntity().getLocation()).toVector().normalize().multiply(-2);
+            p.setVelocity(d);
+            this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE,this.getEntity().getLocation(),500,20,20,20,0);
+            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,4f,0.1f);
+        }
     }
 }
