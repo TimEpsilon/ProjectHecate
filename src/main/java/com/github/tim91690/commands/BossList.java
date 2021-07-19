@@ -30,7 +30,9 @@ public class BossList implements CommandExecutor {
                         + ChatColor.GREEN + "<"
                         +(int)boss.getEntity().getLocation().getX()+" , "
                         +(int)boss.getEntity().getLocation().getY()+" , "
-                        +(int)boss.getEntity().getLocation().getZ()+">");
+                        +(int)boss.getEntity().getLocation().getZ()+"> ("
+                        +(int)boss.getEntity().getLocation().distance(p.getLocation())
+                        +"m)");
             }
             p.sendMessage("      ");
         }

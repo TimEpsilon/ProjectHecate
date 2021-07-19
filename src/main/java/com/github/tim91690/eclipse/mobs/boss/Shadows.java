@@ -2,20 +2,25 @@ package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.misc.WeightCollection;
+import com.mojang.authlib.GameProfile;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.UUID;
 
 public class Shadows extends Boss {
     ArmorStand body;
@@ -104,6 +109,7 @@ public class Shadows extends Boss {
         rc = new WeightCollection<String>()
                 .add(50,"despair")
                 .add(40,"teleport")
+                .add(35,"wither")
                 .add(50,"void");
         String attack = rc.next();
         switch (attack) {
@@ -112,8 +118,12 @@ public class Shadows extends Boss {
                 else despair(proxPlayer);
                 break;
             case "teleport":
-                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2);
+                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) shadowClone();
                 else shadowTeleport();
+                break;
+            case "wither":
+                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2);
+                else witherWave(proxPlayer);
                 break;
         }
     }
@@ -183,17 +193,20 @@ public class Shadows extends Boss {
         }
     }
 
-    /** Téléportation et clone
+    /** Téléportation
      */
     private void shadowTeleport() {
+        //Rend invulnérable le temps de la téléportation
         ((LivingEntity)this.entity).setAI(false);
         ((LivingEntity)this.entity).addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,40,100));
 
+        //3 localisations random + localisation actuelle
         List<Location> randomLoc = new ArrayList<>();
         for (int i=0;i<3;i++) {
             Location loc = this.entity.getLocation().add(Math.random()*20-10,Math.random()*6-3,Math.random()*20-10);
             if (loc.getBlock().isEmpty() && loc.add(0,1,0).getBlock().isEmpty()) randomLoc.add(loc);
             else {
+                //Evite d'avoir une localisation dans le sol
                 for (double y = loc.getY();y<256;y++) {
                     loc.setY(y);
                     if (loc.getBlock().isEmpty() && loc.add(0,1,0).getBlock().isEmpty()) {
@@ -206,12 +219,14 @@ public class Shadows extends Boss {
         randomLoc.add(this.entity.getLocation());
         this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1,0.5f);
 
+        //particules à chaque localisation
         int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
             for (Location loc : randomLoc) {
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,100,0.2,1,0.2,0);
             }
         },0,1).getTaskId();
 
+        //Téléportation après 2s
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
             this.getEntity().teleport(randomLoc.get(1));
             this.body.teleport(this.entity.getLocation().add(0,0.2,0));
@@ -223,51 +238,98 @@ public class Shadows extends Boss {
 
     }
 
-    /** Invoque 2 wither squelettes par joueurs
-     * @param p
+    /** Téléportation et clones
      */
-    private void souls(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
-            for (int i = 0; i < 2; i++) {
-                WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
+    private void shadowClone() {
+        //Invulnérable le temps du clonage
+        ((LivingEntity)this.entity).setAI(false);
+        ((LivingEntity)this.entity).addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,40,100));
 
-                s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80);
-                s.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
-
-                s.getEquipment().setItemInMainHand(new ItemStack(Material.DIAMOND_AXE));
-                s.getEquipment().setItemInMainHandDropChance(0.05f);
-                s.getEquipment().setChestplate(new ItemStack(Material.NETHERITE_CHESTPLATE));
-                s.getEquipment().setChestplateDropChance(0.05f);
-                s.getEquipment().setLeggings(new ItemStack(Material.NETHERITE_LEGGINGS));
-                s.getEquipment().setLeggingsDropChance(0.05f);
-
-                s.setHealth(80);
-
-                s.addScoreboardTag("Eclipse");
-
-                this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),500,10,10,10,0);
-                this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_HURT,3f,0f);
+        //4 Localisations random + localisation actuelle
+        List<Location> randomLoc = new ArrayList<>();
+        for (int i=0;i<4;i++) {
+            Location loc = this.entity.getLocation().add(Math.random()*24-12,Math.random()*6-3,Math.random()*24-12);
+            if (loc.getBlock().isEmpty() && loc.add(0,1,0).getBlock().isEmpty()) randomLoc.add(loc);
+            else {
+                for (double y = loc.getY();y<256;y++) {
+                    loc.setY(y);
+                    if (loc.getBlock().isEmpty() && loc.add(0,1,0).getBlock().isEmpty()) {
+                        randomLoc.add(loc);
+                        break;
+                    }
+                }
             }
         }
+        randomLoc.add(this.entity.getLocation());
+        this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1,0.3f);
+
+        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+            for (Location loc : randomLoc) {
+                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,100,0.2,1,0.2,0);
+                this.getEntity().getWorld().spawnParticle(Particle.SOUL,loc,5,0.8,1,0.8,0.1);
+            }
+        },0,1).getTaskId();
+
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            this.getEntity().teleport(randomLoc.get(0));
+            this.body.teleport(this.entity.getLocation().add(0,0.2,0));
+            this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,1,2);
+            ((LivingEntity)this.getEntity()).setAI(true);
+            Bukkit.getScheduler().cancelTask(task);
+
+            ArrayList<Integer> tasks = new ArrayList<Integer>();
+            for (int i = 1;i<5;i++) {
+                WitherSkeleton clone = (WitherSkeleton) randomLoc.get(i).getWorld().spawnEntity(randomLoc.get(i),EntityType.WITHER_SKELETON);
+
+                clone.getEquipment().setHelmet(((LivingEntity) this.entity).getEquipment().getHelmet());
+                clone.getEquipment().setHelmetDropChance(0);
+                clone.getEquipment().setItemInMainHand(null);
+
+
+                clone.addScoreboardTag("Eclipse");
+                clone.addScoreboardTag("SemiBoss");
+
+                clone.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(100);
+                clone.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
+                clone.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
+
+                clone.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,2000000,0,false,false));
+
+                clone.setHealth(100);
+
+                final int j = i;
+                tasks.add(
+                        Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                    if (clone.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j-1));
+                    clone.getWorld().spawnParticle(Particle.REDSTONE,clone.getLocation().add(0,0.8,0),
+                            30, 0.2, 0.5,0.2,0, new Particle.DustOptions(Color.BLACK,1),true);
+                },0,1).getTaskId()
+                );
+
+
+            }
+        },40);
     }
 
-    /** Invoque un wither (semiboss)
-     * @param p
+    /** Invoque 3 witherwave de façon circulaire
      */
-    private void wither(Player p) {
-        if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 225) {
-            Wither s = (Wither) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER);
+    private void witherWave(List<Player> proxPlayer) {
+        Boolean player = false;
+        for (Player p : proxPlayer) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 100) player = true;
+        }
+        if (player) {
+           int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+               for (int i = 0;i<24;i++) {
+                   WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(this.entity.getLocation().add(Math.cos(i*2*Math.PI/23),1,Math.sin(i*2*Math.PI/23)),EntityType.WITHER_SKULL);
+                   skull.setVelocity(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)));
+               }
+           },0,20).getTaskId();
 
-            s.setCustomName(ChatColor.DARK_RED + "Wrath Spirit");
-            s.setCustomNameVisible(true);
+           Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+               Bukkit.getScheduler().cancelTask(task);
+           },60);
 
-            s.addScoreboardTag("Eclipse");
-            s.addScoreboardTag("SemiBoss");
-
-            Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-            scarlet.addEntry(s.getUniqueId().toString());
-
-            this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),500,5,5,5,0);
         }
     }
 
