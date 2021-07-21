@@ -5,6 +5,8 @@ import com.github.tim91690.misc.WeightCollection;
 import net.minecraft.network.chat.ChatComponentText;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityZombie;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -13,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Team;
 
 public class ZombieTank extends EntityZombie {
 
@@ -40,11 +43,19 @@ public class ZombieTank extends EntityZombie {
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setChestplateDropChance(0.005F);
         ((LivingEntity) this.getBukkitEntity()).getEquipment().setHelmetDropChance(0.005F);
 
-        //15HP au lieu des 8 originaux parce que l'armure est aléatoire
+        //25HP au lieu des 8 originaux parce que l'armure est aléatoire
         this.setHealth(25);
 
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
 
+        Team scarlet;
+        //team
+        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
+            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+            scarlet.setColor(ChatColor.DARK_RED);
+        }
+        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());
     }
 
     private ItemStack randomArmor(String piece) {

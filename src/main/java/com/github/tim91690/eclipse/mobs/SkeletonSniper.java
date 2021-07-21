@@ -3,6 +3,8 @@ package com.github.tim91690.eclipse.mobs;
 import com.github.tim91690.misc.WeightCollection;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntitySkeleton;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -15,6 +17,7 @@ import org.bukkit.potion.PotionData;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.scoreboard.Team;
 
 public class SkeletonSniper extends EntitySkeleton {
 
@@ -60,5 +63,13 @@ public class SkeletonSniper extends EntitySkeleton {
 
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
 
+        Team scarlet;
+        //team
+        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
+            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+            scarlet.setColor(ChatColor.DARK_RED);
+        }
+        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());
     }
 }

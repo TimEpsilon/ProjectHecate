@@ -23,13 +23,6 @@ public class ScarletRabbit extends Boss {
 
         Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
 
-        Team scarlet;
-        //team
-        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        scarlet.setColor(ChatColor.DARK_RED);
-        scarlet.addEntry(this.getEntity().getUniqueId().toString());
-
        //killer bunny
         ((Rabbit) this.entity).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);
 

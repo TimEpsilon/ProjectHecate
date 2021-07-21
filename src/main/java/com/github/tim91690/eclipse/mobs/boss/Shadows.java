@@ -122,7 +122,7 @@ public class Shadows extends Boss {
                 else shadowTeleport();
                 break;
             case "wither":
-                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2);
+                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) strongWitherWave(proxPlayer);
                 else witherWave(proxPlayer);
                 break;
         }
@@ -132,7 +132,7 @@ public class Shadows extends Boss {
      */
     private void despair(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 400) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, this.getEntity().getLocation(), 1000, 5, 5, 5, 0);
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                     //Effect
@@ -169,7 +169,7 @@ public class Shadows extends Boss {
      */
     private void anguish(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 625) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 225) {
                 //Effect
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 500, 0.5, 1, 0.5, 0);
                 p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 1f, 0.7f);
@@ -289,13 +289,13 @@ public class Shadows extends Boss {
                 clone.addScoreboardTag("Eclipse");
                 clone.addScoreboardTag("SemiBoss");
 
-                clone.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(100);
+                clone.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(50);
                 clone.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
-                clone.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
+                clone.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
 
                 clone.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,2000000,0,false,false));
 
-                clone.setHealth(100);
+                clone.setHealth(50);
 
                 final int j = i;
                 tasks.add(
@@ -311,7 +311,7 @@ public class Shadows extends Boss {
         },40);
     }
 
-    /** Invoque 3 witherwave de façon circulaire
+    /** Invoque une witherwave de façon circulaire
      */
     private void witherWave(List<Player> proxPlayer) {
         Boolean player = false;
@@ -319,17 +319,61 @@ public class Shadows extends Boss {
             if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 100) player = true;
         }
         if (player) {
-           int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-               for (int i = 0;i<24;i++) {
-                   WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(this.entity.getLocation().add(Math.cos(i*2*Math.PI/23),1,Math.sin(i*2*Math.PI/23)),EntityType.WITHER_SKULL);
-                   skull.setVelocity(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)));
-               }
-           },0,20).getTaskId();
+            this.entity.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.entity.getLocation(),100,1,0,1);
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                for (int i = 0;i<24;i++) {
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
+                    loc.setYaw(i*360/20-90);
+                    loc.setPitch(0);
+                    WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
+                    skull.setDirection(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)).multiply(0.1));
+                }
+            },40);
+        }
+    }
 
-           Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-               Bukkit.getScheduler().cancelTask(task);
-           },60);
+    /** Invoque 3 witherwaves de façon circulaire
+     */
+    private void strongWitherWave(List<Player> proxPlayer) {
+        Boolean player = false;
+        for (Player p : proxPlayer) {
+            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 225) player = true;
+        }
+        if (player) {
+            this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),200,2,0,2);
 
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                for (int i = 0;i<24;i++) {
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
+                    loc.setYaw(i*360/20-90);
+                    loc.setPitch(0);
+                    WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
+                    skull.setDirection(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)).multiply(0.2));
+                    skull.setRotation(i/23,i/23);
+                }
+            },40);
+
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                for (int i = 0;i<26;i++) {
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
+                    loc.setYaw(i*360/20-90);
+                    loc.setPitch(0);
+                    WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
+                    skull.setDirection(new Vector(Math.cos(i * 2 * Math.PI / 26), 0d, Math.sin(i * 2 * Math.PI / 26)));
+                    skull.setRotation(i/26,i/26);
+                }
+            },60);
+
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                for (int i = 0;i<20;i++) {
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
+                    loc.setYaw(i*360/20-90);
+                    loc.setPitch(0);
+                    WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
+                    skull.setDirection(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.1));
+                    skull.setCharged(true);
+                }
+            },90);
         }
     }
 

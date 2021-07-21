@@ -18,8 +18,8 @@ public class CustomBossBar {
 
             //Chaque boss
             for (Boss boss : Boss.getBossList()) {
-                //entités dans un cube de 100x100x100 centré sur le boss
-                List<Entity> nearby = boss.getEntity().getNearbyEntities(50,50,50);
+                //entités dans un cube de 80x80x80 centré sur le boss
+                List<Entity> nearby = boss.getEntity().getNearbyEntities(40,40,40);
 
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (nearby.contains(p)) {

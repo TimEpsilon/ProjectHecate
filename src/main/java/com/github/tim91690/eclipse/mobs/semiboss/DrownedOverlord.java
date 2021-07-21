@@ -2,6 +2,8 @@ package com.github.tim91690.eclipse.mobs.semiboss;
 
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.animal.horse.EntityHorseZombie;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -11,6 +13,7 @@ import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scoreboard.Team;
 
 
 public class DrownedOverlord extends EntityHorseZombie {
@@ -27,6 +30,15 @@ public class DrownedOverlord extends EntityHorseZombie {
         ((ZombieHorse) this.getBukkitEntity()).addPassenger(e);
 
         this.setHealth(30);
+
+        Team scarlet;
+        //team
+        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
+            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+            scarlet.setColor(ChatColor.DARK_RED);
+        }
+        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());
 
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("SemiBoss");
@@ -46,6 +58,15 @@ public class DrownedOverlord extends EntityHorseZombie {
         e.getEquipment().setHelmet(new ItemStack(Material.NETHERITE_HELMET));
 
         e.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,2000000,0,true,true));
+
+        Team scarlet;
+        //team
+        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
+            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+            scarlet.setColor(ChatColor.DARK_RED);
+        }
+        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        scarlet.addEntry(e.getUniqueId().toString());
 
         e.addScoreboardTag("Eclipse");
         e.addScoreboardTag("SemiBoss");

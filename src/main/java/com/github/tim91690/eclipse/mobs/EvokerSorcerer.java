@@ -2,10 +2,13 @@ package com.github.tim91690.eclipse.mobs;
 
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityEvoker;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.LivingEntity;
+import org.bukkit.scoreboard.Team;
 
 public class EvokerSorcerer extends EntityEvoker {
 
@@ -21,5 +24,13 @@ public class EvokerSorcerer extends EntityEvoker {
 
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
 
+        Team scarlet;
+        //team
+        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
+            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+            scarlet.setColor(ChatColor.DARK_RED);
+        }
+        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());
     }
 }

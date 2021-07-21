@@ -10,6 +10,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -39,6 +40,15 @@ public class Boss {
 
         this.entity.addScoreboardTag("Eclipse");
         this.entity.addScoreboardTag("Boss");
+
+        Team scarlet;
+        //team
+        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
+            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+            scarlet.setColor(ChatColor.DARK_RED);
+        }
+        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        scarlet.addEntry(this.getEntity().getUniqueId().toString());
 
         //vie
         ((LivingEntity) this.entity).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
