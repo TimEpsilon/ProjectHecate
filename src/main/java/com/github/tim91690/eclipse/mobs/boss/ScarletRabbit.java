@@ -72,7 +72,7 @@ public class ScarletRabbit extends Boss {
      */
     private void shockwave(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 64) {
+            if (this.getEntity().getLocation().distance(p.getLocation()) <= 8) {
                 this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 400, 8, 2, 8, 0, Material.DIRT.createBlockData());
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                     Vector d = new Vector(0, 2, 0);
@@ -90,7 +90,7 @@ public class ScarletRabbit extends Boss {
      */
     private void lightning(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 100) {
+            if (this.getEntity().getLocation().distance(p.getLocation()) <= 10) {
                 this.getEntity().getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 50, 1, 1, 1, 0);
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                     Location loc = p.getLocation();
@@ -105,7 +105,7 @@ public class ScarletRabbit extends Boss {
      */
     private void spores(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
+            if (this.getEntity().getLocation().distance(p.getLocation()) <= 12) {
                 this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 500, 2, 2, 2, 0);
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));

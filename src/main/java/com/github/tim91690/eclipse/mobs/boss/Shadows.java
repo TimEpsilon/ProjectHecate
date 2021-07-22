@@ -3,6 +3,7 @@ package com.github.tim91690.eclipse.mobs.boss;
 import com.github.tim91690.EventManager;
 import com.github.tim91690.misc.WeightCollection;
 import com.mojang.authlib.GameProfile;
+import jdk.jfr.Event;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -132,7 +133,7 @@ public class Shadows extends Boss {
      */
     private void despair(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 144) {
+            if (this.getEntity().getLocation().distance(p.getLocation()) <= 12) {
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, this.getEntity().getLocation(), 1000, 5, 5, 5, 0);
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                     //Effect
@@ -169,7 +170,7 @@ public class Shadows extends Boss {
      */
     private void anguish(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 225) {
+            if (this.getEntity().getLocation().distance(p.getLocation()) <= 15) {
                 //Effect
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 500, 0.5, 1, 0.5, 0);
                 p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 1f, 0.7f);
@@ -316,7 +317,7 @@ public class Shadows extends Boss {
     private void witherWave(List<Player> proxPlayer) {
         Boolean player = false;
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 100) player = true;
+            if (this.getEntity().getLocation().distance(p.getLocation()) <= 10) player = true;
         }
         if (player) {
             this.entity.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.entity.getLocation(),100,1,0,1);
@@ -337,7 +338,7 @@ public class Shadows extends Boss {
     private void strongWitherWave(List<Player> proxPlayer) {
         Boolean player = false;
         for (Player p : proxPlayer) {
-            if (this.getEntity().getLocation().distanceSquared(p.getLocation()) <= 225) player = true;
+            if (this.getEntity().getLocation().distance(p.getLocation()) <= 15) player = true;
         }
         if (player) {
             this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),200,2,0,2);
@@ -377,4 +378,47 @@ public class Shadows extends Boss {
         }
     }
 
+    /** Invoque des âmes
+     */
+    private void soulSummon(List<Player> proxPlayer) {
+        Boolean prox = false;
+        for (Player p : proxPlayer) {
+            if (this.entity.getLocation().distance(p.getLocation()) <= 15) {
+                prox = true;
+                break;
+            }
+        }
+
+        if(prox) {
+            this.entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY,this.entity.getLocation(),200,3,3,3);
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                ArrayList<Integer> tasks = new ArrayList<Integer>();
+                for (int i = 0;i<4;i++) {
+                    Vex vex = (Vex)this.entity.getWorld().spawnEntity(this.entity.getLocation(),EntityType.VEX);
+
+                    vex.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,10000000,0,false,false));
+                    vex.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(14);
+                    vex.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(30);
+                    vex.setHealth(30);
+                    vex.setSilent(true);
+
+                    vex.addScoreboardTag("Eclipse");
+
+                    final int j = i;
+                    tasks.add(
+                            Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                                if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j-1));
+                                vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation().add(0,0,0),
+                                        30, 0.1, 0.1,0.1);
+                            },0,1).getTaskId()
+                    );
+
+                }
+            },60);
+        }
+    }
+
+    /** Invoque des âmes explosives
+     *
+     */
 }
