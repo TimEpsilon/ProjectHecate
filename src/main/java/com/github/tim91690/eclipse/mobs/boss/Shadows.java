@@ -111,7 +111,8 @@ public class Shadows extends Boss {
                 .add(50,"despair")
                 .add(40,"teleport")
                 .add(35,"wither")
-                .add(50,"void");
+                .add(50,"void")
+                .add(45,"soul");
         String attack = rc.next();
         switch (attack) {
             case "despair":
@@ -125,6 +126,10 @@ public class Shadows extends Boss {
             case "wither":
                 if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) strongWitherWave(proxPlayer);
                 else witherWave(proxPlayer);
+                break;
+            case "soul":
+                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) tormentedSoulSummon(proxPlayer);
+                else soulSummon(proxPlayer);
                 break;
         }
     }
@@ -392,7 +397,7 @@ public class Shadows extends Boss {
         if(prox) {
             this.entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY,this.entity.getLocation(),200,3,3,3);
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                ArrayList<Integer> tasks = new ArrayList<Integer>();
+                ArrayList<Integer> tasks = new ArrayList<>();
                 for (int i = 0;i<4;i++) {
                     Vex vex = (Vex)this.entity.getWorld().spawnEntity(this.entity.getLocation(),EntityType.VEX);
 
@@ -421,4 +426,48 @@ public class Shadows extends Boss {
     /** Invoque des âmes explosives
      *
      */
+    private void tormentedSoulSummon(List<Player> proxPlayer) {
+        Boolean prox = false;
+        for (Player p : proxPlayer) {
+            if (this.entity.getLocation().distance(p.getLocation()) <= 20) {
+                prox = true;
+                break;
+            }
+        }
+
+        if(prox) {
+            this.entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY,this.entity.getLocation(),200,3,3,3);
+            this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),50,3,3,3);
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                ArrayList<Integer> tasks = new ArrayList<>();
+                for (int i = 0;i<5;i++) {
+                    Vex vex = (Vex)this.entity.getWorld().spawnEntity(this.entity.getLocation(),EntityType.VEX);
+
+                    vex.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,10000000,0,false,false));
+                    vex.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(14);
+                    vex.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
+                    vex.setHealth(40);
+                    vex.setSilent(true);
+
+                    vex.addScoreboardTag("Eclipse");
+
+                    final int j = i;
+                    tasks.add(
+                            Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                                if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j-1));
+                                vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation(),
+                                        30, 0.1, 0.1,0.1);
+                                vex.getWorld().spawnParticle(Particle.SMOKE_NORMAL,vex.getLocation(),
+                                        10, 0.1, 0.1,0.1);
+                            },0,1).getTaskId()
+                    );
+                    vex.getWorld().playSound(vex.getLocation(),Sound.ENTITY_TNT_PRIMED,SoundCategory.HOSTILE,1f,0.8f);
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                        vex.getWorld().createExplosion(vex.getLocation(),1,false,false);
+                        vex.setHealth(0);
+                    },200);
+                }
+            },60);
+        }
+    }
 }
