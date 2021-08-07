@@ -116,22 +116,43 @@ public class Shadows extends Boss {
         String attack = rc.next();
         switch (attack) {
             case "despair":
+                attackAnimation();
                 if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) anguish(proxPlayer);
                 else despair(proxPlayer);
                 break;
             case "teleport":
+                attackAnimation();
                 if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) shadowClone();
                 else shadowTeleport();
                 break;
             case "wither":
+                attackAnimation();
                 if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) strongWitherWave(proxPlayer);
                 else witherWave(proxPlayer);
                 break;
             case "soul":
+                attackAnimation();
                 if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) tormentedSoulSummon(proxPlayer);
                 else soulSummon(proxPlayer);
                 break;
         }
+    }
+
+    /** Animation d'attaque : lève les bras en l'air
+     */
+    private void attackAnimation() {
+        ItemStack arm = ((WitherSkeleton)this.entity).getEquipment().getItemInMainHand();
+        ((WitherSkeleton)this.entity).getEquipment().setItemInMainHand(null);
+        ((WitherSkeleton)this.entity).getEquipment().setItemInOffHand(null);
+        this.body.getEquipment().setItemInMainHand(arm);
+        this.body.getEquipment().setItemInOffHand(arm);
+
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+            ((WitherSkeleton)this.entity).getEquipment().setItemInMainHand(arm);
+            ((WitherSkeleton)this.entity).getEquipment().setItemInOffHand(arm);
+            this.body.getEquipment().setItemInMainHand(null);
+            this.body.getEquipment().setItemInOffHand(null);
+        },80);
     }
 
     /** Draine l'énergie mentale du joueur
@@ -412,12 +433,15 @@ public class Shadows extends Boss {
                     final int j = i;
                     tasks.add(
                             Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-                                if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j-1));
-                                vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation().add(0,0,0),
-                                        30, 0.1, 0.1,0.1);
+                                if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j));
+                                vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation(),
+                                        10, 0.1, 0.1,0.1,0);
                             },0,1).getTaskId()
                     );
 
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                        vex.setHealth(0);
+                    },200);
                 }
             },60);
         }
@@ -454,18 +478,18 @@ public class Shadows extends Boss {
                     final int j = i;
                     tasks.add(
                             Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-                                if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j-1));
+                                if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j));
                                 vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation(),
-                                        30, 0.1, 0.1,0.1);
+                                        10, 0.1, 0.1,0.1,0);
                                 vex.getWorld().spawnParticle(Particle.SMOKE_NORMAL,vex.getLocation(),
-                                        10, 0.1, 0.1,0.1);
+                                        5, 0.1, 0.1,0.1,0);
                             },0,1).getTaskId()
                     );
                     vex.getWorld().playSound(vex.getLocation(),Sound.ENTITY_TNT_PRIMED,SoundCategory.HOSTILE,1f,0.8f);
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                        vex.getWorld().createExplosion(vex.getLocation(),1,false,false);
+                        vex.getWorld().createExplosion(vex.getLocation(),3,false,false);
                         vex.setHealth(0);
-                    },200);
+                    },140);
                 }
             },60);
         }
