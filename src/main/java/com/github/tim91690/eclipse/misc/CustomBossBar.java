@@ -1,4 +1,4 @@
-package com.github.tim91690.misc;
+package com.github.tim91690.eclipse.misc;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.mobs.boss.Boss;

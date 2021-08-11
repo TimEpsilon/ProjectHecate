@@ -1,4 +1,4 @@
-package com.github.tim91690.misc;
+package com.github.tim91690.eclipse.misc;
 
 import java.util.NavigableMap;
 import java.util.Random;

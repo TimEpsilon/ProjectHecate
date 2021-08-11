@@ -1,27 +1,21 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.misc.WeightCollection;
-import com.mojang.authlib.GameProfile;
-import jdk.jfr.Event;
+import com.github.tim91690.eclipse.misc.WeightCollection;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scoreboard.Team;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
 public class Shadows extends Boss {
     ArmorStand body;

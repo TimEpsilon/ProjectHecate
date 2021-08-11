@@ -1,8 +1,7 @@
 package com.github.tim91690.eclipse.mobs;
 
 
-import com.github.tim91690.misc.WeightCollection;
-import net.minecraft.network.chat.ChatComponentText;
+import com.github.tim91690.eclipse.misc.WeightCollection;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntityZombie;
 import org.bukkit.Bukkit;

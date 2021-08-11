@@ -1,7 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.misc.WeightCollection;
+import com.github.tim91690.eclipse.misc.WeightCollection;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -12,7 +12,6 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
 import java.util.List;
 
 public class ScarletRabbit extends Boss {
