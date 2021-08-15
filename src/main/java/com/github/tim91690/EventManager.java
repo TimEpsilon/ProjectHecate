@@ -4,7 +4,7 @@ import com.github.tim91690.commands.BossList;
 import com.github.tim91690.commands.GiveMoonBlade;
 import com.github.tim91690.commands.StartEclipse;
 import com.github.tim91690.eclipse.item.CustomCraft;
-import com.github.tim91690.eclipse.item.moonblade.enchants.EnchantRegister;
+import com.github.tim91690.eclipse.item.enchants.EnchantRegister;
 import com.github.tim91690.eclipse.listeners.ListenerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -15,9 +15,9 @@ public final class EventManager extends JavaPlugin {
     @Override
     public void onEnable() {
         registerCommands();
+        EnchantRegister.register();
         ListenerManager.registerEvents(this);
         new CustomCraft();
-        EnchantRegister.register();
 
     }
 

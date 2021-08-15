@@ -1,4 +1,4 @@
-package com.github.tim91690.eclipse.item.moonblade.enchants;
+package com.github.tim91690.eclipse.item.enchants;
 
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;

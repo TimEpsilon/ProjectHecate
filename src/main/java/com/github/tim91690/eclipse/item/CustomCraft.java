@@ -1,29 +1,94 @@
 package com.github.tim91690.eclipse.item;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.eclipse.item.moonblade.MoonBlade;
+import com.github.tim91690.eclipse.item.enchants.EnchantRegister;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import java.util.List;
 
 public class CustomCraft {
 
     public CustomCraft() {
-        MoonBlade blade = new MoonBlade();
-        ItemStack sword = blade.getBlade();
+        //Lvl 0
+        ItemStack blade = CustomItems.getMoonBlade();
+        shapeSquareRecipe("moonblade",blade,new ItemStack(Material.NETHERITE_SWORD),CustomItems.getMobSoul());
 
-        NamespacedKey key = new NamespacedKey(EventManager.getPlugin(),"moonblade");
+        //Lvl 1
+        ItemStack nextblade = CustomItems.getMoonBlade();
+        ItemMeta meta = nextblade.getItemMeta();
+        List<String> lore = meta.getLore();
+        lore.add("");
+        lore.add(ChatColor.GRAY+"Moon's Blessing I");
+        meta.setLore(lore);
+        nextblade.setItemMeta(meta);
+        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,1);
+        shapeSquareRecipe("moonblade_bless1",nextblade,blade,CustomItems.getSlothSoul());
 
-        ShapedRecipe rc = new ShapedRecipe(key,sword);
-        rc.shape("111","101","111");
-        rc.setIngredient('1',new RecipeChoice.ExactChoice(MoonSoul.getSoul(1)));
-        rc.setIngredient('0',Material.NETHERITE_SWORD);
+        //Lvl 2
+        blade=nextblade.clone();
+        lore.set(5,ChatColor.GRAY+"Moon's Blessing II");
+        meta.setLore(lore);
+        nextblade.setItemMeta(meta);
+        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,2);
+        shapeSquareRecipe("moonblade_bless2",nextblade,blade,CustomItems.getGreedSoul());
 
-        Bukkit.addRecipe(rc);
+        //Lvl 3
+        blade=nextblade.clone();
+        lore.set(5,ChatColor.GRAY+"Moon's Blessing III");
+        meta.setLore(lore);
+        nextblade.setItemMeta(meta);
+        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,3);
+        shapeSquareRecipe("moonblade_bless3",nextblade,blade,CustomItems.getLustSoul());
+
+        //Lvl 4
+        blade=nextblade.clone();
+        lore.set(5,ChatColor.GRAY+"Moon's Blessing IV");
+        meta.setLore(lore);
+        nextblade.setItemMeta(meta);
+        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,4);
+        shapeSquareRecipe("moonblade_bless4",nextblade,blade,CustomItems.getWrathSoul());
+
+        //Lvl 5
+        blade=nextblade.clone();
+        lore.set(5,ChatColor.GRAY+"Moon's Blessing V");
+        meta.setLore(lore);
+        nextblade.setItemMeta(meta);
+        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,5);
+        shapeSquareRecipe("moonblade_bless5",nextblade,blade,CustomItems.getGluttonySoul());
+
+        //Lvl 6
+        blade=nextblade.clone();
+        lore.set(5,ChatColor.GRAY+"Moon's Blessing VI");
+        meta.setLore(lore);
+        nextblade.setItemMeta(meta);
+        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,6);
+        shapeSquareRecipe("moonblade_bless6",nextblade,blade,CustomItems.getPrideSoul());
+
+        //Lvl 7
+        blade=nextblade.clone();
+        lore.set(5,ChatColor.GRAY+"Sins of The Moon I");
+        meta.setLore(lore);
+        meta.setCustomModelData(2);
+        nextblade.setItemMeta(meta);
+        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,7);
+        shapeSquareRecipe("moonblade_bless7",nextblade,blade,CustomItems.getEnvySoul());
 
     }
 
+    private void shapeSquareRecipe(String name, ItemStack result, ItemStack middle, ItemStack soul) {
+        NamespacedKey key = new NamespacedKey(EventManager.getPlugin(),name);
+        ShapedRecipe rc = new ShapedRecipe(key,result);
+        rc.shape("020","010","000");
+        rc.setIngredient('0',new RecipeChoice.ExactChoice(CustomItems.getMobSoul()));
+        rc.setIngredient('1',new RecipeChoice.ExactChoice(middle));
+        rc.setIngredient('2',new RecipeChoice.ExactChoice(soul));
+        Bukkit.addRecipe(rc);
+    }
 }

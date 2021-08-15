@@ -1,11 +1,9 @@
-package com.github.tim91690.eclipse.listeners;
+package com.github.tim91690.eclipse.item.enchants;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.eclipse.item.moonblade.enchants.EnchantRegister;
-import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
+import org.bukkit.enchantments.Enchantment;
+import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.AbstractArrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -13,24 +11,39 @@ import org.bukkit.entity.Trident;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.time.LocalTime;
 import java.util.HashMap;
 import java.util.UUID;
 
+public class MoonEnchant extends Enchantment implements Listener {
+    public MoonEnchant() {
+        super(new NamespacedKey(EventManager.getPlugin(),"moon_blessing"));
+    }
 
-public class LaserSword implements Listener {
     private HashMap<UUID, Boolean> playerList = new HashMap<>();
+
+    @EventHandler
+    public void BlessingDamage(EntityDamageByEntityEvent e) {
+        if(!e.getEntity().getScoreboardTags().contains("Eclipse") || !(e.getDamager() instanceof Player)) return;
+        if (((Player)e.getDamager()).getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) {
+            int lvl = ((Player)e.getDamager()).getInventory().getItemInMainHand().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()));
+            switch (lvl) {
+                case 1:
+                    e.setDamage(e.getDamage()*1.6);
+            }
+        }
+    }
 
     @EventHandler
     public void LaserSword(PlayerInteractEvent e) {
         if(e.getItem() == null) return;
-        if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getType() == Material.NETHERITE_SWORD) {
+        if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getType() == Material.NETHERITE_SWORD && e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) {
             Player p = e.getPlayer();
-
-             p.sendMessage(""+p.getEquipment().getItemInMainHand().getEnchantments().containsKey(EnchantRegister.MOON_BLESSING));
+            int lvl = e.getItem().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()));
 
             if (!playerList.containsKey(p.getUniqueId())) playerList.put(p.getUniqueId(),true);
 
@@ -65,5 +78,45 @@ public class LaserSword implements Listener {
 
 
         }
+    }
+
+    @Override
+    public String getName() {
+        return "Moon's Blessing";
+    }
+
+    @Override
+    public int getMaxLevel() {
+        return 7;
+    }
+
+    @Override
+    public int getStartLevel() {
+        return 1;
+    }
+
+    @Override
+    public EnchantmentTarget getItemTarget() {
+        return null;
+    }
+
+    @Override
+    public boolean isTreasure() {
+        return false;
+    }
+
+    @Override
+    public boolean isCursed() {
+        return false;
+    }
+
+    @Override
+    public boolean conflictsWith(Enchantment other) {
+        return false;
+    }
+
+    @Override
+    public boolean canEnchantItem(ItemStack item) {
+        return true;
     }
 }
