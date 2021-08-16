@@ -27,6 +27,7 @@ public class CustomCraft {
         lore.add("");
         lore.add(ChatColor.GRAY+"Moon's Blessing I");
         meta.setLore(lore);
+        meta.setCustomModelData(2);
         nextblade.setItemMeta(meta);
         nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,1);
         shapeSquareRecipe("moonblade_bless1",nextblade,blade,CustomItems.getSlothSoul());
@@ -35,6 +36,7 @@ public class CustomCraft {
         blade=nextblade.clone();
         lore.set(5,ChatColor.GRAY+"Moon's Blessing II");
         meta.setLore(lore);
+        meta.setCustomModelData(3);
         nextblade.setItemMeta(meta);
         nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,2);
         shapeSquareRecipe("moonblade_bless2",nextblade,blade,CustomItems.getGreedSoul());
@@ -43,6 +45,7 @@ public class CustomCraft {
         blade=nextblade.clone();
         lore.set(5,ChatColor.GRAY+"Moon's Blessing III");
         meta.setLore(lore);
+        meta.setCustomModelData(4);
         nextblade.setItemMeta(meta);
         nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,3);
         shapeSquareRecipe("moonblade_bless3",nextblade,blade,CustomItems.getLustSoul());
@@ -51,6 +54,7 @@ public class CustomCraft {
         blade=nextblade.clone();
         lore.set(5,ChatColor.GRAY+"Moon's Blessing IV");
         meta.setLore(lore);
+        meta.setCustomModelData(5);
         nextblade.setItemMeta(meta);
         nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,4);
         shapeSquareRecipe("moonblade_bless4",nextblade,blade,CustomItems.getWrathSoul());
@@ -59,6 +63,7 @@ public class CustomCraft {
         blade=nextblade.clone();
         lore.set(5,ChatColor.GRAY+"Moon's Blessing V");
         meta.setLore(lore);
+        meta.setCustomModelData(6);
         nextblade.setItemMeta(meta);
         nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,5);
         shapeSquareRecipe("moonblade_bless5",nextblade,blade,CustomItems.getGluttonySoul());
@@ -67,6 +72,7 @@ public class CustomCraft {
         blade=nextblade.clone();
         lore.set(5,ChatColor.GRAY+"Moon's Blessing VI");
         meta.setLore(lore);
+        meta.setCustomModelData(7);
         nextblade.setItemMeta(meta);
         nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,6);
         shapeSquareRecipe("moonblade_bless6",nextblade,blade,CustomItems.getPrideSoul());
@@ -75,7 +81,7 @@ public class CustomCraft {
         blade=nextblade.clone();
         lore.set(5,ChatColor.GRAY+"Sins of The Moon I");
         meta.setLore(lore);
-        meta.setCustomModelData(2);
+        meta.setCustomModelData(8);
         nextblade.setItemMeta(meta);
         nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,7);
         shapeSquareRecipe("moonblade_bless7",nextblade,blade,CustomItems.getEnvySoul());
