@@ -1,5 +1,6 @@
 package com.github.tim91690.eclipse.listeners;
 
+import com.github.tim91690.eclipse.item.CustomItems;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
@@ -12,17 +13,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Random;
 
 public class Loot implements Listener {
-
-    // Définition mcoin
-    private ItemStack mcoin(int n) {
-        ItemStack mcoin = new ItemStack(Material.EMERALD,n);
-        ItemMeta Mmeta = mcoin.getItemMeta();
-        Mmeta.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "M-Coin");
-        Mmeta.setCustomModelData(42);
-        mcoin.setItemMeta(Mmeta);
-        return mcoin;
-    }
-
 
     @EventHandler
     public void mobDeath(EntityDeathEvent event) {
@@ -50,7 +40,7 @@ public class Loot implements Listener {
 
         if (n==0) return;
 
-        e.getLocation().getWorld().dropItem(e.getLocation(),mcoin(n));
+        e.getLocation().getWorld().dropItem(e.getLocation(), CustomItems.mcoin(n));
         return;
     }
 }

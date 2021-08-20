@@ -1,7 +1,10 @@
 package com.github.tim91690.eclipse.item;
 
+import com.github.tim91690.eclipse.item.enchants.EnchantRegister;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -9,6 +12,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CustomItems {
+
+    // Définition mcoin
+    public static ItemStack mcoin(int n) {
+        ItemStack mcoin = new ItemStack(Material.EMERALD,n);
+        ItemMeta Mmeta = mcoin.getItemMeta();
+        Mmeta.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "M-Coin");
+        Mmeta.setCustomModelData(42);
+        mcoin.setItemMeta(Mmeta);
+        return mcoin;
+    }
 
     public static ItemStack getMobSoul() {
         ItemStack soul = new ItemStack(Material.GUNPOWDER);
@@ -37,7 +50,28 @@ public class CustomItems {
         meta.setLore(lore);
         meta.setCustomModelData(1);
         meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         blade.setItemMeta(meta);
+        return blade;
+    }
+
+    public static ItemStack getUltimateMoonBlade() {
+        ItemStack blade = new ItemStack(Material.NETHERITE_SWORD);
+        ItemMeta meta = blade.getItemMeta();
+        meta.setDisplayName(ChatColor.AQUA+"True Moon Blade");
+        List<String> lore = new ArrayList<>();
+        lore.add(ChatColor.LIGHT_PURPLE +"La forme finale de la lame la Lune");
+        lore.add(ChatColor.LIGHT_PURPLE +"Infusée par les 7 péchés capitaux");
+        lore.add(ChatColor.GREEN+""+ChatColor.ITALIC+"Clic droit pour invoquer un péché");
+        lore.add(ChatColor.GREEN+""+ChatColor.ITALIC+"Shift + clic droit pour changer de péché");
+        lore.add("");
+        lore.add(ChatColor.GRAY+"Sins of the Moon I");
+        meta.setLore(lore);
+        meta.setUnbreakable(true);
+        meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+        meta.setCustomModelData(8);
+        blade.setItemMeta(meta);
+        blade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,7);
         return blade;
     }
 

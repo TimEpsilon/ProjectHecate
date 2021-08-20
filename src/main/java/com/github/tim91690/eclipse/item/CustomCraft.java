@@ -79,12 +79,7 @@ public class CustomCraft {
 
         //Lvl 7
         blade=nextblade.clone();
-        lore.set(5,ChatColor.GRAY+"Sins of The Moon I");
-        meta.setLore(lore);
-        meta.setCustomModelData(8);
-        nextblade.setItemMeta(meta);
-        nextblade.addUnsafeEnchantment(EnchantRegister.MOON_BLESSING,7);
-        shapeSquareRecipe("moonblade_bless7",nextblade,blade,CustomItems.getEnvySoul());
+        shapeSquareRecipe("moonblade_bless7",CustomItems.getUltimateMoonBlade(),blade,CustomItems.getEnvySoul());
 
     }
 
