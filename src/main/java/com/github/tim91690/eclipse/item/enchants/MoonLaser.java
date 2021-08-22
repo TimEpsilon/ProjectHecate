@@ -10,21 +10,23 @@ import java.util.List;
 public class MoonLaser {
     Color color;
     Trident laser;
+    Player owner;
 
     public MoonLaser(Location loc, Color color,Player p,int delay) {
-        //loc.setDirection(p.getPo)
         this.laser = (Trident)loc.getWorld().spawnEntity(loc, EntityType.TRIDENT);
-
         this.color = color;
+        this.owner = p;
+
+        this.laser.setVelocity(p.getLocation().getDirection().multiply(0.01));
         this.laser.setInvulnerable(true);
-        this.laser.setShooter(p);
+        this.laser.setShooter(this.owner);
         this.laser.setGravity(false);
-        this.laser.teleport();
+        summon(delay);
         damageTick(delay);
     }
 
     private Vector goToTarget() {
-        Location targetLoc = this.laser.getLocation().add(0,-20,0);
+        Location targetLoc = this.laser.getLocation().add(this.owner.getLocation().getDirection().normalize().multiply(20));
         List<Entity> nearby = this.laser.getNearbyEntities(10,10,10);
         for (Entity e : nearby) {
             if (e instanceof Monster && this.laser.getLocation().distance(e.getLocation()) < this.laser.getLocation().distance(targetLoc)) targetLoc = e.getLocation();
@@ -36,8 +38,12 @@ public class MoonLaser {
     private void summon(int delay) {
         if (delay == 0) return;
         int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-
+            this.laser.getWorld().spawnParticle(Particle.REDSTONE,this.laser.getLocation(),20,0.3,0.3,0.3,0,new Particle.DustOptions(this.color,2),true);
         },0,1).getTaskId();
+
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().cancelTask(task);
+        },delay);
     }
 
     private void damageTick(int delay) {

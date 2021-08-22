@@ -112,13 +112,13 @@ public class MoonEnchant extends Enchantment implements Listener {
                         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE,SoundCategory.MASTER,1,2);
                         p.spawnParticle(Particle.REDSTONE,p.getLocation(),30,1,0.5,1,new Particle.DustOptions(Color.LIME,1));
                     },50);
-                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*10-5,Math.random()*5,Math.random()*10-5),Color.YELLOW,p,20);
-                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*10-5,Math.random()*5,Math.random()*10-5),Color.GREEN,p,20);
-                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*10-5,Math.random()*5,Math.random()*10-5),Color.TEAL,p,20);
-                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*10-5,Math.random()*5,Math.random()*10-5),Color.BLUE,p,20);
-                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*10-5,Math.random()*5,Math.random()*10-5),Color.PURPLE,p,20);
-                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*10-5,Math.random()*5,Math.random()*10-5),Color.RED,p,20);
-                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*10-5,Math.random()*5,Math.random()*10-5),Color.ORANGE,p,20);
+                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.YELLOW,p,20);
+                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.GREEN,p,20);
+                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.TEAL,p,20);
+                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.BLUE,p,20);
+                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.PURPLE,p,20);
+                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.RED,p,20);
+                    new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.ORANGE,p,20);
                     break;
             }
         }
