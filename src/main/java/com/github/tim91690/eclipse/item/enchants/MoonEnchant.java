@@ -12,6 +12,8 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
@@ -23,6 +25,8 @@ public class MoonEnchant extends Enchantment implements Listener {
     }
 
     private HashMap<UUID, Boolean> playerList = new HashMap<>();
+    private HashMap<UUID,Integer> sinId = new HashMap<>();
+    private HashMap<UUID, Boolean> sinCooldown = new HashMap<>();
 
     @EventHandler
     public void BlessingDamage(EntityDamageByEntityEvent e) {
@@ -45,34 +49,34 @@ public class MoonEnchant extends Enchantment implements Listener {
                 case 3:
                     e.setDamage(e.getDamage()*2.8);
                     ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience(2);
-                    if ((int)(Math.random()*9)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                    if ((int)(Math.random()*19)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     break;
                 case 4:
                     e.setDamage(e.getDamage()*3.4);
                     for (int i =0; i<2;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience(2);
-                        if ((int)(Math.random()*9)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*15)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     break;
                 case 5:
                     e.setDamage(e.getDamage()*4);
                     for (int i =0; i<2;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*5));
-                        if ((int)(Math.random()*7)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(2));
+                        if ((int)(Math.random()*12)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     break;
                 case 6:
                     e.setDamage(e.getDamage()*4.6);
                     for (int i =0; i<3;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*5));
-                        if ((int)(Math.random()*7)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin((int)(Math.random()*2)+1));
+                        if ((int)(Math.random()*10)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     break;
                 case 7:
                     e.setDamage(e.getDamage()*5.2);
                     for (int i =0; i<4;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*6));
-                        if ((int)(Math.random()*5)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin((int)(Math.random()*2)+2));
+                        if ((int)(Math.random()*8)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     break;
             }
@@ -82,7 +86,7 @@ public class MoonEnchant extends Enchantment implements Listener {
     @EventHandler
     public void LaserSword(PlayerInteractEvent e) {
         if(e.getItem() == null) return;
-        if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getType() == Material.NETHERITE_SWORD && e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) {
+        if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) {
             Player p = e.getPlayer();
 
             int lvl = e.getItem().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()));
@@ -121,6 +125,75 @@ public class MoonEnchant extends Enchantment implements Listener {
                     new MoonLaser(p.getTargetBlock(null,8).getLocation().add(Math.random()*16-8,Math.random()*5,Math.random()*16-8),Color.ORANGE,p,20);
                     break;
             }
+        }
+    }
+
+    @EventHandler
+    public void SinsOfTheMoon(PlayerInteractEvent e) {
+        if (e.getPlayer() == null || e.getItem() == null) return;
+        if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
+            Player p = e.getPlayer();
+            if (!e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) return;
+            if (e.getItem().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey())) != 7) return;
+            if (!sinId.containsKey(p.getUniqueId())) sinId.put(p.getUniqueId(),0);
+            if (!sinCooldown.containsKey(p.getUniqueId())) sinCooldown.put(p.getUniqueId(),true);
+
+            if (p.isSneaking()) switchSin(p);
+            else activateSin(p);
+
+        }
+    }
+
+    private void switchSin(Player p) {
+        int id = sinId.get(p.getUniqueId());
+        id = (id + 1)%7;
+        sinId.replace(p.getUniqueId(),id);
+    }
+
+    private void activateSin(Player p) {
+        int id =sinId.get(p.getUniqueId());
+        switch (id) {
+            case 0:
+                //Sloth
+                p.getWorld().spawnParticle(Particle.SPELL_MOB,p.getLocation(),0,32/255,42/255,51/255,1);
+                for (Entity e : p.getNearbyEntities(5,5,5)) {
+                    if(!(e instanceof Monster)) continue;
+                    ((Monster)e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW,5,5,false,true));
+                    ((Monster)e).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,5,2,false,true));
+                    sinCooldown.replace(p.getUniqueId(),false);
+
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                        sinCooldown.replace(p.getUniqueId(),true);
+                        p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME,SoundCategory.MASTER,1,1);
+                        p.spawnParticle(Particle.REDSTONE,p.getLocation(),10,1,0.5,1,new Particle.DustOptions(Color.YELLOW,1));
+                    },300);
+                }
+
+                break;
+            case 1:
+                //Greed
+                p.sendMessage("greed");
+                break;
+            case 2:
+                //Lust
+                p.sendMessage("lust");
+                break;
+            case 3:
+                //Wrath
+                p.sendMessage("wrath");
+                break;
+            case 4:
+                //Gluttony
+                p.sendMessage("gluttony");
+                break;
+            case 5:
+                //Pride
+                p.sendMessage("pride");
+                break;
+            case 7:
+                //Envy
+                p.sendMessage("envy");
+                break;
         }
     }
 

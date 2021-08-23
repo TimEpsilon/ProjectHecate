@@ -18,21 +18,23 @@ public class Loot implements Listener {
     public void mobDeath(EntityDeathEvent event) {
         LivingEntity e = event.getEntity();
         if (!e.getScoreboardTags().contains("Eclipse")) return;
+        if ((int)(Math.random()*9) != 0) return;
+        //10% de chance de drop
 
-        // [0-2] mcoins par mobs de l'éclipse
-        int n = new Random().nextInt(3);
+        // 1 mcoins par mobs de l'éclipse
+        int n = 1;
 
-        // [5-10] + [0-2] mcoins par semi boss
-        if(e.getScoreboardTags().contains("SemiBoss")) n += new Random().nextInt(6) + 5;
+        // [6-10] + 1 mcoins par semi boss
+        if(e.getScoreboardTags().contains("SemiBoss")) n += new Random().nextInt(7) + 4;
 
-        // [20 - 30] + [0-2] mcoins par boss
+        // [20 - 30] + 1 mcoins par boss
         if(e.getScoreboardTags().contains("Boss")) {
             n += new Random().nextInt(11) + 20;
 
-            // 5 + [20 - 30] + [0-2] mcoins par phantom
+            // 5 + [20 - 30] + 1 mcoins par phantom
             if(e.getCustomName().equals(ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord")) n += 5;
 
-            // 20 + [20 - 30] + [0-2] mcoins par phantom
+            // 20 + [20 - 30] + 1 mcoins par phantom
             if(e.getCustomName().equals(ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"))) n += 20;
         }
 
