@@ -1,6 +1,7 @@
 package com.github.tim91690.commands;
 
 import com.github.tim91690.eclipse.mobs.boss.Boss;
+import com.github.tim91690.eclipse.mobs.boss.NightFairy;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -24,6 +25,7 @@ public class BossList implements CommandExecutor {
                 return false;
             }
             for (Boss boss : bossList) {
+                if (boss instanceof NightFairy) continue;
                 p.sendMessage(ChatColor.YELLOW + "⚔ : " + boss.getEntity().getCustomName()
                         + ChatColor.YELLOW + ", ♥ : " + ChatColor.RED + (int)((LivingEntity)boss.getEntity()).getHealth()
                         + ChatColor.YELLOW + ", ⌚ : "

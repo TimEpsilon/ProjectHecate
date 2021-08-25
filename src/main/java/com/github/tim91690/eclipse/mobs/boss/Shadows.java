@@ -34,27 +34,27 @@ public class Shadows extends Boss {
         ItemMeta meta = shadow.getItemMeta();
         meta.setCustomModelData(1);
         shadow.setItemMeta(meta);
-        ((WitherSkeleton)this.entity).getEquipment().setHelmet(shadow);
-        ((WitherSkeleton)this.entity).getEquipment().setHelmetDropChance(0f);
+        this.entity.getEquipment().setHelmet(shadow);
+        this.entity.getEquipment().setHelmetDropChance(0f);
         meta.setCustomModelData(3);
         shadow.setItemMeta(meta);
-        ((WitherSkeleton)this.entity).getEquipment().setItemInMainHand(shadow);
-        ((WitherSkeleton)this.entity).getEquipment().setItemInMainHandDropChance(0f);
-        ((WitherSkeleton)this.entity).getEquipment().setItemInOffHand(shadow);
-        ((WitherSkeleton)this.entity).getEquipment().setItemInOffHandDropChance(0f);
+        this.entity.getEquipment().setItemInMainHand(shadow);
+        this.entity.getEquipment().setItemInMainHandDropChance(0f);
+        this.entity.getEquipment().setItemInOffHand(shadow);
+        this.entity.getEquipment().setItemInOffHandDropChance(0f);
 
 
         //nom
         this.entity.setCustomName(this.name);
         this.entity.setCustomNameVisible(true);
 
-        ((WitherSkeleton) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,2000000,0,false,false));
-        ((WitherSkeleton) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,false,false));
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,2000000,0,false,false));
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,false,false));
 
-        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
-        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
-        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(15);
-        ((WitherSkeleton) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(5);
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
+        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(15);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(5);
 
         loc.add(0,0.2,0);
 
@@ -135,15 +135,15 @@ public class Shadows extends Boss {
     /** Animation d'attaque : lève les bras en l'air
      */
     private void attackAnimation() {
-        ItemStack arm = ((WitherSkeleton)this.entity).getEquipment().getItemInMainHand();
-        ((WitherSkeleton)this.entity).getEquipment().setItemInMainHand(null);
-        ((WitherSkeleton)this.entity).getEquipment().setItemInOffHand(null);
+        ItemStack arm = this.entity.getEquipment().getItemInMainHand();
+        this.entity.getEquipment().setItemInMainHand(null);
+        this.entity.getEquipment().setItemInOffHand(null);
         this.body.getEquipment().setItemInMainHand(arm);
         this.body.getEquipment().setItemInOffHand(arm);
 
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-            ((WitherSkeleton)this.entity).getEquipment().setItemInMainHand(arm);
-            ((WitherSkeleton)this.entity).getEquipment().setItemInOffHand(arm);
+            this.entity.getEquipment().setItemInMainHand(arm);
+            this.entity.getEquipment().setItemInOffHand(arm);
             this.body.getEquipment().setItemInMainHand(null);
             this.body.getEquipment().setItemInOffHand(null);
         },80);

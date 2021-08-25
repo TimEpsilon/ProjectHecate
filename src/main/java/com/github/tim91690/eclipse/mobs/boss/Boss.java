@@ -13,12 +13,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class Boss {
     protected static final List<Boss> bossList = new ArrayList<>();
-    protected Entity entity;
+    protected LivingEntity entity;
     protected final BossBar bossbar;
     private double maxHealth;
     protected String name;
@@ -31,7 +30,7 @@ public class Boss {
     public Boss(Entity e, int health,String name,BarColor barcolor) {
         this.bossbar = Bukkit.createBossBar(name, barcolor, BarStyle.SOLID, BarFlag.CREATE_FOG,BarFlag.DARKEN_SKY);
         this.maxHealth = health;
-        this.entity = e;
+        this.entity = (LivingEntity) e;
         this.name = name;
 
         //Ne supprime pas l'entité quand trop loin

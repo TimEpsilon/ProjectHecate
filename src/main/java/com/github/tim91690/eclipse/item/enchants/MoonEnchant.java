@@ -43,43 +43,43 @@ public class MoonEnchant extends Enchantment implements Listener {
             int lvl = p.getInventory().getItemInMainHand().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()));
             switch (lvl) {
                 case 1:
-                    e.setDamage(e.getDamage()*1.6);
+                    e.setDamage(e.getDamage()*1.5);
                     break;
                 case 2:
-                    e.setDamage(e.getDamage()*2.2);
+                    e.setDamage(e.getDamage()*2);
                     ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience(1);
                     break;
                 case 3:
-                    e.setDamage(e.getDamage()*2.8);
+                    e.setDamage(e.getDamage()*2.5);
                     ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience(2);
-                    if ((int)(Math.random()*19)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                    if ((int)(Math.random()*50)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     break;
                 case 4:
-                    e.setDamage(e.getDamage()*3.4);
+                    e.setDamage(e.getDamage()*3);
                     for (int i =0; i<2;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience(2);
-                        if ((int)(Math.random()*15)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*48)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     break;
                 case 5:
-                    e.setDamage(e.getDamage()*4);
+                    e.setDamage(e.getDamage()*3.5);
                     for (int i =0; i<2;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*5));
-                        if ((int)(Math.random()*12)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*44)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     break;
                 case 6:
-                    e.setDamage(e.getDamage()*4.6);
+                    e.setDamage(e.getDamage()*4);
                     for (int i =0; i<3;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*5));
-                        if ((int)(Math.random()*10)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*40)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     break;
                 case 7:
-                    e.setDamage(e.getDamage()*5.2);
+                    e.setDamage(e.getDamage()*4.5);
                     for (int i =0; i<4;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*6));
-                        if ((int)(Math.random()*8)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*36)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
                     }
                     passiveSin(p,(LivingEntity)e.getEntity());
                     break;
@@ -216,8 +216,10 @@ public class MoonEnchant extends Enchantment implements Listener {
                 for (Entity e : p.getNearbyEntities(5, 5, 5)) {
                     if (e instanceof LivingEntity && e.getScoreboardTags().contains("Eclipse")) {
                         ExperienceOrb xp = (ExperienceOrb) e.getWorld().spawnEntity(e.getLocation(), EntityType.EXPERIENCE_ORB);
-                        xp.setExperience(20);
-                        xp.setVelocity(new Vector(0,1,0));
+                        for (int i = 0; i<5;i++) {
+                            xp.setExperience(4);
+                            xp.setVelocity(Vector.getRandom());
+                        }
                     }
                 }
                 timer = 1000;
@@ -236,7 +238,7 @@ public class MoonEnchant extends Enchantment implements Listener {
 
             case 3:
                 //Wrath
-                p.getWorld().spawnParticle(Particle.BLOCK_CRACK, p.getLocation(), 150, 2, 2, 2,0,Material.REDSTONE_BLOCK.createBlockData());
+                p.getWorld().spawnParticle(Particle.BLOCK_CRACK, p.getLocation(), 150, 1, 1, 1,0,Material.REDSTONE_BLOCK.createBlockData());
                 p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE,300,1));
                 timer = 1200;
                 sin = Color.RED;
@@ -251,7 +253,7 @@ public class MoonEnchant extends Enchantment implements Listener {
                     ((LivingEntity)e).addPotionEffect(new PotionEffect(PotionEffectType.WITHER,50,2));
                     abslvl += 1;
                 }
-                p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,300,(abslvl/2)));
+                p.setAbsorptionAmount(abslvl);
                 timer = 900;
                 sin = Color.AQUA;
                 break;
@@ -262,7 +264,7 @@ public class MoonEnchant extends Enchantment implements Listener {
                 p.setVelocity(p.getLocation().getDirection().normalize().multiply(3));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED,200,1));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,200,1));
-                timer = 150;
+                timer = 250;
                 sin = Color.ORANGE;
                 break;
 
@@ -324,12 +326,15 @@ public class MoonEnchant extends Enchantment implements Listener {
                 break;
             case 4:
                 //Gluttony
-                if ((int)(Math.random()*5)==0) {
+                if ((int)(Math.random()*7)==0) {
                     e.damage(8);
                     p.addPotionEffect(new PotionEffect(PotionEffectType.HEAL,1,0));
-                    Vector direction = p.getLocation().toVector().add(e.getLocation().toVector().multiply(-1));
-                    for (int i=1; i<6;i++) {
-                        p.getWorld().spawnParticle(Particle.DRAGON_BREATH,e.getLocation().add(direction.multiply(i/5)),50,0.2,0.2,0.2,0);
+                    double length = e.getLocation().add(p.getLocation()).length();
+                    Vector direction = p.getEyeLocation().toVector().add(e.getEyeLocation().toVector().multiply(-1)).multiply(1d/length);
+                    Location loc = e.getLocation().add(0,0.5,0).clone();
+                    for (int i=0; i<e.getLocation().add(p.getLocation()).length();i++) {
+                        p.getWorld().spawnParticle(Particle.DRAGON_BREATH,loc,5,0.2,0.2,0.2,0);
+                        loc.add(direction);
                     }
                 }
                 break;

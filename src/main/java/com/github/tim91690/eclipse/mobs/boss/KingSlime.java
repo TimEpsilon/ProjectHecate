@@ -9,7 +9,6 @@ import org.bukkit.entity.Slime;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.Collection;
 import java.util.List;
 
 public class KingSlime extends Boss {
@@ -27,14 +26,14 @@ public class KingSlime extends Boss {
         this.entity.setCustomName(this.name);
         this.entity.setCustomNameVisible(true);
 
-        ((Slime) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.JUMP,2000000,3));
-        ((Slime) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,2000000,2));
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,2000000,3));
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,2000000,2));
 
-        ((Slime) this.entity).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
-        ((Slime) this.entity).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
-        ((Slime) this.entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(7);
-        ((Slime) this.entity).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(12);
-        ((Slime) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(2);
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
+        this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
+        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(7);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(12);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(2);
     }
 
     @Override

@@ -43,6 +43,7 @@ public class Loot implements Listener {
         if (n==0) return;
 
         e.getLocation().getWorld().dropItem(e.getLocation(), CustomItems.mcoin(n));
+        if ((int)(Math.random()*30) == 0) e.getWorld().dropItem(e.getLocation(),CustomItems.getMobSoul());
         return;
     }
 }

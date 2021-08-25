@@ -29,7 +29,7 @@ public class MoonLaser {
         Location targetLoc = this.laser.getLocation().add(this.owner.getLocation().getDirection().normalize().multiply(20));
         List<Entity> nearby = this.laser.getNearbyEntities(10,10,10);
         for (Entity e : nearby) {
-            if (e instanceof Monster && this.laser.getLocation().distance(e.getLocation()) < this.laser.getLocation().distance(targetLoc)) targetLoc = e.getLocation();
+            if (e instanceof LivingEntity && e.getScoreboardTags().contains("Eclipse") && this.laser.getLocation().distance(e.getLocation()) < this.laser.getLocation().distance(targetLoc)) targetLoc = e.getLocation();
         }
         Location diff = targetLoc.add(this.laser.getLocation().multiply(-1));
         return new Vector(diff.getX(),diff.getY(),diff.getZ()).normalize();

@@ -30,13 +30,13 @@ public class ScarletRabbit extends Boss {
         this.entity.setCustomNameVisible(true);
         this.entity.setGlowing(true);
 
-        ((Rabbit) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.JUMP,2000000,2));
-        ((Rabbit) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0));
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,2000000,2));
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0));
 
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(14);
-        ((Rabbit) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(4);
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
+        this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.5);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(14);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(4);
     }
 
     /** 5 attaques différentes

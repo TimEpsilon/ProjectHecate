@@ -9,7 +9,6 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import java.util.Collection;
 import java.util.List;
 
 public class PhantomOverlord extends Boss {
@@ -26,11 +25,11 @@ public class PhantomOverlord extends Boss {
         this.entity.setCustomName(this.name);
         this.entity.setCustomNameVisible(true);
 
-        ((Phantom) this.entity).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
-        ((Phantom) this.entity).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
-        ((Phantom) this.entity).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(12);
-        ((Phantom) this.entity).getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(3);
-        ((Phantom) this.entity).addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,true,true));
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
+        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(12);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(3);
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,true,true));
     }
 
     @Override
