@@ -1,18 +1,11 @@
 package com.github.tim91690.commands;
 
 import com.github.tim91690.eclipse.events.Meteor;
-import com.github.tim91690.eclipse.mobs.boss.KingSlime;
-import com.github.tim91690.eclipse.mobs.boss.PhantomOverlord;
-import com.github.tim91690.eclipse.mobs.boss.ScarletRabbit;
-import com.github.tim91690.eclipse.mobs.boss.Shadows;
-import org.bukkit.Location;
+import com.github.tim91690.eclipse.mobs.boss.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.util.Vector;
 
 public class StartEclipse implements CommandExecutor {
     @Override
@@ -34,6 +27,10 @@ public class StartEclipse implements CommandExecutor {
                     break;
                 case "meteor":
                     new Meteor(p.getLocation());
+                    break;
+                case "bee":
+                    new QueenBee(p.getLocation());
+                    break;
             }
 
             return true;

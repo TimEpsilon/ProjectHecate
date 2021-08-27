@@ -15,11 +15,16 @@ import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.loot.LootContext;
+import org.bukkit.loot.LootTable;
+import org.bukkit.loot.LootTables;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.UUID;
 
 public class MoonEnchant extends Enchantment implements Listener {
@@ -302,8 +307,13 @@ public class MoonEnchant extends Enchantment implements Listener {
                 break;
             case 1:
                 //Greed
-                if ((int)(Math.random()*12)==0) {
-                    e.getWorld().dropItem(e.getLocation(), CustomItems.mcoin(1));
+                if ((int)(Math.random()*5)==0) {
+                    LootTable loot = LootTables.SHIPWRECK_TREASURE.getLootTable();
+                    LootContext.Builder contextBuilder = new LootContext.Builder(p.getLocation());
+                    LootContext context = contextBuilder.build();
+                    List<ItemStack> drop = (List<ItemStack>) loot.populateLoot(new Random(), context);
+                    drop.get(0).setAmount(1);
+                    e.getWorld().dropItem(e.getLocation(), drop.get(0));
                     p.getWorld().spawnParticle(Particle.TOTEM,e.getLocation(),60,1,1.5,1);
                     p.playSound(p.getLocation(),Sound.ITEM_TOTEM_USE,SoundCategory.MASTER,1,2);
                 }
@@ -333,7 +343,7 @@ public class MoonEnchant extends Enchantment implements Listener {
                     Vector direction = p.getEyeLocation().toVector().add(e.getEyeLocation().toVector().multiply(-1)).multiply(1d/length);
                     Location loc = e.getLocation().add(0,0.5,0).clone();
                     for (int i=0; i<e.getLocation().add(p.getLocation()).length();i++) {
-                        p.getWorld().spawnParticle(Particle.DRAGON_BREATH,loc,5,0.2,0.2,0.2,0);
+                        p.getWorld().spawnParticle(Particle.DRAGON_BREATH,loc,2,0.2,0.2,0.2,0);
                         loc.add(direction);
                     }
                 }
