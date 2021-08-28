@@ -1,10 +1,10 @@
 package com.github.tim91690.eclipse.mobs;
 
 import com.github.tim91690.eclipse.misc.WeightCollection;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.minecraft.world.entity.EntityTypes;
 import net.minecraft.world.entity.monster.EntitySkeleton;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -67,7 +67,7 @@ public class SkeletonSniper extends EntitySkeleton {
         //team
         if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
             scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-            scarlet.setColor(ChatColor.DARK_RED);
+            scarlet.color(NamedTextColor.DARK_RED);
         }
         else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
         scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());

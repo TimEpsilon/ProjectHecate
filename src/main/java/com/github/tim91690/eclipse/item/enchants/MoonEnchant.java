@@ -2,10 +2,9 @@ package com.github.tim91690.eclipse.item.enchants;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.item.CustomItems;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.TextComponent;
+import io.papermc.paper.enchantments.EnchantmentRarity;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
-import org.bukkit.Color;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.*;
@@ -14,6 +13,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
@@ -21,20 +21,18 @@ import org.bukkit.loot.LootTables;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-import java.util.UUID;
+import java.util.*;
 
 public class MoonEnchant extends Enchantment implements Listener {
     public MoonEnchant() {
         super(new NamespacedKey(EventManager.getPlugin(),"moon_blessing"));
     }
 
-    private HashMap<UUID, Boolean> playerList = new HashMap<>();
-    private HashMap<UUID,Integer> sinId = new HashMap<>();
-    private HashMap<UUID, HashMap<Integer, Long>> sinCooldown = new HashMap<>();
+    private final HashMap<UUID, Boolean> playerList = new HashMap<>();
+    private final HashMap<UUID,Integer> sinId = new HashMap<>();
+    private final HashMap<UUID, HashMap<Integer, Long>> sinCooldown = new HashMap<>();
 
     @EventHandler
     public void BlessingDamage(EntityDamageByEntityEvent e) {
@@ -140,7 +138,7 @@ public class MoonEnchant extends Enchantment implements Listener {
 
     @EventHandler
     public void SinsOfTheMoon(PlayerInteractEvent e) {
-        if (e.getPlayer() == null || e.getItem() == null) return;
+        if (e.getItem() == null) return;
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = e.getPlayer();
             if (!e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) return;
@@ -159,31 +157,31 @@ public class MoonEnchant extends Enchantment implements Listener {
         switch (id) {
             case 0:
                 //Sloth
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.YELLOW + "" + ChatColor.BOLD + "Sloth"));
+                p.sendActionBar(Component.text(ChatColor.YELLOW + "" + ChatColor.BOLD + "Sloth"));
                 break;
             case 1:
                 //Greed
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Greed"));
+                p.sendActionBar(Component.text(ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Greed"));
                 break;
             case 2:
                 //Lust
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Lust"));
+                p.sendActionBar(Component.text(ChatColor.DARK_PURPLE + "" + ChatColor.BOLD + "Lust"));
                 break;
             case 3:
                 //Wrath
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Wrath"));
+                p.sendActionBar(Component.text(ChatColor.DARK_RED + "" + ChatColor.BOLD + "Wrath"));
                 break;
             case 4:
                 //Gluttony
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.BLUE + "" + ChatColor.BOLD + "Gluttony"));
+                p.sendActionBar(Component.text(ChatColor.BLUE + "" + ChatColor.BOLD + "Gluttony"));
                 break;
             case 5:
                 //Pride
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GOLD + "" + ChatColor.BOLD + "Pride"));
+                p.sendActionBar(Component.text(ChatColor.GOLD + "" + ChatColor.BOLD + "Pride"));
                 break;
             case 6:
                 //Envy
-                p.spigot().sendMessage(ChatMessageType.ACTION_BAR, TextComponent.fromLegacyText(ChatColor.GREEN + "" + ChatColor.BOLD + "Envy"));
+                p.sendActionBar(Component.text(ChatColor.GREEN + "" + ChatColor.BOLD + "Envy"));
                 break;
         }
         sinId.replace(p.getUniqueId(),id);
@@ -439,7 +437,7 @@ public class MoonEnchant extends Enchantment implements Listener {
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "Moon's Blessing";
     }
 
@@ -454,8 +452,8 @@ public class MoonEnchant extends Enchantment implements Listener {
     }
 
     @Override
-    public EnchantmentTarget getItemTarget() {
-        return null;
+    public @NotNull EnchantmentTarget getItemTarget() {
+        return EnchantmentTarget.WEAPON;
     }
 
     @Override
@@ -469,12 +467,47 @@ public class MoonEnchant extends Enchantment implements Listener {
     }
 
     @Override
-    public boolean conflictsWith(Enchantment other) {
+    public boolean conflictsWith(@NotNull Enchantment other) {
         return true;
     }
 
     @Override
-    public boolean canEnchantItem(ItemStack item) {
+    public boolean canEnchantItem(@NotNull ItemStack item) {
         return true;
+    }
+
+    @Override
+    public @NotNull Component displayName(int level) {
+        return Component.text("Moon's Blessing");
+    }
+
+    @Override
+    public boolean isTradeable() {
+        return false;
+    }
+
+    @Override
+    public boolean isDiscoverable() {
+        return false;
+    }
+
+    @Override
+    public @NotNull EnchantmentRarity getRarity() {
+        return EnchantmentRarity.VERY_RARE;
+    }
+
+    @Override
+    public float getDamageIncrease(int level, @NotNull EntityCategory entityCategory) {
+        return 0;
+    }
+
+    @Override
+    public @NotNull Set<EquipmentSlot> getActiveSlots() {
+        return null;
+    }
+
+    @Override
+    public @NotNull String translationKey() {
+        return null;
     }
 }

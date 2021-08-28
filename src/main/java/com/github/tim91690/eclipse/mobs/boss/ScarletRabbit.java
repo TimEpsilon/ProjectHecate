@@ -2,6 +2,7 @@ package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.misc.WeightCollection;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -20,7 +21,7 @@ public class ScarletRabbit extends Boss {
 
         super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"), BarColor.RED);
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
+        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">")));
 
        //killer bunny
         ((Rabbit) this.entity).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);

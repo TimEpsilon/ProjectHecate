@@ -15,14 +15,14 @@ public class EnchantRegister {
     public static void register() {
         boolean registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(MOON_BLESSING);
 
-        if(!registered) registerEnchantment(MOON_BLESSING);
+        if(!registered) registerEnchantment();
     }
 
     public static void unregister() {
-        unregisterEnchantment(MOON_BLESSING);
+        unregisterEnchantment();
     }
 
-    private static void unregisterEnchantment(Enchantment enchantment) {
+    private static void unregisterEnchantment() {
         try {
             Field keyField = Enchantment.class.getDeclaredField("byKey");
 
@@ -30,8 +30,8 @@ public class EnchantRegister {
             @SuppressWarnings("unchecked")
             HashMap<NamespacedKey, Enchantment> byKey = (HashMap<NamespacedKey, Enchantment>) keyField.get(null);
 
-            if(byKey.containsKey(enchantment.getKey())) {
-                byKey.remove(enchantment.getKey());
+            if(byKey.containsKey(EnchantRegister.MOON_BLESSING.getKey())) {
+                byKey.remove(EnchantRegister.MOON_BLESSING.getKey());
             }
 
             Field nameField = Enchantment.class.getDeclaredField("byName");
@@ -40,19 +40,19 @@ public class EnchantRegister {
             @SuppressWarnings("unchecked")
             HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) nameField.get(null);
 
-            if(byName.containsKey(enchantment.getName())) {
-                byName.remove(enchantment.getName());
+            if(byName.containsKey(EnchantRegister.MOON_BLESSING.getName())) {
+                byName.remove(EnchantRegister.MOON_BLESSING.getName());
             }
         } catch (Exception ignored) { }
     }
 
-    private static void registerEnchantment(Enchantment enchantment) {
+    private static void registerEnchantment() {
         boolean registered = true;
         try {
             Field f = Enchantment.class.getDeclaredField("acceptingNew");
             f.setAccessible(true);
             f.set(null,true);
-            Enchantment.registerEnchantment(enchantment);
+            Enchantment.registerEnchantment(EnchantRegister.MOON_BLESSING);
         } catch (Exception e) {
             registered = false;
             e.printStackTrace();

@@ -1,9 +1,9 @@
 package com.github.tim91690.eclipse.item;
 
 import com.github.tim91690.eclipse.item.enchants.EnchantRegister;
+import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
-import org.bukkit.attribute.Attribute;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,7 +17,7 @@ public class CustomItems {
     public static ItemStack mcoin(int n) {
         ItemStack mcoin = new ItemStack(Material.EMERALD,n);
         ItemMeta Mmeta = mcoin.getItemMeta();
-        Mmeta.setDisplayName(ChatColor.AQUA + "" + ChatColor.BOLD + "M-Coin");
+        Mmeta.displayName(Component.text(ChatColor.AQUA + "" + ChatColor.BOLD + "M-Coin"));
         Mmeta.setCustomModelData(42);
         mcoin.setItemMeta(Mmeta);
         return mcoin;
@@ -27,13 +27,13 @@ public class CustomItems {
         ItemStack soul = new ItemStack(Material.GUNPOWDER);
         ItemMeta meta = soul.getItemMeta();
         meta.setCustomModelData(1);
-        meta.setDisplayName(ChatColor.AQUA+"Moon Soul");
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.LIGHT_PURPLE+ "Âme d'une créature de la nuit");
-        lore.add(ChatColor.LIGHT_PURPLE+ "L'éclipse leur permet de prendre forme");
-        lore.add(ChatColor.GRAY +""+ ChatColor.ITALIC+"Infusez une épée en netherite avec 8 âmes");
-        lore.add(ChatColor.GRAY +""+ ChatColor.ITALIC+"pour obtenir un métal tranchant");
-        meta.setLore(lore);
+        meta.displayName(Component.text(ChatColor.AQUA+"Moon Soul"));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(ChatColor.LIGHT_PURPLE+ "Âme d'une créature de la nuit"));
+        lore.add(Component.text(ChatColor.LIGHT_PURPLE+ "L'éclipse leur permet de prendre forme"));
+        lore.add(Component.text(ChatColor.GRAY +""+ ChatColor.ITALIC+"Infusez une épée en netherite avec 8 âmes"));
+        lore.add(Component.text(ChatColor.GRAY +""+ ChatColor.ITALIC+"pour obtenir un métal tranchant"));
+        meta.lore(lore);
         soul.setItemMeta(meta);
         return soul;
     }
@@ -41,13 +41,13 @@ public class CustomItems {
     public static ItemStack getMoonBlade() {
         ItemStack blade = new ItemStack(Material.NETHERITE_SWORD);
         ItemMeta meta = blade.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA + "Moon Blade");
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.LIGHT_PURPLE +"Une épée forgée à partir de roches lunaires");
-        lore.add(ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit");
-        lore.add(ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en");
-        lore.add(ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant");
-        meta.setLore(lore);
+        meta.displayName(Component.text(ChatColor.AQUA + "Moon Blade"));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(ChatColor.LIGHT_PURPLE +"Une épée forgée à partir de roches lunaires"));
+        lore.add(Component.text(ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit"));
+        lore.add(Component.text(ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en"));
+        lore.add(Component.text(ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant"));
+        meta.lore(lore);
         meta.setCustomModelData(1);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
@@ -58,15 +58,15 @@ public class CustomItems {
     public static ItemStack getUltimateMoonBlade() {
         ItemStack blade = new ItemStack(Material.NETHERITE_SWORD);
         ItemMeta meta = blade.getItemMeta();
-        meta.setDisplayName(ChatColor.AQUA+"True Moon Blade");
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.LIGHT_PURPLE +"La forme finale de la lame la Lune");
-        lore.add(ChatColor.LIGHT_PURPLE +"Infusée par les 7 péchés capitaux");
-        lore.add(ChatColor.GREEN+""+ChatColor.ITALIC+"Clic droit pour invoquer un péché");
-        lore.add(ChatColor.GREEN+""+ChatColor.ITALIC+"Shift + clic droit pour changer de péché");
-        lore.add("");
-        lore.add(ChatColor.GRAY+"Sins of the Moon I");
-        meta.setLore(lore);
+        meta.displayName(Component.text(ChatColor.AQUA+"True Moon Blade"));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(ChatColor.LIGHT_PURPLE +"La forme finale de la lame la Lune"));
+        lore.add(Component.text(ChatColor.LIGHT_PURPLE +"Infusée par les 7 péchés capitaux"));
+        lore.add(Component.text(ChatColor.GREEN+""+ChatColor.ITALIC+"Clic droit pour invoquer un péché"));
+        lore.add(Component.text(ChatColor.GREEN+""+ChatColor.ITALIC+"Shift + clic droit pour changer de péché"));
+        lore.add(Component.text(""));
+        lore.add(Component.text(ChatColor.GRAY+"Sins of the Moon I"));
+        meta.lore(lore);
         meta.setUnbreakable(true);
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.setCustomModelData(8);
@@ -107,11 +107,11 @@ public class CustomItems {
         ItemStack soul = new ItemStack(material);
         ItemMeta meta = soul.getItemMeta();
         meta.setCustomModelData(1);
-        meta.setDisplayName(name);
-        List<String> lore = new ArrayList<>();
-        lore.add(ChatColor.LIGHT_PURPLE+lore1);
-        lore.add(ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Moon Blade");
-        meta.setLore(lore);
+        meta.displayName(Component.text(name));
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text(ChatColor.LIGHT_PURPLE+lore1));
+        lore.add(Component.text(ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Moon Blade"));
+        meta.lore(lore);
         soul.setItemMeta(meta);
         return soul;
     }

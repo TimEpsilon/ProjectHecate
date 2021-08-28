@@ -2,13 +2,10 @@ package com.github.tim91690.eclipse.listeners;
 
 import com.github.tim91690.eclipse.item.CustomItems;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.Random;
 
@@ -38,12 +35,7 @@ public class Loot implements Listener {
             if(e.getCustomName().equals(ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"))) n += 20;
         }
 
-
-
-        if (n==0) return;
-
         e.getLocation().getWorld().dropItem(e.getLocation(), CustomItems.mcoin(n));
         if ((int)(Math.random()*30) == 0) e.getWorld().dropItem(e.getLocation(),CustomItems.getMobSoul());
-        return;
     }
 }

@@ -37,13 +37,11 @@ public class MoonLaser {
 
     private void summon(int delay) {
         if (delay == 0) return;
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-            this.laser.getWorld().spawnParticle(Particle.REDSTONE,this.laser.getLocation(),20,0.3,0.3,0.3,0,new Particle.DustOptions(this.color,2),true);
-        },0,1).getTaskId();
+        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> this.laser.getWorld().spawnParticle(Particle.REDSTONE,this.laser.getLocation(),
+                20,0.3,0.3,0.3,0,new Particle.DustOptions(this.color,2),true),0,1)
+                .getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-            Bukkit.getScheduler().cancelTask(task);
-        },delay);
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> Bukkit.getScheduler().cancelTask(task),delay);
     }
 
     private void damageTick(int delay) {

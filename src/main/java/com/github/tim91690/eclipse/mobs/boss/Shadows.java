@@ -2,6 +2,7 @@ package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.misc.WeightCollection;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -27,7 +28,7 @@ public class Shadows extends Boss {
 
         super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,ChatColor.translateAlternateColorCodes('&',"&8&lShadow"), BarColor.WHITE);
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
+        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">")));
 
        //shadow appearance
         ItemStack shadow = new ItemStack(Material.NETHERITE_HOE);
@@ -178,9 +179,7 @@ public class Shadows extends Boss {
                     p.sendTitle(ChatColor.DARK_GRAY+rc.next(),"",5,80,0);
 
                     //Fake message
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                        p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[(new Random()).nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next());
-                    },60);
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[(new Random()).nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next()),60);
                 },40);
             }
         }
@@ -218,8 +217,8 @@ public class Shadows extends Boss {
      */
     private void shadowTeleport() {
         //Rend invulnérable le temps de la téléportation
-        ((LivingEntity)this.entity).setAI(false);
-        ((LivingEntity)this.entity).addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,40,100));
+        this.entity.setAI(false);
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,40,100));
 
         //3 localisations random + localisation actuelle
         List<Location> randomLoc = new ArrayList<>();
@@ -263,8 +262,8 @@ public class Shadows extends Boss {
      */
     private void shadowClone() {
         //Invulnérable le temps du clonage
-        ((LivingEntity)this.entity).setAI(false);
-        ((LivingEntity)this.entity).addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,40,100));
+        this.entity.setAI(false);
+        this.entity.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,40,100));
 
         //4 Localisations random + localisation actuelle
         List<Location> randomLoc = new ArrayList<>();
@@ -298,11 +297,11 @@ public class Shadows extends Boss {
             ((LivingEntity)this.getEntity()).setAI(true);
             Bukkit.getScheduler().cancelTask(task);
 
-            ArrayList<Integer> tasks = new ArrayList<Integer>();
+            ArrayList<Integer> tasks = new ArrayList<>();
             for (int i = 1;i<5;i++) {
                 WitherSkeleton clone = (WitherSkeleton) randomLoc.get(i).getWorld().spawnEntity(randomLoc.get(i),EntityType.WITHER_SKELETON);
 
-                clone.getEquipment().setHelmet(((LivingEntity) this.entity).getEquipment().getHelmet());
+                clone.getEquipment().setHelmet(this.entity.getEquipment().getHelmet());
                 clone.getEquipment().setHelmetDropChance(0);
                 clone.getEquipment().setItemInMainHand(null);
 
@@ -335,16 +334,16 @@ public class Shadows extends Boss {
     /** Invoque une witherwave de façon circulaire
      */
     private void witherWave(List<Player> proxPlayer) {
-        Boolean player = false;
+        boolean player = false;
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 10) player = true;
         }
         if (player) {
             this.entity.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.entity.getLocation(),100,1,0,1);
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                for (int i = 0;i<24;i++) {
+                for (float i = 0;i<24;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
-                    loc.setYaw(i*360/20-90);
+                    loc.setYaw(i*360f/20f-90f);
                     loc.setPitch(0);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
                     skull.setDirection(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)).multiply(0.1));
@@ -356,7 +355,7 @@ public class Shadows extends Boss {
     /** Invoque 3 witherwaves de façon circulaire
      */
     private void strongWitherWave(List<Player> proxPlayer) {
-        Boolean player = false;
+        boolean player = false;
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 15) player = true;
         }
@@ -364,9 +363,9 @@ public class Shadows extends Boss {
             this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),200,2,0,2);
 
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                for (int i = 0;i<24;i++) {
+                for (float i = 0;i<24;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
-                    loc.setYaw(i*360/20-90);
+                    loc.setYaw(i*360f/20f-90f);
                     loc.setPitch(0);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
                     skull.setDirection(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)).multiply(0.2));
@@ -375,9 +374,9 @@ public class Shadows extends Boss {
             },40);
 
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                for (int i = 0;i<26;i++) {
+                for (float i = 0;i<26;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
-                    loc.setYaw(i*360/20-90);
+                    loc.setYaw(i*360f/20f-90f);
                     loc.setPitch(0);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
                     skull.setDirection(new Vector(Math.cos(i * 2 * Math.PI / 26), 0d, Math.sin(i * 2 * Math.PI / 26)));
@@ -386,9 +385,9 @@ public class Shadows extends Boss {
             },60);
 
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                for (int i = 0;i<20;i++) {
+                for (float i = 0;i<20;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
-                    loc.setYaw(i*360/20-90);
+                    loc.setYaw(i*360f/20f-90f);
                     loc.setPitch(0);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
                     skull.setDirection(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.1));
@@ -401,7 +400,7 @@ public class Shadows extends Boss {
     /** Invoque des âmes
      */
     private void soulSummon(List<Player> proxPlayer) {
-        Boolean prox = false;
+        boolean prox = false;
         for (Player p : proxPlayer) {
             if (this.entity.getLocation().distance(p.getLocation()) <= 15) {
                 prox = true;
@@ -433,9 +432,7 @@ public class Shadows extends Boss {
                             },0,1).getTaskId()
                     );
 
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                        vex.setHealth(0);
-                    },200);
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> vex.setHealth(0),200);
                 }
             },60);
         }
@@ -445,7 +442,7 @@ public class Shadows extends Boss {
      *
      */
     private void tormentedSoulSummon(List<Player> proxPlayer) {
-        Boolean prox = false;
+        boolean prox = false;
         for (Player p : proxPlayer) {
             if (this.entity.getLocation().distance(p.getLocation()) <= 20) {
                 prox = true;

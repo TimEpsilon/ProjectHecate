@@ -1,7 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
+import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
@@ -19,7 +19,7 @@ public class Boss {
     protected static final List<Boss> bossList = new ArrayList<>();
     protected LivingEntity entity;
     protected final BossBar bossbar;
-    private double maxHealth;
+    private final double maxHealth;
     protected String name;
 
     /**Classe Boss
@@ -35,7 +35,7 @@ public class Boss {
 
         //Ne supprime pas l'entité quand trop loin
         this.entity.setPersistent(true);
-        ((LivingEntity)this.entity).setRemoveWhenFarAway(false);
+        this.entity.setRemoveWhenFarAway(false);
 
         this.entity.addScoreboardTag("Eclipse");
         this.entity.addScoreboardTag("Boss");
@@ -44,18 +44,18 @@ public class Boss {
         //team
         if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
             scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-            scarlet.setColor(ChatColor.DARK_RED);
+            scarlet.color(NamedTextColor.DARK_RED);
         }
         else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
         scarlet.addEntry(this.getEntity().getUniqueId().toString());
 
         //vie
-        ((LivingEntity) this.entity).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
-        ((LivingEntity) this.entity).setHealth(health);
+        this.entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
+        this.entity.setHealth(health);
 
         bossList.add(this);
 
-        this.bossbar.setProgress(((LivingEntity) this.entity).getHealth() / health);
+        this.bossbar.setProgress(this.entity.getHealth() / health);
     }
 
     //retire le boss de la liste et supprime sa bossbar

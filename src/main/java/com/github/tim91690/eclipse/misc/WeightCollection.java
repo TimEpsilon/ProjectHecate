@@ -9,7 +9,7 @@ import java.util.TreeMap;
  * j'aurais pas pu écrire quelque chose de mieux
  */
 public class WeightCollection<E> {
-    private final NavigableMap<Double,E> map = new TreeMap<Double,E>();
+    private final NavigableMap<Double,E> map = new TreeMap<>();
     private final Random random;
     private double total = 0;
 

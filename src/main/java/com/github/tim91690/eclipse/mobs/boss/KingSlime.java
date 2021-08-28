@@ -1,5 +1,6 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -17,7 +18,7 @@ public class KingSlime extends Boss {
 
         super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime"), BarColor.GREEN);
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUn &2&lKing Slime &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
+        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
 
         //au dessus, frapper le mob est difficile
         ((Slime) this.entity).setSize(15);

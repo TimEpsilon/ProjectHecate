@@ -1,6 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.eclipse.mobs.SkeletonSniper;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -16,7 +17,7 @@ public class PhantomOverlord extends Boss {
     public PhantomOverlord(Location loc) {
         super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord", BarColor.BLUE);
 
-        Bukkit.broadcastMessage(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">"));
+        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">")));
 
         //au dessus, frapper le mob est difficile
         ((Phantom) this.entity).setSize(64);
