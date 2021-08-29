@@ -2,7 +2,7 @@ package com.github.tim91690.eclipse.listeners;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.item.enchants.MoonEnchant;
-import com.github.tim91690.eclipse.misc.CustomBossBar;
+import com.github.tim91690.eclipse.mobs.boss.CustomBossBar;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 

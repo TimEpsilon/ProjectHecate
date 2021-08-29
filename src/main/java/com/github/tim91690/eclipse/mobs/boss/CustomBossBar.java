@@ -1,7 +1,6 @@
-package com.github.tim91690.eclipse.misc;
+package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.eclipse.mobs.boss.Boss;
 import org.bukkit.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;

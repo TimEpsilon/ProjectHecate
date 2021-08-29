@@ -7,3 +7,6 @@ commands:
   eclipse:
   bosslocation:
   moonblade:
+
+softdepend:
+  - FastAsyncWorldEdit

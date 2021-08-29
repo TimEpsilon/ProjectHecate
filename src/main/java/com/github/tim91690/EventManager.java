@@ -6,6 +6,7 @@ import com.github.tim91690.commands.StartEclipse;
 import com.github.tim91690.eclipse.item.CustomCraft;
 import com.github.tim91690.eclipse.item.enchants.EnchantRegister;
 import com.github.tim91690.eclipse.listeners.ListenerManager;
+import com.github.tim91690.eclipse.misc.ConfigManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 public final class EventManager extends JavaPlugin {
@@ -18,6 +19,7 @@ public final class EventManager extends JavaPlugin {
         EnchantRegister.register();
         ListenerManager.registerEvents(this);
         new CustomCraft();
+        ConfigManager.loadResource();
 
     }
 

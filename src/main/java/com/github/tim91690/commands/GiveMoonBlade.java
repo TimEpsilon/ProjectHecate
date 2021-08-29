@@ -32,6 +32,7 @@ public class GiveMoonBlade implements CommandExecutor {
             if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless5"))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless5"));
             if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless6"))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless6"));
             if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless7"))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless7"));
+            p.sendMessage(p.getWorld().toString());
             return true;
         }
         return false;
