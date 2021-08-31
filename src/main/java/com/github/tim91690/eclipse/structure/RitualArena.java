@@ -22,10 +22,7 @@ import java.io.*;
 public class RitualArena {
 
     public static void spawnRitualArena(boolean future) {
-        int[] coord = ConfigManager.getCoord();
-        World overworld = null;
-        for (World world : Bukkit.getWorlds()) if(world.getEnvironment().compareTo(World.Environment.NORMAL) == 0) overworld = world;
-        Location loc = new Location(overworld,coord[0],coord[1]-7,coord[2]);
+        Location loc = ConfigManager.getLoc();
 
         if (!future) {
             pasteSchematic("ritual_past.schem",loc);

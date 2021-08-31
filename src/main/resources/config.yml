@@ -1,5 +1,6 @@
 #Coordonnées de l'altar de l'arène pour le combat final
+#l'altar se situe 6 blocs sous la surface
 RitualLocation:
-  x: 354
-  y: 80
-  z: 126
+  x: 0
+  y: 100
+  z: 0
