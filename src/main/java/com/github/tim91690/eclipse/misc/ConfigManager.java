@@ -42,6 +42,6 @@ public class ConfigManager {
             loc = new Location(overworld,coord[0],coord[1],coord[2]);
             Bukkit.broadcast(Component.text("loc"));
         }
-        return loc;
+        return loc.clone();
     }
 }

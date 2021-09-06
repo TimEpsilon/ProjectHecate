@@ -1,7 +1,9 @@
 package com.github.tim91690.commands;
 
 import com.github.tim91690.eclipse.events.Meteor;
+import com.github.tim91690.eclipse.events.MoonRitual;
 import com.github.tim91690.eclipse.misc.ConfigManager;
+import com.github.tim91690.eclipse.misc.MagicCircle;
 import com.github.tim91690.eclipse.mobs.boss.*;
 import com.github.tim91690.eclipse.structure.RitualArena;
 import net.kyori.adventure.text.Component;
@@ -45,6 +47,11 @@ public class StartEclipse implements CommandExecutor {
                 case "distance":
                     Bukkit.broadcast(Component.text(ConfigManager.getLoc().distance(p.getLocation())));
                     break;
+                case "fire":
+                    new MoonRitual(ConfigManager.getLoc());
+                    break;
+                case "magic":
+                    MagicCircle.inCircle(ConfigManager.getLoc().add(0.5,1,0.5),2);
             }
 
             return true;
