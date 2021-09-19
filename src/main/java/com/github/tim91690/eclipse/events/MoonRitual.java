@@ -4,20 +4,18 @@ import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.misc.Laser;
 import com.github.tim91690.eclipse.misc.MagicCircle;
 import com.github.tim91690.eclipse.structure.RitualArena;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoonRitual {
 
-    private List<Integer> tasks;
+    private final List<Integer> tasks;
 
     public MoonRitual(Location loc) {
         this.tasks = new ArrayList<>();
@@ -73,23 +71,23 @@ public class MoonRitual {
                     }
                     laser.start(EventManager.getPlugin());
                     Laser finalLaser = laser;
-                    laser.moveEnd(loc.clone().add(0.5,32,0.5),200,()->{
-                        finalLaser.stop();});
+                    laser.moveEnd(loc.clone().add(0.5,32,0.5),200, finalLaser::stop);
                     laser2.start(EventManager.getPlugin());
                     Laser finalLaser1 = laser2;
-                    laser2.moveEnd(loc.clone().add(0.5,32,0.5),200,()->{
-                        finalLaser1.stop();});
+                    laser2.moveEnd(loc.clone().add(0.5,32,0.5),200, finalLaser1::stop);
                 }
             }
         },450);
 
-        final int[] rot = {0};
+        final float[] rot = {0};
         tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
-            Location center = loc.clone().add(0.5,1.5,0.5);
+            Location center = loc.clone().add(0.5,1.1,0.5);
             center.setYaw(rot[0]);
             MagicCircle.inCircle(center,2);
-            rot[0] = rot[0] + 3;
-        },450,4).getTaskId());
+            center.setYaw(-rot[0]);
+            MagicCircle.outCircle(center,6);
+            rot[0] = rot[0] + 0.8f;
+        },450,2).getTaskId());
 
         //Map change, boss spawn
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
@@ -97,6 +95,7 @@ public class MoonRitual {
             RitualArena.spawnRitualArena(true);
             loc.getWorld().playSound(loc,Sound.ENTITY_WITHER_SPAWN,SoundCategory.HOSTILE,30,0);
             Bukkit.getScheduler().cancelTask(tasks.get(1));
+            Bukkit.getScheduler().cancelTask(tasks.get(2));
 
             for (Player p : Bukkit.getOnlinePlayers()) {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,0));

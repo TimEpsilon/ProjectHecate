@@ -16,7 +16,7 @@ public class KingSlime extends Boss {
 
     public KingSlime(Location loc) {
 
-        super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime"), BarColor.GREEN);
+        super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime"), BarColor.YELLOW);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
 
