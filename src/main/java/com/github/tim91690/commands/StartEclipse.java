@@ -4,6 +4,7 @@ import com.github.tim91690.eclipse.events.Meteor;
 import com.github.tim91690.eclipse.events.MoonRitual;
 import com.github.tim91690.eclipse.misc.ConfigManager;
 import com.github.tim91690.eclipse.misc.MagicCircle;
+import com.github.tim91690.eclipse.mobs.ZombieTank;
 import com.github.tim91690.eclipse.mobs.boss.*;
 import com.github.tim91690.eclipse.structure.RitualArena;
 import net.kyori.adventure.text.Component;
@@ -11,7 +12,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class StartEclipse implements CommandExecutor {
@@ -52,6 +55,10 @@ public class StartEclipse implements CommandExecutor {
                     break;
                 case "magic":
                     MagicCircle.inCircle(ConfigManager.getLoc().add(0.5,1,0.5),2);
+                    break;
+                case "demiurge":
+                    Demiurge d = new Demiurge(p.getLocation());
+                    ((CraftWorld)p.getWorld()).addEntity(d, CreatureSpawnEvent.SpawnReason.NATURAL);
             }
 
             return true;
