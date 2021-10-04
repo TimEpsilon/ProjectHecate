@@ -20,5 +20,6 @@ public class ListenerManager {
         pm.registerEvents(new OnJoin(),plugin);
         pm.registerEvents(new MoonEnchant(),plugin);
         pm.registerEvents(new BlockProtection(),plugin);
+        pm.registerEvents(new SlimeSplit(),plugin);
     }
 }

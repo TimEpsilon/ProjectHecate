@@ -57,8 +57,7 @@ public class StartEclipse implements CommandExecutor {
                     MagicCircle.inCircle(ConfigManager.getLoc().add(0.5,1,0.5),2);
                     break;
                 case "demiurge":
-                    Demiurge d = new Demiurge(p.getLocation());
-                    ((CraftWorld)p.getWorld()).addEntity(d, CreatureSpawnEvent.SpawnReason.NATURAL);
+                    new Demiurge(p.getLocation());
             }
 
             return true;
