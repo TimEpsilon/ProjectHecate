@@ -232,6 +232,7 @@ public class Demiurge extends Boss {
     private void attackWither(List<Player> proxplayer) {
         switch (this.phase) {
             case 2:
+
             case 1:
                 Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> {
                     double yaw = Math.random()*2*Math.PI;
