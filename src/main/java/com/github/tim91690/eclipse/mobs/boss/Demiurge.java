@@ -234,12 +234,13 @@ public class Demiurge extends Boss {
             case 2:
             case 1:
                 Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> {
-                    EulerAngle angle = new EulerAngle(Math.random()*360,Math.random()*360,Math.random()*360);
-                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(angle.getX()), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
-                    loc.setYaw(i*360f/20f-90f);
-                    loc.setPitch(0);
+                    double yaw = Math.random()*2*Math.PI;
+                    double pitch = -Math.random()*Math.PI;
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(yaw), Math.cos(pitch), Math.sin(yaw)).multiply(0.2));
+                    loc.setYaw((float)yaw);
+                    loc.setPitch((float)pitch);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
-                    skull.setDirection(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)).multiply(0.1));
+                    skull.setDirection(new Vector(Math.cos(yaw),Math.cos(pitch),Math.sin(yaw)).multiply(0.2));
                 },0,2);
         }
     }
