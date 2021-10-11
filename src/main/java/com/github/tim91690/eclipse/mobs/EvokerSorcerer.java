@@ -20,7 +20,7 @@ public class EvokerSorcerer extends EntityEvoker {
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
         ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
 
-        this.setHealth(40);
+        this.setHealth(60);
 
         ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
 

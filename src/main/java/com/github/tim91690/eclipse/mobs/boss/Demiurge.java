@@ -3,20 +3,28 @@ package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.misc.WeightCollection;
+import com.github.tim91690.eclipse.mobs.*;
+import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlord;
+import com.github.tim91690.eclipse.mobs.semiboss.IllusionerMage;
+import com.github.tim91690.eclipse.mobs.semiboss.PhantomFurries;
+import com.github.tim91690.eclipse.mobs.semiboss.RavagerBeast;
 import net.kyori.adventure.text.Component;
+import net.minecraft.server.level.WorldServer;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
-import org.bukkit.entity.ArmorStand;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.MagmaCube;
-import org.bukkit.entity.Player;
+import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+import org.bukkit.entity.*;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
+import org.bukkit.util.Vector;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 
 public class Demiurge extends Boss {
@@ -115,7 +123,7 @@ public class Demiurge extends Boss {
 
         switch (attack) {
             case "mob":
-                //to do
+                attackMob();
                 break;
             case "laser":
                 //to do
@@ -141,6 +149,98 @@ public class Demiurge extends Boss {
             case "assimilation":
                 //to do
                 break;
+        }
+    }
+
+    private void attackMob() {
+        WorldServer world = ((CraftWorld) this.getEntity().getLocation().getWorld()).getHandle();
+        Location loc = this.getEntity().getLocation();
+        switch (this.phase) {
+            case 1:
+            case 2:
+                this.getEntity().getWorld().playSound(loc,Sound.BLOCK_LAVA_EXTINGUISH,SoundCategory.HOSTILE,3,0);
+                this.getEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL,loc.clone().add(0,-1,0),30,1,1,1,0,null,true);
+                WeightCollection<String> rc;
+                rc = new WeightCollection<String>()
+                        .add(30,"CreeperBomb")
+                        .add(5,"EvokerSorcerer")
+                        .add(35,"SkeletonSniper")
+                        .add(30,"SpiderCrawler")
+                        .add(25,"SpiderHerd")
+                        .add(40,"ZombieTank");
+                for (int i = 0; i<7;i++) {
+                    switch (rc.next()) {
+                        case "CreeperBomb":
+                            CreeperBomb cb = new CreeperBomb(loc);
+                            world.addEntity(cb, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "EvokerSorcerer":
+                            EvokerSorcerer es = new EvokerSorcerer(loc);
+                            world.addEntity(es, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "SkeletonSniper":
+                            SkeletonSniper ss = new SkeletonSniper(loc);
+                            world.addEntity(ss, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "SpiderCrawler":
+                            SpiderCrawler sc = new SpiderCrawler(loc);
+                            world.addEntity(sc, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "SpiderHerd":
+                            SpiderHerd sh = new SpiderHerd(loc);
+                            world.addEntity(sh, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "ZombieTank":
+                            ZombieTank zt = new ZombieTank(loc);
+                            world.addEntity(zt, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                    }
+                }
+                break;
+            case 3:
+            case 4:
+                WeightCollection<String> rcboss;
+                rcboss = new WeightCollection<String>()
+                        .add(10,"DrownedOverlord")
+                        .add(20,"IllusionerMage")
+                        .add(15,"PhantomFurries")
+                        .add(20,"RavagerBeast");
+                for (int i = 0; i<3;i++) {
+                    switch (rcboss.next()) {
+                        case "DrownedOverlord":
+                            DrownedOverlord Do = new DrownedOverlord(loc);
+                            world.addEntity(Do, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "IllusionerMage":
+                            IllusionerMage im = new IllusionerMage(loc);
+                            world.addEntity(im, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "PhantomFurries":
+                            PhantomFurries pf = new PhantomFurries(loc);
+                            world.addEntity(pf, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                        case "RavagerBeast":
+                            RavagerBeast rb = new RavagerBeast(loc);
+                            world.addEntity(rb, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            break;
+                    }
+                }
+                break;
+        }
+    }
+
+    private void attackWither(List<Player> proxplayer) {
+        switch (this.phase) {
+            case 2:
+            case 1:
+                Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> {
+                    EulerAngle angle = new EulerAngle(Math.random()*360,Math.random()*360,Math.random()*360);
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(angle.getX()), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
+                    loc.setYaw(i*360f/20f-90f);
+                    loc.setPitch(0);
+                    WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
+                    skull.setDirection(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)).multiply(0.1));
+                },0,2);
         }
     }
 
