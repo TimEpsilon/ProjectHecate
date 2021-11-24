@@ -2,6 +2,8 @@ package com.github.tim91690.eclipse.mobs.boss;
 
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.misc.ConfigManager;
+import com.github.tim91690.eclipse.misc.Laser;
 import com.github.tim91690.eclipse.misc.WeightCollection;
 import com.github.tim91690.eclipse.mobs.*;
 import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlord;
@@ -11,6 +13,7 @@ import com.github.tim91690.eclipse.mobs.semiboss.RavagerBeast;
 import net.kyori.adventure.text.Component;
 import net.minecraft.server.level.WorldServer;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.*;
@@ -22,25 +25,23 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 
 public class Demiurge extends Boss {
 
-    private ArmorStand ring1;
-    private ArmorStand ring2;
-    private ArmorStand core;
-    private ArmorStand shell;
-    private ArmorStand wings;
+    private final ArmorStand ring1;
+    private final ArmorStand ring2;
+    private final ArmorStand core;
+    private final ArmorStand shell;
+    private final ArmorStand wings;
     private int phase;
     private int tick;
 
     /** 4 phases
      * 1) Le demiurge se téléporte autour de l'arène, lançant divers projectiles et spawnant des mobs + attaques spéciales, -> 75% HP
-     * 2) Le demiurge augmente son armure et devient quasi invinsible, il faut alors activer chacun des piliers en tuant le boss qui lui est associé.
-     *      Chaque pilier le blesse -> 50% HP
+     * 2) Le demiurge augmente son armure et devient quasi invinsible, il faut alors tuer le boss qui apparait. -> 50% HP
      * 3) Le demiurge se téléporte plus souvent et brusquement, spawn des mini-boss, + d'attaques spéciales -> 25% HP
      * 4) Le demiurge perd ses anneaux et passe en mode vitesse, les joueurs subissent de l'antigravité et sont éjectés
      */
@@ -53,6 +54,8 @@ public class Demiurge extends Boss {
         this.entity.setAI(false);
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,100000000,0,false,false));
         ((MagmaCube)this.entity).setSize(2);
+        this.entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(this.getMaxHealth());
+        this.entity.setHealth(this.getMaxHealth());
 
         this.phase=1;
 
@@ -65,15 +68,23 @@ public class Demiurge extends Boss {
         tick();
     }
 
+    public void setPhase(int phase) {
+        this.phase = phase;
+    }
+
     private void tick() {
+        Location center = ConfigManager.getLoc();
         //période d'oscillation/rotation de chaque composante
         float Tcore = 300;
         float Tshell = 800;
         float Tring1 = 1600;
         float Tring2 = 2000;
-        float Twings = 1000;
+        float Twings = 600;
         this.tick = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
             int t = this.entity.getTicksLived();
+
+            Vector move = this.getEntity().getLocation().subtract(center).toVector().normalize().rotateAroundY(Math.PI/2).multiply(0.03).setY(0);
+            this.getEntity().teleport(this.getEntity().getLocation().add(move));
 
             //model position
             this.ring1.teleport(this.entity.getLocation().clone().add(0,-0.7,0));
@@ -111,14 +122,14 @@ public class Demiurge extends Boss {
         WeightCollection<String> rc;
         rc = new WeightCollection<String>()
                 .add(50,"mob")
-                .add(50,"laser")
                 .add(40,"witherwave")
+                .add(50,"laser")
                 .add(50,"fireball")
-                .add(30,"vortex")
-                .add(20,"dash")
-                .add(10,"swap")
-                .add(40,"meteorshower")
-                .add(5,"assimilation");
+                .add(30,"vortex");
+                //.add(20,"dash")
+                //.add(10,"swap")
+                //.add(40,"meteorshower")
+                //.add(5,"assimilation");
         String attack = rc.next();
 
         switch (attack) {
@@ -126,16 +137,16 @@ public class Demiurge extends Boss {
                 attackMob();
                 break;
             case "laser":
-                //to do
+                attackLaser(proxPlayer);
                 break;
             case "witherwave":
-                //to do
+                attackWither(proxPlayer);
                 break;
             case "fireball":
-                //to do
+                attackFireball();
                 break;
             case "vortex":
-                //to do
+                attackVortex(proxPlayer);
                 break;
             case "dash":
                 //to do
@@ -154,7 +165,7 @@ public class Demiurge extends Boss {
 
     private void attackMob() {
         WorldServer world = ((CraftWorld) this.getEntity().getLocation().getWorld()).getHandle();
-        Location loc = this.getEntity().getLocation();
+        Location loc = this.getEntity().getLocation().add(0,-1,0);
         switch (this.phase) {
             case 1:
             case 2:
@@ -171,27 +182,27 @@ public class Demiurge extends Boss {
                 for (int i = 0; i<7;i++) {
                     switch (rc.next()) {
                         case "CreeperBomb":
-                            CreeperBomb cb = new CreeperBomb(loc);
+                            CreeperBomb cb = new CreeperBomb(loc.clone().add(Vector.getRandom()));
                             world.addEntity(cb, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "EvokerSorcerer":
-                            EvokerSorcerer es = new EvokerSorcerer(loc);
+                            EvokerSorcerer es = new EvokerSorcerer(loc.clone().add(Vector.getRandom()));
                             world.addEntity(es, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "SkeletonSniper":
-                            SkeletonSniper ss = new SkeletonSniper(loc);
+                            SkeletonSniper ss = new SkeletonSniper(loc.clone().add(Vector.getRandom()));
                             world.addEntity(ss, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "SpiderCrawler":
-                            SpiderCrawler sc = new SpiderCrawler(loc);
+                            SpiderCrawler sc = new SpiderCrawler(loc.clone().add(Vector.getRandom()));
                             world.addEntity(sc, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "SpiderHerd":
-                            SpiderHerd sh = new SpiderHerd(loc);
+                            SpiderHerd sh = new SpiderHerd(loc.clone().add(Vector.getRandom()));
                             world.addEntity(sh, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "ZombieTank":
-                            ZombieTank zt = new ZombieTank(loc);
+                            ZombieTank zt = new ZombieTank(loc.clone().add(Vector.getRandom()));
                             world.addEntity(zt, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                     }
@@ -205,22 +216,22 @@ public class Demiurge extends Boss {
                         .add(20,"IllusionerMage")
                         .add(15,"PhantomFurries")
                         .add(20,"RavagerBeast");
-                for (int i = 0; i<3;i++) {
+                for (int i = 0; i<2;i++) {
                     switch (rcboss.next()) {
                         case "DrownedOverlord":
-                            DrownedOverlord Do = new DrownedOverlord(loc);
+                            DrownedOverlord Do = new DrownedOverlord(loc.clone().add(Vector.getRandom()));
                             world.addEntity(Do, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "IllusionerMage":
-                            IllusionerMage im = new IllusionerMage(loc);
+                            IllusionerMage im = new IllusionerMage(loc.clone().add(Vector.getRandom()));
                             world.addEntity(im, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "PhantomFurries":
-                            PhantomFurries pf = new PhantomFurries(loc);
+                            PhantomFurries pf = new PhantomFurries(loc.clone().add(Vector.getRandom()));
                             world.addEntity(pf, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "RavagerBeast":
-                            RavagerBeast rb = new RavagerBeast(loc);
+                            RavagerBeast rb = new RavagerBeast(loc.clone().add(Vector.getRandom()));
                             world.addEntity(rb, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                     }
@@ -229,25 +240,169 @@ public class Demiurge extends Boss {
         }
     }
 
-    private void attackWither(List<Player> proxplayer) {
+    private void attackWither(List<Player> proxPlayer) {
         switch (this.phase) {
+            case 4:
+            case 3:
+                for (Player p : proxPlayer) {
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                        Vector direction = p.getLocation().toVector().subtract(this.getEntity().getLocation().toVector()).clone().normalize().multiply(2);
+                        WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(this.getEntity().getLocation(), EntityType.WITHER_SKULL);
+                        skull.setCharged(true);
+                        skull.setDirection(direction); 
+                        },60);
+                }
+
+
             case 2:
+                ArrayList<Integer> tasks = new ArrayList<>();
+                for (int i = 0;i<8;i++) {
+                    Vex vex = (Vex)this.entity.getWorld().spawnEntity(this.entity.getLocation(),EntityType.VEX);
+
+                    vex.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,10000000,0,false,false));
+                    vex.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(6);
+                    vex.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(30);
+                    vex.setHealth(30);
+                    vex.setSilent(true);
+
+                    vex.addScoreboardTag("Eclipse");
+
+                    final int j = i;
+                    tasks.add(
+                            Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                                if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j));
+                                vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation(),
+                                        10, 0.1, 0.1,0.1,0);
+                            },0,1).getTaskId()
+                    );
+
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> vex.setHealth(0),200);
+                }
 
             case 1:
-                Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> {
-                    double yaw = Math.random()*2*Math.PI;
-                    double pitch = -Math.random()*Math.PI;
-                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(yaw), Math.cos(pitch), Math.sin(yaw)).multiply(0.2));
+                int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> {
+                    double yaw = 2*Math.random()*Math.PI;
+                    double pitch = -Math.random()*Math.PI/2;
+                    double coscos = Math.cos(pitch) * Math.cos(yaw);
+                    double cossin = -Math.cos(pitch) * Math.sin(yaw);
+                    Location loc = this.entity.getLocation().add(new Vector(cossin, Math.sin(pitch), coscos).multiply(0.2));
                     loc.setYaw((float)yaw);
                     loc.setPitch((float)pitch);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
-                    skull.setDirection(new Vector(Math.cos(yaw),Math.cos(pitch),Math.sin(yaw)).multiply(0.2));
-                },0,2);
+                    skull.setDirection(new Vector(cossin, Math.sin(pitch), coscos).multiply(0.2));
+                },0,2).getTaskId();
+                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
+                    Bukkit.getScheduler().cancelTask(task);
+                },50);
+        }
+    }
+
+    private void attackLaser(List<Player> proxPlayer) {
+        for (int i = 0; i < this.phase ; i++) {
+            Player target = proxPlayer.get((int)Math.random()*proxPlayer.size());
+            target.playSound(this.getEntity().getLocation(),Sound.ENTITY_GUARDIAN_ATTACK,SoundCategory.HOSTILE,4,1);
+            Laser laser = null;
+            try {
+                laser = new Laser.GuardianLaser(this.getEntity().getLocation(),target.getLocation().add(0,-0.5,0),60,64);
+            } catch (ReflectiveOperationException e) {
+                e.printStackTrace();
+            }
+            laser.start(EventManager.getPlugin());
+            Laser finalLaser = laser;
+            int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                finalLaser.moveEnd(target.getLocation().add(0,-0.5,0),1,null);
+                finalLaser.moveStart(this.getEntity().getLocation(),1,null);
+            },0,1).getTaskId();
+
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                finalLaser.stop();
+                Bukkit.getScheduler().cancelTask(task);
+                Vector direction = this.getEntity().getLocation().toVector().subtract(target.getLocation().toVector()).normalize().multiply(-1);
+                this.getEntity().getWorld().spawnArrow(this.getEntity().getLocation().add(direction),direction,11,0);
+            },60);
+
+
+        }
+    }
+
+    private void attackFireball() {
+        switch (this.phase) {
+            case 1:
+                for (double a = 0; a < 2*Math.PI;a = a + Math.PI/8) {
+                    SmallFireball fireball = (SmallFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+Math.random())*2,0,Math.sin(a+Math.random())*2), EntityType.SMALL_FIREBALL);
+                    fireball.setVelocity(new Vector(0,-1,0));
+                    fireball.setDirection(new Vector(0,-1,0));
+                    fireball = (SmallFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+Math.random())*5,0,Math.sin(a+Math.random())*5), EntityType.SMALL_FIREBALL);
+                    fireball.setVelocity(new Vector(0,-0.5,0));
+                    fireball.setDirection(new Vector(0,-0.5,0));
+                }
+                break;
+            case 2:
+                for (double a = 0; a < 2*Math.PI;a = a + Math.PI/10) {
+                    LargeFireball fireball = (LargeFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+Math.random())*3,0,Math.sin(a+Math.random())*3), EntityType.FIREBALL);
+                    fireball.setVelocity(new Vector(0,-1,0));
+                    fireball.setDirection(new Vector(0,-1,0));
+                    SmallFireball smallFireball = (SmallFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+Math.random())*5,0,Math.sin(a+Math.random())*5), EntityType.SMALL_FIREBALL);
+                    smallFireball.setVelocity(new Vector(0,-1,0));
+                    smallFireball.setDirection(new Vector(0,-1,0));
+                }
+                break;
+            case 3:
+                for (double a = 0; a < 2*Math.PI;a = a + Math.PI/13) {
+                    LargeFireball fireball = (LargeFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+Math.random())*3,0,Math.sin(a+Math.random())*3), EntityType.FIREBALL);
+                    fireball.setVelocity(new Vector(0,-1.5,0));
+                    fireball.setDirection(new Vector(0,-1,0));
+                    fireball = (LargeFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+Math.random())*6,0,Math.sin(a+Math.random())*6), EntityType.FIREBALL);
+                    fireball.setVelocity(new Vector(0,-1.5,0));
+                    fireball.setDirection(new Vector(0,-1,0));
+                }
+                break;
+            case 4:
+                for (double a = 0; a < 2*Math.PI;a = a + Math.PI/4) {
+                    DragonFireball fireball = (DragonFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+Math.random())*3,0,Math.sin(a+Math.random())*3), EntityType.DRAGON_FIREBALL);
+                    fireball.setVelocity(new Vector(0,-2,0));
+                    fireball.setDirection(new Vector(0,-1,0));
+                }
+                break;
+        }
+
+    }
+
+    private void attackVortex(List<Player> proxPlayer) {
+        switch (this.phase) {
+            case 1:
+                for (Player p : proxPlayer) {
+                    Vector toVortex = p.getLocation().toVector().subtract(this.getEntity().getLocation().toVector()).normalize();
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,60,1,true,true));
+                    p.setVelocity(toVortex.multiply(-0.3));
+                }
+                break;
+            case 2:
+                for (Player p : proxPlayer) {
+                    Vector toVortex = p.getLocation().toVector().subtract(this.getEntity().getLocation().toVector()).normalize();
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,80,1,true,true));
+                    p.setVelocity(toVortex.multiply(-0.7));
+                }
+                break;
+            case 3:
+                for (Player p : proxPlayer) {
+                    Vector toVortex = p.getLocation().toVector().subtract(this.getEntity().getLocation().toVector()).normalize();
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,80,2,true,true));
+                    p.setVelocity(toVortex.multiply(-1));
+                }
+                break;
+            case 4:
+                for (Player p : proxPlayer) {
+                    Vector toVortex = p.getLocation().toVector().subtract(this.getEntity().getLocation().toVector()).normalize();
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,100,2,true,true));
+                    p.setVelocity(toVortex.multiply(-1.3));
+                }
+                break;
         }
     }
 
     private ArmorStand modelConstruct(int cmd) {
-       return modelConstruct(cmd,false);
+        return modelConstruct(cmd,false);
     }
 
     private ArmorStand modelConstruct(int cmd,boolean isArms) {

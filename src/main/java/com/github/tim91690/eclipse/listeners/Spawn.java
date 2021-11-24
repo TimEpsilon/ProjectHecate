@@ -13,13 +13,13 @@ public class Spawn implements Listener {
     public void onSpawn(CreatureSpawnEvent event) {
         if (!(event.getEntity() instanceof Monster) || event.getEntity().getScoreboardTags().contains("Eclipse")) return;
 
-        /*Semi boss à chaque étapes (1% -> 5%) :
+        /**Semi boss à chaque étapes (1% -> 5%) :
           1) -> Phantom Furries (100%)
           2) -> Ravager Beast (70%), Phantom Furries (30%)
           3) -> Illusioner Mage (70%), Ravager Beast (25%), Phantom Furries (5%)
           4) -> Drowned Overlord (70%), Illusioner Mage (20%), Ravager Beast (7%), Phantom Furries (3%)
           5) -> Shadows (70%), Drowned Overlord (15%), Illusioner Mage (8%), Ravager Beast (5%), Phantom Furries (2%)
-         */
+         **/
 
         WorldServer world = ((CraftWorld) event.getLocation().getWorld()).getHandle();
         switch (event.getEntity().getType().toString()) {
