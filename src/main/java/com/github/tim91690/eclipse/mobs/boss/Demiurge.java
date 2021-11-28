@@ -31,6 +31,7 @@ import java.util.List;
 
 public class Demiurge extends Boss {
 
+    private Location center;
     private final ArmorStand ring1;
     private final ArmorStand ring2;
     private final ArmorStand core;
@@ -49,6 +50,8 @@ public class Demiurge extends Boss {
         super(loc.getWorld().spawnEntity(loc, EntityType.MAGMA_CUBE),2040,ChatColor.BOLD+""+ChatColor.AQUA+"Demiurge", BarColor.GREEN);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eLe &k&bDemiurge &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
+
+        this.center = ConfigManager.getLoc();
 
         this.entity.setCustomName(this.name);
         this.entity.setAI(false);
@@ -73,25 +76,30 @@ public class Demiurge extends Boss {
     }
 
     private void tick() {
-        Location center = ConfigManager.getLoc();
         //période d'oscillation/rotation de chaque composante
         float Tcore = 300;
         float Tshell = 800;
-        float Tring1 = 1600;
-        float Tring2 = 2000;
-        float Twings = 600;
-        this.tick = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        float Tring1 = 1400;
+        float Tring2 = 1600;
+        float Twings = 350;
+        this.tick = Bukkit.getScheduler().runTaskTimerAsynchronously(EventManager.getPlugin(),() -> {
             int t = this.entity.getTicksLived();
 
-            Vector move = this.getEntity().getLocation().subtract(center).toVector().normalize().rotateAroundY(Math.PI/2).multiply(0.03).setY(0);
+            Vector move = this.getEntity().getLocation().subtract(this.center.clone()).toVector().normalize().rotateAroundY(Math.PI/2).multiply(0.02).setY(0);
             this.getEntity().teleport(this.getEntity().getLocation().add(move));
 
             //model position
+            float yaw = this.getEntity().getLocation().getYaw();
             this.ring1.teleport(this.entity.getLocation().clone().add(0,-0.7,0));
+            this.ring1.setRotation(yaw,0);
             this.ring2.teleport(this.entity.getLocation().clone().add(0,-0.7,0));
+            this.ring2.setRotation(yaw,0);
             this.core.teleport(this.entity.getLocation().clone().add(0,-0.7,0));
+            this.core.setRotation(yaw,0);
             this.shell.teleport(this.entity.getLocation().clone().add(0,-0.7,0));
+            this.shell.setRotation(yaw,0);
             this.wings.teleport(this.entity.getLocation().clone().add(0,-0.7,0));
+            this.wings.setRotation(yaw,0);
 
             //model rotation
             this.core.setHeadPose(new EulerAngle(0,t/Tcore*2*Math.PI,0));
@@ -119,6 +127,11 @@ public class Demiurge extends Boss {
 
     @Override
     public void attack(List<Player> proxPlayer) {
+        if ((int)(Math.random()*2) == 0) {
+            this.getEntity().teleport(this.center.clone().add(Math.random()*20-10,13+Math.random()*4,Math.random()*20-10));
+            this.getEntity().getLocation().setYaw((float)Math.random()*360);
+            this.getEntity().getWorld().playSound(this.getEntity().getLocation(),Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.HOSTILE,2,1);
+        }
         WeightCollection<String> rc;
         rc = new WeightCollection<String>()
                 .add(50,"mob")
