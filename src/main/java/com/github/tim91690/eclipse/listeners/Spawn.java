@@ -1,8 +1,9 @@
 package com.github.tim91690.eclipse.listeners;
 
 import com.github.tim91690.eclipse.mobs.*;
-import net.minecraft.server.level.WorldServer;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
+
+import net.minecraft.server.level.ServerLevel;
+import org.bukkit.craftbukkit.v1_18_R1.CraftWorld;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -21,7 +22,7 @@ public class Spawn implements Listener {
           5) -> Shadows (70%), Drowned Overlord (15%), Illusioner Mage (8%), Ravager Beast (5%), Phantom Furries (2%)
          **/
 
-        WorldServer world = ((CraftWorld) event.getLocation().getWorld()).getHandle();
+        ServerLevel world = ((CraftWorld)event.getLocation().getWorld()).getHandle();
         switch (event.getEntity().getType().toString()) {
             case ("ZOMBIE"):
             case ("DROWNED"):
@@ -29,7 +30,7 @@ public class Spawn implements Listener {
                 //Zombie Tank remplace les zombies, drowned et husk
                 event.setCancelled(true);
                 ZombieTank zt = new ZombieTank(event.getLocation());
-                world.addEntity(zt, CreatureSpawnEvent.SpawnReason.NATURAL);
+                world.addFreshEntity(zt, CreatureSpawnEvent.SpawnReason.NATURAL);
                 return;
             case ("CREEPER"):
                 //Creeper Bomb remplace creeper

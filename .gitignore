@@ -108,6 +108,12 @@ buildNumber.properties
 .mvn/timing.properties
 .mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
+.gradle/
+build/
+EventManager.iml
+gradlew
+gradlew.bat
+
 
 # Common working directory
 run/
