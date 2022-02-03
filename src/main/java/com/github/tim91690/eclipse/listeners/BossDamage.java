@@ -22,18 +22,14 @@ public class BossDamage implements Listener {
             if (health > boss.getMaxHealth()/2) {
                 if (health > boss.getMaxHealth()*3/4) {
                     ((Demiurge) boss).setPhase(1);
-                    Bukkit.broadcastMessage("1");
                 } else {
                     ((Demiurge) boss).setPhase(2);
-                    Bukkit.broadcastMessage("2");
                 }
             } else {
                 if (health > boss.getMaxHealth()/4) {
                     ((Demiurge) boss).setPhase(3);
-                    Bukkit.broadcastMessage("3");
                 } else {
                     ((Demiurge) boss).setPhase(4);
-                    Bukkit.broadcastMessage("4");
                 }
             }
         }

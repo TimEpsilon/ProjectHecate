@@ -55,34 +55,34 @@ public class MoonEnchant extends Enchantment implements Listener {
                 case 3:
                     e.setDamage(e.getDamage()*2.5);
                     ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience(2);
-                    if ((int)(Math.random()*50)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                    if ((int)(Math.random()*50)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
                     break;
                 case 4:
                     e.setDamage(e.getDamage()*3);
                     for (int i =0; i<2;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience(2);
-                        if ((int)(Math.random()*48)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*48)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
                     }
                     break;
                 case 5:
                     e.setDamage(e.getDamage()*3.5);
                     for (int i =0; i<2;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*5));
-                        if ((int)(Math.random()*44)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*44)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
                     }
                     break;
                 case 6:
                     e.setDamage(e.getDamage()*4);
                     for (int i =0; i<3;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*5));
-                        if ((int)(Math.random()*40)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*40)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
                     }
                     break;
                 case 7:
                     e.setDamage(e.getDamage()*4.5);
                     for (int i =0; i<4;i++) {
                         ((ExperienceOrb)p.getWorld().spawnEntity(e.getEntity().getLocation(),EntityType.EXPERIENCE_ORB)).setExperience((int)(Math.random()*6));
-                        if ((int)(Math.random()*36)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.mcoin(1));
+                        if ((int)(Math.random()*36)==0) p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
                     }
                     passiveSin(p,(LivingEntity)e.getEntity());
                     break;

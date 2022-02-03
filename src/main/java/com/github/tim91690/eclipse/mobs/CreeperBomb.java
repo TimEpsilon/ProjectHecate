@@ -1,37 +1,20 @@
 package com.github.tim91690.eclipse.mobs;
 
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.monster.EntityCreeper;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.entity.Creeper;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Monster;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
-public class CreeperBomb extends EntityCreeper {
+public class CreeperBomb extends EclipseMobs {
 
     public CreeperBomb(Location loc) {
-        super(EntityTypes.o,((CraftWorld)loc.getWorld()).getHandle());
-        this.setPosition(loc.getX(),loc.getY(),loc.getZ());
+        super((Monster) loc.getWorld().spawnEntity(loc, EntityType.CREEPER, CreatureSpawnEvent.SpawnReason.NATURAL),40);
 
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(50);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.25);
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(50);
+        this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.25);
 
-        this.setPowered(true);
-        this.setHealth(40);
-        ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
-
-        Team scarlet;
-        //team
-        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
-            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-            scarlet.color(NamedTextColor.DARK_RED);
+        ((Creeper)this.entity).setPowered(true);
         }
-        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());
-
-    }
 }

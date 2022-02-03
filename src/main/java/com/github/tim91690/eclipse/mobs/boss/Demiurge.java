@@ -6,16 +6,14 @@ import com.github.tim91690.eclipse.misc.ConfigManager;
 import com.github.tim91690.eclipse.misc.Laser;
 import com.github.tim91690.eclipse.misc.WeightCollection;
 import com.github.tim91690.eclipse.mobs.*;
-import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlord;
+import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlordHorse;
 import com.github.tim91690.eclipse.mobs.semiboss.IllusionerMage;
 import com.github.tim91690.eclipse.mobs.semiboss.PhantomFurries;
 import com.github.tim91690.eclipse.mobs.semiboss.RavagerBeast;
 import net.kyori.adventure.text.Component;
-import net.minecraft.server.level.WorldServer;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.entity.*;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -162,21 +160,22 @@ public class Demiurge extends Boss {
                 attackVortex(proxPlayer);
                 break;
             case "dash":
-                //to do
+                //todo dash
                 break;
             case "swap":
-                //to do
+                //todo swap
                 break;
             case "meteorshower":
-                //to do
+                //todo meteorshower
                 break;
             case "assimilation":
-                //to do
+                //todo assimilation
                 break;
         }
     }
 
     private void attackMob() {
+        //TODO abandonner nms si possible
         WorldServer world = ((CraftWorld) this.getEntity().getLocation().getWorld()).getHandle();
         Location loc = this.getEntity().getLocation().add(0,-1,0);
         switch (this.phase) {
@@ -232,7 +231,7 @@ public class Demiurge extends Boss {
                 for (int i = 0; i<2;i++) {
                     switch (rcboss.next()) {
                         case "DrownedOverlord":
-                            DrownedOverlord Do = new DrownedOverlord(loc.clone().add(Vector.getRandom()));
+                            DrownedOverlordHorse Do = new DrownedOverlordHorse(loc.clone().add(Vector.getRandom()));
                             world.addEntity(Do, CreatureSpawnEvent.SpawnReason.NATURAL);
                             break;
                         case "IllusionerMage":

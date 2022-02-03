@@ -57,8 +57,8 @@ public class EnchantRegister {
             registered = false;
             e.printStackTrace();
         }
-        if(registered) {
-            System.out.println("Enchant ajoute");
+        if(!registered) {
+            System.out.println("[Error] : Failed to load enchants");
         }
     }
 }

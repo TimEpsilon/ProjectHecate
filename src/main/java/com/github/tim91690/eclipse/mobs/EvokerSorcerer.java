@@ -1,36 +1,17 @@
 package com.github.tim91690.eclipse.mobs;
 
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.monster.EntityEvoker;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Monster;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 
-public class EvokerSorcerer extends EntityEvoker {
+public class EvokerSorcerer extends EclipseMobs {
 
     public EvokerSorcerer(Location loc) {
-        super(EntityTypes.y,((CraftWorld)loc.getWorld()).getHandle());
-        this.setPosition(loc.getX(),loc.getY(),loc.getZ());
+        super((Monster) loc.getWorld().spawnEntity(loc, EntityType.EVOKER, CreatureSpawnEvent.SpawnReason.NATURAL),60);
 
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(40);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
-
-        this.setHealth(60);
-
-        ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
-
-        Team scarlet;
-        //team
-        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
-            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-            scarlet.color(NamedTextColor.DARK_RED);
-        }
-        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
+        this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);
     }
 }

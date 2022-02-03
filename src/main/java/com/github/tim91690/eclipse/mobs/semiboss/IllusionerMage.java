@@ -1,20 +1,18 @@
 package com.github.tim91690.eclipse.mobs.semiboss;
 
-import net.kyori.adventure.text.format.NamedTextColor;
-import net.minecraft.world.entity.EntityTypes;
-import net.minecraft.world.entity.monster.EntityIllagerIllusioner;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import com.github.tim91690.eclipse.mobs.EclipseMobs;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.craftbukkit.v1_17_R1.CraftWorld;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Monster;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scoreboard.Team;
 
-public class IllusionerMage extends EntityIllagerIllusioner {
+public class IllusionerMage extends EclipseMobs {
+
+    private ItemStack IllusionerBow = Bow();
 
     private ItemStack Bow() {
         ItemStack bow = new ItemStack(Material.BOW);
@@ -24,30 +22,16 @@ public class IllusionerMage extends EntityIllagerIllusioner {
     }
 
     public IllusionerMage(Location loc) {
-        super(EntityTypes.O,((CraftWorld)loc.getWorld()).getHandle());
-        this.setPosition(loc.getX(),loc.getY(),loc.getZ());
+        super((Monster)loc.getWorld().spawnEntity(loc, EntityType.ILLUSIONER, CreatureSpawnEvent.SpawnReason.NATURAL),150);
 
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(150);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.9);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(8);
-        ((LivingEntity) this.getBukkitEntity()).getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(7);
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30);
+        this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.9);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(8);
+        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(7);
 
-        this.setHealth(150);
+        this.entity.getEquipment().setItemInMainHand(IllusionerBow);
+        this.entity.getEquipment().setItemInMainHandDropChance(0.06f);
 
-        ((LivingEntity) this.getBukkitEntity()).getEquipment().setItemInMainHand(Bow());
-        ((LivingEntity) this.getBukkitEntity()).getEquipment().setItemInMainHandDropChance(0.06f);
-
-        ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("Eclipse");
-        ((LivingEntity) this.getBukkitEntity()).addScoreboardTag("SemiBoss");
-
-        Team scarlet;
-        //team
-        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
-            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-            scarlet.color(NamedTextColor.DARK_RED);
-        }
-        else scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        scarlet.addEntry(((LivingEntity)this.getBukkitEntity()).getUniqueId().toString());
+        this.entity.addScoreboardTag("SemiBoss");
     }
 }

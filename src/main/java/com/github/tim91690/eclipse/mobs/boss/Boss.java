@@ -15,7 +15,7 @@ import org.bukkit.scoreboard.Team;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Boss {
+public abstract class Boss {
     protected static final List<Boss> bossList = new ArrayList<>();
     protected LivingEntity entity;
     protected final BossBar bossbar;
@@ -87,7 +87,5 @@ public class Boss {
         return this.maxHealth;
     }
 
-    public void attack(List<Player> proxPlayer) {
-        //Utiliser un @override dans la sous classe du boss pour définir ses attaques
-    }
+    public abstract void attack(List<Player> proxPlayer);
 }

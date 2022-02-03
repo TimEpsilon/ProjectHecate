@@ -6,6 +6,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Random;
 
@@ -35,7 +36,9 @@ public class Loot implements Listener {
             if(e.getCustomName().equals(ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"))) n += 20;
         }
 
-        e.getLocation().getWorld().dropItem(e.getLocation(), CustomItems.mcoin(n));
-        if ((int)(Math.random()*30) == 0) e.getWorld().dropItem(e.getLocation(),CustomItems.getMobSoul());
+        ItemStack mcoin = CustomItems.MCOIN.getItem();
+        mcoin.setAmount(n);
+        e.getLocation().getWorld().dropItem(e.getLocation(), mcoin);
+        if ((int)(Math.random()*30) == 0) e.getWorld().dropItem(e.getLocation(),CustomItems.SOUL_MOB.getItem());
     }
 }
