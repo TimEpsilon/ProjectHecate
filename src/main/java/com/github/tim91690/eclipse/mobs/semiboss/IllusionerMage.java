@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +23,7 @@ public class IllusionerMage extends EclipseMobs {
     }
 
     public IllusionerMage(Location loc) {
-        super((Monster)loc.getWorld().spawnEntity(loc, EntityType.ILLUSIONER, CreatureSpawnEvent.SpawnReason.NATURAL),150);
+        super((LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.ILLUSIONER),150);
 
         this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(30);
         this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.9);

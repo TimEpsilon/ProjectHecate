@@ -3,17 +3,16 @@ package com.github.tim91690.eclipse.mobs;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
-import org.bukkit.entity.Monster;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.scoreboard.Team;
 
 public abstract class EclipseMobs {
 
-    protected Monster entity;
+    protected LivingEntity entity;
 
 
-    public EclipseMobs(Monster e,int health) {
+    public EclipseMobs(LivingEntity e,int health) {
         this.entity = e;
-
         this.entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
         this.entity.setHealth(health);
 
@@ -32,7 +31,7 @@ public abstract class EclipseMobs {
 
     }
 
-    public Monster getEntity() {
+    public LivingEntity getEntity() {
         return this.entity;
     }
 }

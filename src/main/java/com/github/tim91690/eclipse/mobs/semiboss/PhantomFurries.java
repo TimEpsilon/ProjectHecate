@@ -4,6 +4,7 @@ import com.github.tim91690.eclipse.mobs.EclipseMobs;
 import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Phantom;
 import org.bukkit.event.entity.CreatureSpawnEvent;
@@ -13,7 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 public class PhantomFurries extends EclipseMobs {
 
     public PhantomFurries(Location loc) {
-        super((Monster)loc.getWorld().spawnEntity(loc, EntityType.PHANTOM, CreatureSpawnEvent.SpawnReason.NATURAL),100);
+        super((LivingEntity) loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),100);
 
         this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(3);
 

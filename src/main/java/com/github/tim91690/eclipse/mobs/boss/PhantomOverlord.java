@@ -65,9 +65,9 @@ public class PhantomOverlord extends Boss {
             s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60);
             s.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
 
-            s.getEquipment().setItemInMainHand(SkeletonSniper.Bow());
+            s.getEquipment().setItemInMainHand(SkeletonSniper.SkeletonBow);
             s.getEquipment().setItemInMainHandDropChance(0f);
-            s.getEquipment().setItemInOffHand(SkeletonSniper.Arrow());
+            s.getEquipment().setItemInOffHand(SkeletonSniper.RandomArrow());
             s.getEquipment().setItemInOffHandDropChance(0.1f);
 
             s.setSilent(true);

@@ -7,6 +7,7 @@ import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlordHorse;
 import com.github.tim91690.eclipse.mobs.semiboss.IllusionerMage;
 import com.github.tim91690.eclipse.mobs.semiboss.PhantomFurries;
 import com.github.tim91690.eclipse.mobs.semiboss.RavagerBeast;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
@@ -34,22 +35,21 @@ public class Spawn implements Listener {
             case ("HUSK"):
                 //Zombie Tank remplace les zombies, drowned et husk
                 event.setCancelled(true);
-                new ZombieTank(event.getLocation(),lvl);
+                new ZombieTank(event.getEntity(),lvl);
                 return;
             case ("CREEPER"):
                 //Creeper Bomb remplace creeper
-                event.setCancelled(true);
-                new CreeperBomb(event.getLocation());
+                new CreeperBomb(event.getEntity());
                 return;
             case ("SKELETON"):
                 //Skeleton Sniper remplace skeletons
                 event.setCancelled(true);
-                new SkeletonSniper(event.getLocation());
+                new SkeletonSniper(event.getEntity());
                 return;
             case ("SPIDER"):
                 //Spider Crawler remplace spider
                 event.setCancelled(true);
-                new SpiderCrawler(event.getLocation());
+                new SpiderCrawler(event.getEntity());
         }
     }
 

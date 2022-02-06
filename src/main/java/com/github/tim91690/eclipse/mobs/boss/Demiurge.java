@@ -15,7 +15,6 @@ import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.*;
-import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
@@ -176,7 +175,6 @@ public class Demiurge extends Boss {
 
     private void attackMob() {
         //TODO abandonner nms si possible
-        WorldServer world = ((CraftWorld) this.getEntity().getLocation().getWorld()).getHandle();
         Location loc = this.getEntity().getLocation().add(0,-1,0);
         switch (this.phase) {
             case 1:
@@ -194,28 +192,23 @@ public class Demiurge extends Boss {
                 for (int i = 0; i<7;i++) {
                     switch (rc.next()) {
                         case "CreeperBomb":
-                            CreeperBomb cb = new CreeperBomb(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(cb, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            //new CreeperBomb(loc.clone().add(Vector.getRandom()));
                             break;
                         case "EvokerSorcerer":
-                            EvokerSorcerer es = new EvokerSorcerer(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(es, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            //new EvokerSorcerer(loc.clone().add(Vector.getRandom()));
                             break;
                         case "SkeletonSniper":
-                            SkeletonSniper ss = new SkeletonSniper(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(ss, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            //new SkeletonSniper(loc.clone().add(Vector.getRandom()));
                             break;
                         case "SpiderCrawler":
-                            SpiderCrawler sc = new SpiderCrawler(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(sc, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            //new SpiderCrawler(loc.clone().add(Vector.getRandom()));
                             break;
                         case "SpiderHerd":
-                            SpiderHerd sh = new SpiderHerd(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(sh, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            //new SpiderHerd(loc.clone().add(Vector.getRandom()));
                             break;
                         case "ZombieTank":
-                            ZombieTank zt = new ZombieTank(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(zt, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            //new ZombieTank(loc.clone().add(Vector.getRandom()),4);
+
                             break;
                     }
                 }
@@ -231,20 +224,16 @@ public class Demiurge extends Boss {
                 for (int i = 0; i<2;i++) {
                     switch (rcboss.next()) {
                         case "DrownedOverlord":
-                            DrownedOverlordHorse Do = new DrownedOverlordHorse(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(Do, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            new DrownedOverlordHorse(loc.clone().add(Vector.getRandom()));
                             break;
                         case "IllusionerMage":
-                            IllusionerMage im = new IllusionerMage(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(im, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            new IllusionerMage(loc.clone().add(Vector.getRandom()));
                             break;
                         case "PhantomFurries":
-                            PhantomFurries pf = new PhantomFurries(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(pf, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            new PhantomFurries(loc.clone().add(Vector.getRandom()));
                             break;
                         case "RavagerBeast":
-                            RavagerBeast rb = new RavagerBeast(loc.clone().add(Vector.getRandom()));
-                            world.addEntity(rb, CreatureSpawnEvent.SpawnReason.NATURAL);
+                            new RavagerBeast(loc.clone().add(Vector.getRandom()));
                             break;
                     }
                 }

@@ -2,14 +2,18 @@ package com.github.tim91690.eclipse.listeners;
 
 import com.github.tim91690.eclipse.mobs.boss.Boss;
 import com.github.tim91690.eclipse.mobs.boss.Demiurge;
-import org.bukkit.Bukkit;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.util.Vector;
 
 public class BossDamage implements Listener {
+
+    private final int bossXp = 600;
 
     @EventHandler
     public void onBossDamage(EntityDamageEvent e) {
@@ -40,7 +44,14 @@ public class BossDamage implements Listener {
         if (!e.getEntity().getScoreboardTags().contains("Boss")) return;
         Boss boss = Boss.getBossInList(e.getEntity());
         boss.death();
-        //300 xp par boss
-        e.setDroppedExp(300);
+
+        int i = 1;
+        for (int n =1; n <= bossXp; n += i) {
+            ExperienceOrb xp = (ExperienceOrb) e.getEntity().getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB);
+            xp.setExperience(i);
+            xp.setVelocity(Vector.getRandom());
+            i = (int)(Math.random()*30+1);
+        }
+        //600 xp par boss
     }
 }

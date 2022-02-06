@@ -13,7 +13,7 @@ import org.bukkit.potion.PotionEffectType;
 public class DrownedOverlordRider extends EclipseMobs {
 
     public DrownedOverlordRider(Location loc) {
-        super((Monster)loc.getWorld().spawnEntity(loc,EntityType.DROWNED, CreatureSpawnEvent.SpawnReason.NATURAL),120);
+        super((LivingEntity)loc.getWorld().spawnEntity(loc,EntityType.DROWNED),120);
 
         this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
         this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.3);

@@ -4,9 +4,12 @@ import com.github.tim91690.EventManager;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+
+import java.util.List;
 
 
 public class NightFairy extends Boss {
@@ -39,5 +42,11 @@ public class NightFairy extends Boss {
         Bukkit.getScheduler().cancelTask(this.taskTick);
         Bukkit.getScheduler().cancelTask(this.beaconTask);
         this.entity.getWorld().createExplosion(this.entity.getLocation(),3,true,false,this.entity);
+    }
+
+    @Override
+    public void attack(List<Player> proxPlayer) {
+        //c'est une gentille fée
+        //elle attaquerait jamais quelqu'un :(
     }
 }

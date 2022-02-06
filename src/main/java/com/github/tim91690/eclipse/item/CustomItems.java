@@ -12,6 +12,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataType;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public enum CustomItems {
@@ -52,6 +53,7 @@ public enum CustomItems {
 
 
     public static NamespacedKey CustomItemKey = new NamespacedKey(EventManager.getPlugin(),"CustomItem");
+    public final static String PDAText = ChatColor.GREEN + "" + ChatColor.BOLD + "[S.A.M.] ";
     private ItemStack item;
     private String name;
 
@@ -61,7 +63,7 @@ public enum CustomItems {
         this.item = new ItemStack(material,n);
         ItemMeta meta = this.item.getItemMeta();
         meta.setCustomModelData(cmd);
-        List<Component> itemlore = meta.lore();
+        List<Component> itemlore = new ArrayList<>();
         for (String l : lore) {
             itemlore.add(Component.text(l));
         }
@@ -69,7 +71,7 @@ public enum CustomItems {
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.lore(itemlore);
         if(isMcoin) {
-            meta.getPersistentDataContainer().set(new NamespacedKey("StonksExchange","CustomItem"), PersistentDataType.STRING,this.name);
+            meta.getPersistentDataContainer().set(new NamespacedKey("stonksexchange","customitem"), PersistentDataType.STRING,this.name);
         } else {
             meta.getPersistentDataContainer().set(new NamespacedKey(EventManager.getPlugin(),"CustomItem"),PersistentDataType.STRING,this.name);
         }

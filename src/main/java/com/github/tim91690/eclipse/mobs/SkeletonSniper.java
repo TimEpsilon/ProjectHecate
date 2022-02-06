@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +23,7 @@ public class SkeletonSniper extends EclipseMobs {
         return bow;
     }
 
-    private static ItemStack RandomArrow() {
+    public static ItemStack RandomArrow() {
         ItemStack arrow = new ItemStack(Material.TIPPED_ARROW);
         PotionMeta meta = (PotionMeta) arrow.getItemMeta();
         WeightCollection<PotionData> rc;
@@ -38,8 +39,8 @@ public class SkeletonSniper extends EclipseMobs {
         return arrow;
     }
 
-    public SkeletonSniper(Location loc) {
-        super((Monster) loc.getWorld().spawnEntity(loc, EntityType.SKELETON, CreatureSpawnEvent.SpawnReason.NATURAL),50);
+    public SkeletonSniper(LivingEntity entity) {
+        super(entity,50);
 
         this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
         this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.4);

@@ -6,7 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Monster;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -16,8 +16,8 @@ import org.bukkit.potion.PotionEffectType;
 public class ZombieTank extends EclipseMobs {
     int lvl;
 
-    public ZombieTank(Location loc,int lvl) {
-        super((Monster) loc.getWorld().spawnEntity(loc, EntityType.ZOMBIE, CreatureSpawnEvent.SpawnReason.NATURAL),25);
+    public ZombieTank(LivingEntity entity,int lvl) {
+        super(entity,25);
         this.lvl = lvl;
 
         this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
