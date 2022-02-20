@@ -41,7 +41,7 @@ public enum CustomItems {
     MOONBLADE_TRUE(Material.NETHERITE_SWORD,1,ChatColor.AQUA+"True Moon Blade",307,EnchantRegister.MOON_BLESSING,7,ChatColor.LIGHT_PURPLE +"La forme finale de la lame la Lune",
             ChatColor.LIGHT_PURPLE +"Infusée par les 7 péchés capitaux",ChatColor.GREEN+""+ChatColor.ITALIC+"Clic droit pour invoquer un péché",ChatColor.GREEN+""+ChatColor.ITALIC+"Shift + clic droit pour changer de péché"),
     MCOIN(Material.EMERALD,1,ChatColor.AQUA + "" + ChatColor.BOLD + "M-Coin",42,null,0,true),
-    SOUL_MOB(Material.GUNPOWDER,1,ChatColor.AQUA+"Moon Soul",1,ChatColor.LIGHT_PURPLE+ "Âme d'une créature de la nuit",ChatColor.LIGHT_PURPLE+ "L'éclipse leur permet de prendre forme",
+    SOUL_MOB(Material.GUNPOWDER,1,ChatColor.AQUA+"Moon Soul",10,ChatColor.LIGHT_PURPLE+ "Âme d'une créature de la nuit",ChatColor.LIGHT_PURPLE+ "L'éclipse leur permet de prendre forme",
             ChatColor.GRAY +""+ ChatColor.ITALIC+"Infusez une épée en netherite avec 8 âmes",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant"),
     SOUL_SLOTH(Material.SLIME_BALL,1,ChatColor.YELLOW+"Slime of Sloth",10,ChatColor.LIGHT_PURPLE+"Âme du King Slime",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Moon Blade"),
     SOUL_GREED(Material.PHANTOM_MEMBRANE,1,ChatColor.DARK_BLUE+"Wings of Greed",10,ChatColor.LIGHT_PURPLE+"Âme du Phantom Overlord",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Moon Blade"),
@@ -63,6 +63,7 @@ public enum CustomItems {
         this.item = new ItemStack(material,n);
         ItemMeta meta = this.item.getItemMeta();
         meta.setCustomModelData(cmd);
+        meta.displayName(Component.text(name));
         List<Component> itemlore = new ArrayList<>();
         for (String l : lore) {
             itemlore.add(Component.text(l));

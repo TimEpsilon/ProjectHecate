@@ -59,11 +59,11 @@ public class Demiurge extends Boss {
 
         this.phase=1;
 
-        this.ring1 = modelConstruct(1);
-        this.ring2 = modelConstruct(1);
-        this.core = modelConstruct(2);
-        this.shell = modelConstruct(3);
-        this.wings = modelConstruct(4,true);
+        this.ring1 = modelConstruct(100);
+        this.ring2 = modelConstruct(100);
+        this.core = modelConstruct(200);
+        this.shell = modelConstruct(300);
+        this.wings = modelConstruct(400,true);
 
         tick();
     }

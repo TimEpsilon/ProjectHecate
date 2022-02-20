@@ -33,11 +33,11 @@ public class Shadows extends Boss {
        //shadow appearance
         ItemStack shadow = new ItemStack(Material.NETHERITE_HOE);
         ItemMeta meta = shadow.getItemMeta();
-        meta.setCustomModelData(1);
+        meta.setCustomModelData(100);
         shadow.setItemMeta(meta);
         this.entity.getEquipment().setHelmet(shadow);
         this.entity.getEquipment().setHelmetDropChance(0f);
-        meta.setCustomModelData(3);
+        meta.setCustomModelData(300);
         shadow.setItemMeta(meta);
         this.entity.getEquipment().setItemInMainHand(shadow);
         this.entity.getEquipment().setItemInMainHandDropChance(0f);
@@ -64,7 +64,7 @@ public class Shadows extends Boss {
         this.body.setMarker(true);
         this.body.setGravity(false);
         this.body.getEquipment().setHelmet(shadow);
-        meta.setCustomModelData(2);
+        meta.setCustomModelData(200);
         shadow.setItemMeta(meta);
         this.body.getEquipment().setHelmet(shadow);
         this.body.setArms(true);

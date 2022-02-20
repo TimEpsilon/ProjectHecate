@@ -1,10 +1,7 @@
 package com.github.tim91690.eclipse.structure;
 
 import com.github.tim91690.eclipse.misc.ConfigManager;
-import com.sk89q.worldedit.event.platform.BlockInteractEvent;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
@@ -15,6 +12,8 @@ public class BlockProtection implements Listener {
     @EventHandler
     public void onBlockBreak(BlockBreakEvent b) {
 
+        if (!b.getPlayer().getWorld().equals(World.Environment.NORMAL)) return;
+
         if (!b.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ) return;
         if (b.getBlock().getLocation().distance(loc) > 60) return;
 
@@ -24,6 +23,8 @@ public class BlockProtection implements Listener {
 
     @EventHandler
     public void onBlockExplode(BlockExplodeEvent e) {
+
+        if (!e.getBlock().getWorld().equals(World.Environment.NORMAL)) return;
 
         if (e.getBlock().getLocation().distance(loc) > 60) return;
 
@@ -37,16 +38,9 @@ public class BlockProtection implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
 
         if (!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ) return;
+        if (!e.getPlayer().getWorld().equals(World.Environment.NORMAL)) return;
         if (e.getBlock().getLocation().distance(loc) > 60) return;
 
         e.setCancelled(true);
     }
-
-    @EventHandler
-    public void fire(BlockIgniteEvent e) {
-        if (e.getBlock().getLocation().distance(loc) > 60 ) return;
-
-        e.setCancelled(true);
-    }
-
 }

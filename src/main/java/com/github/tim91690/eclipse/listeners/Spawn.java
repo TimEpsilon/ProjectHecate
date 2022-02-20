@@ -14,17 +14,20 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.CreatureSpawnEvent;
 
+import java.util.Random;
+
 public class Spawn implements Listener {
 
-    private float probaSemiBoss = 0.05f;
+    private float probaSemiBoss = 0.01f;
+    private static Random random = new Random();
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {
-        if (!(event.getEntity() instanceof Monster) || event.getEntity().getScoreboardTags().contains("Eclipse")) return;
+        if (!(event.getEntity() instanceof Monster) || !event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)) return;
 
         int lvl = 1; //TODO getlevel
 
-        if (Math.random()<probaSemiBoss) {
+        if (random.nextFloat()<probaSemiBoss) {
             event.setCancelled(true);
             spawnSemiBoss(event.getLocation(),lvl);
         }
@@ -34,7 +37,6 @@ public class Spawn implements Listener {
             case ("DROWNED"):
             case ("HUSK"):
                 //Zombie Tank remplace les zombies, drowned et husk
-                event.setCancelled(true);
                 new ZombieTank(event.getEntity(),lvl);
                 return;
             case ("CREEPER"):
@@ -43,12 +45,10 @@ public class Spawn implements Listener {
                 return;
             case ("SKELETON"):
                 //Skeleton Sniper remplace skeletons
-                event.setCancelled(true);
                 new SkeletonSniper(event.getEntity());
                 return;
             case ("SPIDER"):
                 //Spider Crawler remplace spider
-                event.setCancelled(true);
                 new SpiderCrawler(event.getEntity());
         }
     }
@@ -64,10 +64,13 @@ public class Spawn implements Listener {
         switch (lvl) {
             case 1:
                 rc.add(100,"PhantomFurries");
+                break;
             case 2:
                 rc.add(70,"RavagerBeast").add(30,"PhantomFurries");
+                break;
             case 3:
                 rc.add(70,"IllusionerMage").add(25,"RavagerBeast").add(5,"PhantomFurries");
+                break;
             case 4:
                 rc.add(70,"DrownedOverlord").add(20,"IllusionerMage").add(7,"RavagerBeast").add(3,"PhantomFurries");
         }
@@ -75,12 +78,16 @@ public class Spawn implements Listener {
         switch (rc.next()) {
             case "PhantomFurries":
                 new PhantomFurries(loc);
+                break;
             case "RavagerBeast":
                 new RavagerBeast(loc);
+                break;
             case "IllusionerMage":
                 new IllusionerMage(loc);
+                break;
             case "DrownedOverlord":
                 new DrownedOverlordHorse(loc);
+                break;
         }
     }
 }

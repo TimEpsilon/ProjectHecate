@@ -4,8 +4,7 @@ import org.bukkit.Location;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.entity.Spider;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
@@ -19,5 +18,9 @@ public class SpiderCrawler extends EclipseMobs {
 
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_FALLING,2000000,2,true,true));
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.JUMP,2000000,3,true,true));
+    }
+
+    public SpiderCrawler(Location loc) {
+        this((Spider)loc.getWorld().spawnEntity(loc,EntityType.SPIDER));
     }
 }

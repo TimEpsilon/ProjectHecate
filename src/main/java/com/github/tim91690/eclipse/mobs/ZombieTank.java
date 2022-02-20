@@ -7,7 +7,7 @@ import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
-import org.bukkit.event.entity.CreatureSpawnEvent;
+import org.bukkit.entity.Zombie;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.potion.PotionEffect;
@@ -37,6 +37,10 @@ public class ZombieTank extends EclipseMobs {
         this.entity.getEquipment().setHelmetDropChance(0.005F);
     }
 
+    public ZombieTank(Location loc, int lvl) {
+        this((Zombie)loc.getWorld().spawnEntity(loc, EntityType.ZOMBIE),lvl);
+    }
+
     private ItemStack randomArmor(EquipmentSlot e) {
         WeightCollection<ItemStack> rc;
         float[] weight = getWeightByLevel();
@@ -58,17 +62,23 @@ public class ZombieTank extends EclipseMobs {
     }
 
     private float[] getWeightByLevel() {
-        float[] weight = new float[] {1,1,1,1};
+        float[] weight;
 
         switch (this.lvl) {
             case 1:
                 weight = new float[] {90, 9, 0.9f, 0.1f};
+                break;
             case 2:
                 weight = new float[] {0.1f,90,9,0.9f};
+                break;
             case 3:
                 weight = new float[] {0.1f,0.9f,90,9};
+                break;
             case 4:
                 weight = new float[] {0.1f,0.9f,9,90};
+                break;
+            default:
+                weight = new float[] {1,1,1,1};
         }
         return weight;
     }
