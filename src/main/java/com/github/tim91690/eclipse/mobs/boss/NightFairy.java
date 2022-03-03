@@ -1,8 +1,10 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.item.CustomItems;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
@@ -17,7 +19,7 @@ public class NightFairy extends Boss {
     int beaconTask;
 
     public NightFairy(Location loc,int beaconTask) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.BAT),60, ChatColor.DARK_PURPLE+""+ChatColor.BOLD+"Night Fairy", BarColor.PINK);
+        super(loc.getWorld().spawnEntity(loc, EntityType.BAT),60, ChatColor.DARK_PURPLE+""+ChatColor.BOLD+"Night Fairy", BarColor.PINK, CustomItems.SOUL_LUST.getItem(),3,40);
         this.beaconTask = beaconTask;
 
         this.entity.setCustomName(this.name);
@@ -28,7 +30,7 @@ public class NightFairy extends Boss {
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,100000000,0,false,false));
 
         this.taskTick = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-            this.getEntity().getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation(),10,0.2,0.2,0.2,0,new Particle.DustOptions(Color.fromRGB(242,204,209),1),true);
+            this.getEntity().getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation(),10,0.1,0.1,0.1,0,new Particle.DustOptions(Color.fromRGB(242,204,209),1),true);
             this.getEntity().getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation(),20,0.5,0.5,0.5,0,new Particle.DustOptions(Color.fromRGB(220,0,140),1),true);
             this.getEntity().getWorld().spawnParticle(Particle.DRAGON_BREATH,this.getEntity().getLocation(),3,0,0,0,0,null,true);
         },0,1).getTaskId();
@@ -37,11 +39,10 @@ public class NightFairy extends Boss {
 
     @Override
     public void death() {
-        bossList.remove(this);
-        this.bossbar.removeAll();
+        this.entity.getWorld().createExplosion(this.entity.getLocation(),3,true,false,this.entity);
+        super.death();
         Bukkit.getScheduler().cancelTask(this.taskTick);
         Bukkit.getScheduler().cancelTask(this.beaconTask);
-        this.entity.getWorld().createExplosion(this.entity.getLocation(),3,true,false,this.entity);
     }
 
     @Override

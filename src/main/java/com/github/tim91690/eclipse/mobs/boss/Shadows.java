@@ -1,6 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.misc.WeightCollection;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -19,29 +20,35 @@ import java.util.List;
 import java.util.Random;
 
 public class Shadows extends Boss {
-    ArmorStand body;
-    int position_task;
+    private ArmorStand body;
+    private int position_task;
+    private static final ItemStack itemArm = getBodyPart(300);
+    private static final ItemStack itemHead = getBodyPart(100);
+    private static final ItemStack itemBody = getBodyPart(200);
+
+    private static final Random random = new Random();
 
 
+    private static ItemStack getBodyPart(int cmd) {
+        ItemStack item = new ItemStack(Material.NETHERITE_HOE);
+        ItemMeta meta = item.getItemMeta();
+        meta.setCustomModelData(cmd);
+        item.setItemMeta(meta);
+        return item;
+    }
 
     public Shadows(Location loc) {
-
-        super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,ChatColor.translateAlternateColorCodes('&',"&8&lShadow"), BarColor.WHITE);
+        super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,ChatColor.translateAlternateColorCodes('&',"&8&lShadow"), BarColor.WHITE, CustomItems.SOUL_PRIDE.getItem(),6,35);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">")));
 
        //shadow appearance
-        ItemStack shadow = new ItemStack(Material.NETHERITE_HOE);
-        ItemMeta meta = shadow.getItemMeta();
-        meta.setCustomModelData(100);
-        shadow.setItemMeta(meta);
-        this.entity.getEquipment().setHelmet(shadow);
+
+        this.entity.getEquipment().setHelmet(itemHead);
         this.entity.getEquipment().setHelmetDropChance(0f);
-        meta.setCustomModelData(300);
-        shadow.setItemMeta(meta);
-        this.entity.getEquipment().setItemInMainHand(shadow);
+        this.entity.getEquipment().setItemInMainHand(itemArm);
         this.entity.getEquipment().setItemInMainHandDropChance(0f);
-        this.entity.getEquipment().setItemInOffHand(shadow);
+        this.entity.getEquipment().setItemInOffHand(itemArm);
         this.entity.getEquipment().setItemInOffHandDropChance(0f);
 
 
@@ -63,10 +70,7 @@ public class Shadows extends Boss {
         this.body.setInvisible(true);
         this.body.setMarker(true);
         this.body.setGravity(false);
-        this.body.getEquipment().setHelmet(shadow);
-        meta.setCustomModelData(200);
-        shadow.setItemMeta(meta);
-        this.body.getEquipment().setHelmet(shadow);
+        this.body.getEquipment().setHelmet(itemBody);
         this.body.setArms(true);
         this.body.setRightArmPose(new EulerAngle(0,0,135*Math.PI/180));
         this.body.setLeftArmPose(new EulerAngle(0,0,225*Math.PI/180));
@@ -90,8 +94,7 @@ public class Shadows extends Boss {
      */
     @Override
     public void death() {
-        bossList.remove(this);
-        this.bossbar.removeAll();
+        super.death();
         this.body.remove();
         Bukkit.getScheduler().cancelTask(this.position_task);
     }
@@ -102,49 +105,49 @@ public class Shadows extends Boss {
     @Override
     public void attack(List<Player> proxPlayer) {
         WeightCollection<String> rc;
+        boolean ismidlife = ((LivingEntity) this.getEntity()).getHealth() <= this.getMaxHealth() / 2;
         rc = new WeightCollection<String>()
                 .add(50,"despair")
                 .add(40,"teleport")
                 .add(35,"wither")
-                .add(50,"void")
-                .add(45,"soul");
+                .add(45,"soul")
+                .add(50,"void");
         String attack = rc.next();
         switch (attack) {
-            case "despair":
+            case "despair" -> {
                 attackAnimation();
-                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) anguish(proxPlayer);
+                if (ismidlife) anguish(proxPlayer);
                 else despair(proxPlayer);
-                break;
-            case "teleport":
+            }
+            case "teleport" -> {
                 attackAnimation();
-                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) shadowClone();
+                if (ismidlife) shadowClone();
                 else shadowTeleport();
-                break;
-            case "wither":
+            }
+            case "wither" -> {
                 attackAnimation();
-                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) strongWitherWave(proxPlayer);
+                if (ismidlife) strongWitherWave(proxPlayer);
                 else witherWave(proxPlayer);
-                break;
-            case "soul":
+            }
+            case "soul" -> {
                 attackAnimation();
-                if (((LivingEntity)this.getEntity()).getHealth() <= this.getMaxHealth()/2) tormentedSoulSummon(proxPlayer);
+                if (ismidlife) tormentedSoulSummon(proxPlayer);
                 else soulSummon(proxPlayer);
-                break;
+            }
         }
     }
 
     /** Animation d'attaque : lève les bras en l'air
      */
     private void attackAnimation() {
-        ItemStack arm = this.entity.getEquipment().getItemInMainHand();
         this.entity.getEquipment().setItemInMainHand(null);
         this.entity.getEquipment().setItemInOffHand(null);
-        this.body.getEquipment().setItemInMainHand(arm);
-        this.body.getEquipment().setItemInOffHand(arm);
+        this.body.getEquipment().setItemInMainHand(itemArm);
+        this.body.getEquipment().setItemInOffHand(itemArm);
 
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-            this.entity.getEquipment().setItemInMainHand(arm);
-            this.entity.getEquipment().setItemInOffHand(arm);
+            this.entity.getEquipment().setItemInMainHand(itemArm);
+            this.entity.getEquipment().setItemInOffHand(itemArm);
             this.body.getEquipment().setItemInMainHand(null);
             this.body.getEquipment().setItemInOffHand(null);
         },80);
@@ -153,13 +156,29 @@ public class Shadows extends Boss {
     /** Draine l'énergie mentale du joueur
      */
     private void despair(List<Player> proxPlayer) {
+        //Random Message
+        WeightCollection<String> rc = (new WeightCollection<String>()
+                .add(1,"Tu es à bout de forces...")
+                .add(1,"Abandonnes...")
+                .add(1,"Tout est futile...")
+                .add(1,"Sacrifies toi au vide...")
+                .add(1,"Jettes ton épée...")
+                .add(1,"Fais demi tour...")
+                .add(1,"Tout le monde te regarde...")
+                .add(1,"Rejoins nous...")
+                .add(1,"La Lune demande un sacrifice...")
+                .add(1,"Tes pêchés rampent dans ton dos...")
+                .add(1,"Ton avarice mènera à ta perte...")
+                .add(1,"Je suis Toi. Tu es Moi...")
+                .add(1,"Retires ton armure..."));
+
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 12) {
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, this.getEntity().getLocation(), 1000, 5, 5, 5, 0);
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                     //Effect
                     this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 400, 0.5, 1, 0.5, 0);
-                    p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 1f, 0.7f);
+                    p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD,SoundCategory.HOSTILE, 1f, 0.7f);
 
                     //Potion
                     p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,0));
@@ -167,19 +186,11 @@ public class Shadows extends Boss {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS,100,0));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,100,0));
 
-                    //Random Message
-                    WeightCollection<String> rc = (new WeightCollection<String>().add(1,"Tu es à bout de forces...")
-                            .add(1,"Abandonnes...")
-                            .add(1,"Sacrifies toi au vide...")
-                            .add(1,"Jettes ton épée...")
-                            .add(1,"La lune demande un sacrifice...")
-                            .add(1,"Retires ton armure..."));
-
                     //Title
-                    p.sendTitle(ChatColor.DARK_GRAY+rc.next(),"",5,80,0);
+                    p.sendTitle(" ",ChatColor.DARK_GRAY+rc.next(),5,80,0);
 
                     //Fake message
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[(new Random()).nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next()),60);
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[random.nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next()),60);
                 },40);
             }
         }
@@ -188,11 +199,25 @@ public class Shadows extends Boss {
     /** Version phase 2 de despair
      */
     private void anguish(List<Player> proxPlayer) {
+        //Random Message
+        WeightCollection<String> rc = (new WeightCollection<String>()
+                .add(1,ChatColor.MAGIC + "Feed the void")
+                .add(1,"Je suis une ombre. Le miroir du vrai Toi...")
+                .add(1,"Tu n'as aucune idée de ce que tu vas affronter...")
+                .add(1,"Rejoins nous...")
+                .add(1,"Tu seras bientôt en Sa présence...")
+                .add(1,ChatColor.MAGIC + "The Day of Salvation is Near")
+                .add(1,"Tu finiras par échouer...")
+                .add(1,"La Lune s'impatiente...")
+                .add(1,"Tes pêchés pèsent sur ta nuque...")
+                .add(1,"Une catastrophe imminente approche...")
+                .add(1,"Retires ton armure..."));
+
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 15) {
                 //Effect
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 500, 0.5, 1, 0.5, 0);
-                p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD, 1f, 0.7f);
+                p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD,SoundCategory.HOSTILE, 1f, 0.7f);
 
                 //Potion
                 p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,100,0));
@@ -201,14 +226,25 @@ public class Shadows extends Boss {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION,100,0));
 
                 //Title
-                p.sendTitle(ChatColor.DARK_RED+""+ChatColor.MAGIC+"Feed the void","",5,80,0);
+                String title = rc.next();
+                String finalText = ChatColor.DARK_RED +""+ title.charAt(0) +""+ title.charAt(1);
+                for (int j = 2; j < title.length(); j++) {
+                    if (random.nextFloat()<0.40) {
+                        finalText = finalText + ChatColor.MAGIC + title.charAt(j) + ChatColor.RESET + ChatColor.DARK_RED;
+                    } else {
+                        finalText = finalText + title.charAt(j);
+                    }
+                }
+
+                p.sendTitle(" ",ChatColor.DARK_RED+finalText,5,80,0);
                 p.sendMessage(ChatColor.ITALIC+""+ChatColor.GRAY+"Vous ressentez une soudaine pulsion de jeter quelque chose...");
 
                 //Fake message
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
                     p.sendMessage("<"+p.getName()+"> Je n'ai pas besoin de ça...");
-                    p.dropItem(false);
-                },60);
+                    p.dropItem(true);
+                    p.updateInventory();
+                },40);
             }
         }
     }
@@ -237,12 +273,12 @@ public class Shadows extends Boss {
             }
         }
         randomLoc.add(this.entity.getLocation());
-        this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1,0.5f);
+        this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,SoundCategory.HOSTILE,1,0.5f);
 
         //particules à chaque localisation
         int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
             for (Location loc : randomLoc) {
-                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,100,0.2,1,0.2,0);
+                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,70,0.2,0.7,0.2,0);
             }
         },0,1).getTaskId();
 
@@ -250,7 +286,7 @@ public class Shadows extends Boss {
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
             this.getEntity().teleport(randomLoc.get(1));
             this.body.teleport(this.entity.getLocation().add(0,0.2,0));
-            this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,1,2);
+            this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.HOSTILE,1,2);
             ((LivingEntity)this.getEntity()).setAI(true);
             Bukkit.getScheduler().cancelTask(task);
         },40);
@@ -281,19 +317,19 @@ public class Shadows extends Boss {
             }
         }
         randomLoc.add(this.entity.getLocation());
-        this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,1,0.3f);
+        this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,SoundCategory.HOSTILE,1,0.3f);
 
         int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
             for (Location loc : randomLoc) {
-                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,100,0.2,1,0.2,0);
-                this.getEntity().getWorld().spawnParticle(Particle.SOUL,loc,5,0.8,1,0.8,0.1);
+                this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,70,0.2,0.7,0.2,0);
+                this.getEntity().getWorld().spawnParticle(Particle.SOUL,loc,5,0.8,0.7,0.8,0.1);
             }
         },0,1).getTaskId();
 
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
             this.getEntity().teleport(randomLoc.get(0));
             this.body.teleport(this.entity.getLocation().add(0,0.2,0));
-            this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,1,2);
+            this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.HOSTILE,1,2);
             ((LivingEntity)this.getEntity()).setAI(true);
             Bukkit.getScheduler().cancelTask(task);
 
@@ -325,8 +361,6 @@ public class Shadows extends Boss {
                             30, 0.2, 0.5,0.2,0, new Particle.DustOptions(Color.BLACK,1),true);
                 },0,1).getTaskId()
                 );
-
-
             }
         },40);
     }
@@ -342,7 +376,7 @@ public class Shadows extends Boss {
             this.entity.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.entity.getLocation(),100,1,0,1);
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
                 for (float i = 0;i<24;i++) {
-                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 1d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
                     loc.setYaw(i*360f/20f-90f);
                     loc.setPitch(0);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
@@ -360,12 +394,12 @@ public class Shadows extends Boss {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 15) player = true;
         }
         if (player) {
-            this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),200,2,0,2);
+            this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),200,2,1,2);
 
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
                 for (float i = 0;i<24;i++) {
-                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
-                    loc.setYaw(i*360f/20f-90f);
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 24), 0d, Math.sin(i * 2 * Math.PI / 24)).multiply(0.2));
+                    loc.setYaw(i*360f/24f-90f);
                     loc.setPitch(0);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
                     skull.setDirection(new Vector(Math.cos(i*2*Math.PI/23),0d,Math.sin(i*2*Math.PI/23)).multiply(0.2));
@@ -374,13 +408,13 @@ public class Shadows extends Boss {
             },40);
 
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                for (float i = 0;i<26;i++) {
-                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
+                for (float i = 0;i<30;i++) {
+                    Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 30), 0d, Math.sin(i * 2 * Math.PI / 30)).multiply(0.2));
                     loc.setYaw(i*360f/20f-90f);
                     loc.setPitch(0);
                     WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
-                    skull.setDirection(new Vector(Math.cos(i * 2 * Math.PI / 26), 0d, Math.sin(i * 2 * Math.PI / 26)));
-                    skull.setRotation(i/26,i/26);
+                    skull.setDirection(new Vector(Math.cos(i * 2 * Math.PI / 29), 0d, Math.sin(i * 2 * Math.PI / 29)));
+                    skull.setRotation(i/29,i/29);
                 }
             },60);
 
@@ -431,7 +465,6 @@ public class Shadows extends Boss {
                                         10, 0.1, 0.1,0.1,0);
                             },0,1).getTaskId()
                     );
-
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> vex.setHealth(0),200);
                 }
             },60);
@@ -449,7 +482,6 @@ public class Shadows extends Boss {
                 break;
             }
         }
-
         if(prox) {
             this.entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY,this.entity.getLocation(),200,3,3,3);
             this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),50,3,3,3);
@@ -479,7 +511,7 @@ public class Shadows extends Boss {
                     vex.getWorld().playSound(vex.getLocation(),Sound.ENTITY_TNT_PRIMED,SoundCategory.HOSTILE,1f,0.8f);
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                         vex.getWorld().createExplosion(vex.getLocation(),3,false,false);
-                        vex.setHealth(0);
+                        vex.remove();
                     },140);
                 }
             },60);

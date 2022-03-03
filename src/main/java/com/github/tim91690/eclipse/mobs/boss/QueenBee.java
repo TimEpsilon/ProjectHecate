@@ -1,6 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.item.CustomItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;
@@ -18,7 +19,7 @@ public class QueenBee extends Boss {
     int colony;
 
     public QueenBee(Location loc) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.BEE),250, ChatColor.BLUE+""+ChatColor.BOLD+"Queen Bee", BarColor.BLUE);
+        super(loc.getWorld().spawnEntity(loc, EntityType.BEE),250, ChatColor.BLUE+""+ChatColor.BOLD+"Queen Bee", BarColor.BLUE, CustomItems.SOUL_GLUTTONY.getItem(),5,25);
         this.colony = 0;
 
         this.entity.setCustomName(this.name);
@@ -49,8 +50,7 @@ public class QueenBee extends Boss {
 
     @Override
     public void death() {
-        bossList.remove(this);
-        this.bossbar.removeAll();
+        super.death();
         Bukkit.getScheduler().cancelTask(this.task);
     }
 
@@ -60,12 +60,14 @@ public class QueenBee extends Boss {
         Player closest = null;
         for (Player p : proxPlayer) {
             p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER,60,0));
+            p.playSound(this.entity.getLocation(),Sound.ENTITY_BEE_LOOP_AGGRESSIVE,SoundCategory.HOSTILE,3,1);
             if (this.entity.getLocation().distance(p.getLocation())<distance) distance = this.entity.getLocation().distance(p.getLocation());
             closest = p;
         }
-        if (this.colony < 30) {
-            this.colony = this.colony +2;
+        if (this.colony < 50) {
+            this.colony = this.colony +3;
             if (closest != null) ((Bee)this.entity).setTarget(closest);
+            summonBee();
             summonBee();
             summonBee();
         }

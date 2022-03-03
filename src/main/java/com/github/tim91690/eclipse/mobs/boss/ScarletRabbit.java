@@ -1,6 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.misc.WeightCollection;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -19,7 +20,7 @@ public class ScarletRabbit extends Boss {
 
     public ScarletRabbit(Location loc) {
 
-        super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"), BarColor.RED);
+        super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"), BarColor.RED, CustomItems.SOUL_WRATH.getItem(),4,20);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">")));
 
@@ -50,21 +51,11 @@ public class ScarletRabbit extends Boss {
         rc = new WeightCollection<String>().add(11,"shockwave").add(10,"lightning").add(9,"spores").add(8,"souls").add(1,"wither").add(60,"void");
         String attack = rc.next();
         switch (attack) {
-            case "shockwave":
-                shockwave(proxPlayer);
-                break;
-            case "lightning":
-                lightning(proxPlayer);
-                break;
-            case "spores":
-                spores(proxPlayer);
-                break;
-            case "souls":
-                souls();
-                break;
-            case "wither":
-                wither();
-                break;
+            case "shockwave" -> shockwave(proxPlayer);
+            case "lightning" -> lightning(proxPlayer);
+            case "spores" -> spores(proxPlayer);
+            case "souls" -> souls();
+            case "wither" -> wither();
         }
     }
 
@@ -75,15 +66,12 @@ public class ScarletRabbit extends Boss {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 8) {
                 this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 400, 8, 2, 8, 0, Material.DIRT.createBlockData());
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                    Vector d = new Vector(0, 2, 0);
-                    p.setVelocity(d);
+                    p.setVelocity(new Vector(0, 2, 0));
                     this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 300, 8, 2, 8, 0, Material.DIRT.createBlockData());
-                    this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK, 2f, 0.8f);
-                },60);
+                    this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK,SoundCategory.HOSTILE, 2f, 0.8f);
+                },20);
             }
         }
-
-
     }
 
     /** Envoi un éclair sur le joueur
@@ -96,7 +84,7 @@ public class ScarletRabbit extends Boss {
                     Location loc = p.getLocation();
                     loc.add(new Vector(Math.random()*4-2,0,Math.random()*4-2));
                     p.getWorld().strikeLightning(loc);
-                },60);
+                },20);
             }
         }
     }
@@ -110,15 +98,15 @@ public class ScarletRabbit extends Boss {
                 Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));
                     this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 1500, 5, 5, 5, 10);
-                    this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 3f, 0f);
-                },60);
+                    this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, SoundCategory.HOSTILE, 3f, 0f);
+                },20);
 
             }
         }
 
     }
 
-    /** Invoque 2 wither squelettes par joueurs
+    /** Invoque 3 wither squelettes
      */
     private void souls() {
         this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
@@ -139,11 +127,10 @@ public class ScarletRabbit extends Boss {
                 s.setHealth(80);
 
                 s.addScoreboardTag("Eclipse");
-
-                this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),500,10,10,10,0);
-                this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_HURT,3f,0f);
             }
-        },60);
+            this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),500,10,10,10,0);
+            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_HURT,SoundCategory.HOSTILE,3f,0f);
+        },20);
     }
 
     /** Invoque un wither (semiboss)
@@ -163,7 +150,6 @@ public class ScarletRabbit extends Boss {
             scarlet.addEntry(s.getUniqueId().toString());
 
             this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),500,5,5,5,0);
-        },60);
+        },20);
     }
-
 }

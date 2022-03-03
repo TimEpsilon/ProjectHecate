@@ -7,7 +7,6 @@ import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlordHorse;
 import com.github.tim91690.eclipse.mobs.semiboss.IllusionerMage;
 import com.github.tim91690.eclipse.mobs.semiboss.PhantomFurries;
 import com.github.tim91690.eclipse.mobs.semiboss.RavagerBeast;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
@@ -19,7 +18,7 @@ import java.util.Random;
 public class Spawn implements Listener {
 
     private float probaSemiBoss = 0.01f;
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {

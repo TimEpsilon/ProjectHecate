@@ -31,13 +31,14 @@ public class MoonLaser {
         for (Entity e : nearby) {
             if (e instanceof LivingEntity && e.getScoreboardTags().contains("Eclipse") && this.laser.getLocation().distance(e.getLocation()) < this.laser.getLocation().distance(targetLoc)) targetLoc = e.getLocation();
         }
-        Location diff = targetLoc.add(this.laser.getLocation().multiply(-1));
+        Location diff = targetLoc.subtract(this.laser.getLocation());
         return new Vector(diff.getX(),diff.getY(),diff.getZ()).normalize();
     }
 
     private void summon(int delay) {
         if (delay == 0) return;
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> this.laser.getWorld().spawnParticle(Particle.REDSTONE,this.laser.getLocation(),
+        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() ->
+                this.laser.getWorld().spawnParticle(Particle.REDSTONE,this.laser.getLocation(),
                 20,0.3,0.3,0.3,0,new Particle.DustOptions(this.color,2),true),0,1)
                 .getTaskId();
 

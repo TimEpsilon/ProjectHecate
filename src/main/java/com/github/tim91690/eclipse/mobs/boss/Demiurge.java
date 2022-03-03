@@ -2,6 +2,7 @@ package com.github.tim91690.eclipse.mobs.boss;
 
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.misc.ConfigManager;
 import com.github.tim91690.eclipse.misc.Laser;
 import com.github.tim91690.eclipse.misc.WeightCollection;
@@ -44,7 +45,7 @@ public class Demiurge extends Boss {
      * 4) Le demiurge perd ses anneaux et passe en mode vitesse, les joueurs subissent de l'antigravité et sont éjectés
      */
     public Demiurge(Location loc) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.MAGMA_CUBE),2040,ChatColor.BOLD+""+ChatColor.AQUA+"Demiurge", BarColor.GREEN);
+        super(loc.getWorld().spawnEntity(loc, EntityType.MAGMA_CUBE),2040,ChatColor.BOLD+""+ChatColor.AQUA+"Demiurge", BarColor.GREEN, CustomItems.SOUL_ENVY.getItem(),7,100);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eLe &k&bDemiurge &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
 

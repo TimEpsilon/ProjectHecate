@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.SoundCategory;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Fireball;
 import org.bukkit.entity.Player;
@@ -15,7 +16,7 @@ import org.bukkit.util.Vector;
 
 public class Meteor {
     private Location loc;
-    private int task;
+    private int fallingTask;
     private int beaconTask;
     private Fireball fireball;
     private NightFairy fairy;
@@ -30,14 +31,14 @@ public class Meteor {
 
         this.fireball.getWorld().playSound(this.loc,"minecraft:meteor_fall", SoundCategory.AMBIENT,20,1);
 
-        this.task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+        this.fallingTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
             if(this.fireball.isDead()) MeteorDeath();
-            loc.getWorld().spawnParticle(Particle.GLOW_SQUID_INK,this.fireball.getLocation(),60,1,2,1,0,null,true);
+            loc.getWorld().spawnParticle(Particle.GLOW_SQUID_INK,this.fireball.getLocation(),60,1,3,1,0,null,true);
         },0,1).getTaskId();
     }
 
     private void MeteorDeath() {
-        Bukkit.getScheduler().cancelTask(this.task);
+        Bukkit.getScheduler().cancelTask(this.fallingTask);
         Beacon();
     }
 
@@ -53,6 +54,11 @@ public class Meteor {
                 }
             }
             if (this.loc.distance(this.fairy.getEntity().getLocation())> 30) this.fairy.getEntity().teleport(this.loc);
+
+            for (Entity entity : this.loc.getNearbyEntities(10,10,10)) {
+                if (!entity.getScoreboardTags().contains("Eclipse") || entity.getScoreboardTags().contains("Boss")) continue;
+                entity.setVelocity(entity.getLocation().toVector().subtract(this.loc.toVector()).multiply(2));
+            }
         },40,30).getTaskId();
 
         this.fairy = new NightFairy(this.loc,this.beaconTask);

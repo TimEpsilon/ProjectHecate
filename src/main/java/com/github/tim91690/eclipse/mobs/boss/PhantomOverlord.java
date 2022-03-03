@@ -1,5 +1,6 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
+import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.mobs.SkeletonSniper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -11,11 +12,14 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.List;
+import java.util.Random;
 
 public class PhantomOverlord extends Boss {
 
+    private static final Random random = new Random();
+
     public PhantomOverlord(Location loc) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord", BarColor.BLUE);
+        super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord", BarColor.BLUE, CustomItems.SOUL_GREED.getItem(),2,10);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">")));
 
@@ -35,7 +39,7 @@ public class PhantomOverlord extends Boss {
 
     @Override
     public void attack(List<Player> proxPlayer) {
-        int n = (int)(Math.random()*7);
+        int n = random.nextInt(7);
         switch (n) {
             case 0:
                 summonSoldiers();
@@ -78,17 +82,17 @@ public class PhantomOverlord extends Boss {
             ph.addPassenger(s);
 
             this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE,this.getEntity().getLocation(),500,20,20,20,0);
-            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_PHANTOM_HURT,4f,2f);
+            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_PHANTOM_HURT,SoundCategory.HOSTILE,4f,2f);
         }
     }
 
     private void succ(List<Player> proxPlayer) {
         for (Player p : proxPlayer) {
             //Vector unitaire du boss au joueur multiplié par -2
-            Vector d = p.getLocation().subtract(this.getEntity().getLocation()).toVector().normalize().multiply(-2);
+            Vector d = p.getLocation().subtract(this.getEntity().getLocation()).toVector().normalize().multiply(-3);
             p.setVelocity(d);
             this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE,this.getEntity().getLocation(),500,20,20,20,0);
-            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,4f,0.1f);
+            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.HOSTILE,4f,0.1f);
         }
     }
 }
