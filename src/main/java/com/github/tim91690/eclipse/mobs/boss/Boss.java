@@ -118,7 +118,7 @@ public abstract class Boss {
             for (ItemStack item : remaining.values()) {
                 p.getWorld().dropItem(p.getLocation(),item);
             }
-            if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless"+this.lvl))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade_bless"+this.lvl));
+            if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade_bless"+this.lvl))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade_bless"+this.lvl));
         }
     }
 

@@ -7,12 +7,12 @@ import org.bukkit.util.Vector;
 
 import java.util.List;
 
-public class MoonLaser {
+public class CosmicLaser {
     Color color;
     Trident laser;
     Player owner;
 
-    public MoonLaser(Location loc, Color color,Player p,int delay) {
+    public CosmicLaser(Location loc, Color color, Player p, int delay) {
         this.laser = (Trident)loc.getWorld().spawnEntity(loc, EntityType.TRIDENT);
         this.color = color;
         this.owner = p;

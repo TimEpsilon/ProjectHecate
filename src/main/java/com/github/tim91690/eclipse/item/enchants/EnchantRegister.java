@@ -10,10 +10,10 @@ import java.util.stream.Collectors;
 
 public class EnchantRegister {
 
-    public static final Enchantment MOON_BLESSING = new MoonEnchant();
+    public static final Enchantment COSMIC_BLESSING = new CosmicEnchant();
 
     public static void register() {
-        boolean registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(MOON_BLESSING);
+        boolean registered = Arrays.stream(Enchantment.values()).collect(Collectors.toList()).contains(COSMIC_BLESSING);
 
         if(!registered) registerEnchantment();
     }
@@ -30,8 +30,8 @@ public class EnchantRegister {
             @SuppressWarnings("unchecked")
             HashMap<NamespacedKey, Enchantment> byKey = (HashMap<NamespacedKey, Enchantment>) keyField.get(null);
 
-            if(byKey.containsKey(EnchantRegister.MOON_BLESSING.getKey())) {
-                byKey.remove(EnchantRegister.MOON_BLESSING.getKey());
+            if(byKey.containsKey(EnchantRegister.COSMIC_BLESSING.getKey())) {
+                byKey.remove(EnchantRegister.COSMIC_BLESSING.getKey());
             }
 
             Field nameField = Enchantment.class.getDeclaredField("byName");
@@ -40,8 +40,8 @@ public class EnchantRegister {
             @SuppressWarnings("unchecked")
             HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) nameField.get(null);
 
-            if(byName.containsKey(EnchantRegister.MOON_BLESSING.getName())) {
-                byName.remove(EnchantRegister.MOON_BLESSING.getName());
+            if(byName.containsKey(EnchantRegister.COSMIC_BLESSING.getName())) {
+                byName.remove(EnchantRegister.COSMIC_BLESSING.getName());
             }
         } catch (Exception ignored) { }
     }
@@ -52,7 +52,7 @@ public class EnchantRegister {
             Field f = Enchantment.class.getDeclaredField("acceptingNew");
             f.setAccessible(true);
             f.set(null,true);
-            Enchantment.registerEnchantment(EnchantRegister.MOON_BLESSING);
+            Enchantment.registerEnchantment(EnchantRegister.COSMIC_BLESSING);
         } catch (Exception e) {
             registered = false;
             e.printStackTrace();

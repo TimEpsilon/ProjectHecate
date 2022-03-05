@@ -25,9 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
-public class MoonEnchant extends Enchantment implements Listener {
-    public MoonEnchant() {
-        super(new NamespacedKey(EventManager.getPlugin(),"moon_blessing"));
+public class CosmicEnchant extends Enchantment implements Listener {
+    public CosmicEnchant() {
+        super(new NamespacedKey(EventManager.getPlugin(),"cosmic_blessing"));
     }
 
     private final HashMap<UUID, Boolean> playerList = new HashMap<>();
@@ -43,8 +43,8 @@ public class MoonEnchant extends Enchantment implements Listener {
         if(e.getDamager() instanceof Projectile && ((Projectile)e.getDamager()).getShooter() instanceof Player) p = (Player)((Projectile)e.getDamager()).getShooter();
         if(p == null) return;
 
-        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) {
-            int lvl = p.getInventory().getItemInMainHand().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()));
+        if (p.getInventory().getItemInMainHand().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey()))) {
+            int lvl = p.getInventory().getItemInMainHand().getEnchantments().get(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey()));
             switch (lvl) {
                 case 1 -> e.setDamage(e.getDamage() * 1.5);
                 case 2 -> {
@@ -97,16 +97,16 @@ public class MoonEnchant extends Enchantment implements Listener {
     @EventHandler
     public void LaserSword(PlayerInteractEvent e) {
         if(e.getItem() == null) return;
-        if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) {
+        if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey()))) {
             Player p = e.getPlayer();
 
-            int lvl = e.getItem().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()));
+            int lvl = e.getItem().getEnchantments().get(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey()));
             if (!playerList.containsKey(p.getUniqueId())) playerList.put(p.getUniqueId(),true);
             if (!playerList.get(p.getUniqueId())) return;
 
             switch (lvl) {
-                case 4 -> moonArrow(p);
-                case 5 -> moonTrident(p);
+                case 4 -> cosmicArrow(p);
+                case 5 -> cosmicTrident(p);
                 case 6 -> {
                     playerList.replace(p.getUniqueId(), false);
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
@@ -114,7 +114,7 @@ public class MoonEnchant extends Enchantment implements Listener {
                         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, SoundCategory.PLAYERS, 1, 2);
                         p.spawnParticle(Particle.REDSTONE, p.getLocation(), 30, 1, 0.5, 1, new Particle.DustOptions(Color.LIME, 1));
                     }, 30);
-                    new MoonLaser(p.getLocation().add(0, 1, 0).add(p.getLocation().getDirection().multiply(2)), Color.LIME, p, 0);
+                    new CosmicLaser(p.getLocation().add(0, 1, 0).add(p.getLocation().getDirection().multiply(2)), Color.LIME, p, 0);
                 }
                 case 7 -> {
                     if (!p.isSneaking()) return;
@@ -126,25 +126,25 @@ public class MoonEnchant extends Enchantment implements Listener {
                         p.spawnParticle(Particle.REDSTONE, p.getLocation(), 30, 1, 0.5, 1, new Particle.DustOptions(Color.LIME, 1));
                     }, 150);
 
-                    new MoonLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.YELLOW, p, 20);
-                    new MoonLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.GREEN, p, 25);
-                    new MoonLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.TEAL, p, 30);
-                    new MoonLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.BLUE, p, 35);
-                    new MoonLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.PURPLE, p, 40);
-                    new MoonLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.RED, p, 45);
-                    new MoonLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.ORANGE, p, 50);
+                    new CosmicLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.YELLOW, p, 20);
+                    new CosmicLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.GREEN, p, 25);
+                    new CosmicLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.TEAL, p, 30);
+                    new CosmicLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.BLUE, p, 35);
+                    new CosmicLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.PURPLE, p, 40);
+                    new CosmicLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.RED, p, 45);
+                    new CosmicLaser(p.getTargetBlock(null, 8).getLocation().add(Math.random() * 16 - 8, Math.random() * 5, Math.random() * 16 - 8), Color.ORANGE, p, 50);
                 }
             }
         }
     }
 
     @EventHandler
-    public void SinsOfTheMoon(PlayerInteractEvent e) {
+    public void SinsOfTheCosmos(PlayerInteractEvent e) {
         if (e.getItem() == null) return;
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = e.getPlayer();
-            if (!e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey()))) return;
-            if (e.getItem().getEnchantments().get(Enchantment.getByKey(EnchantRegister.MOON_BLESSING.getKey())) != 7) return;
+            if (!e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey()))) return;
+            if (e.getItem().getEnchantments().get(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey())) != 7) return;
             if (!sinId.containsKey(p.getUniqueId())) sinId.put(p.getUniqueId(),0);
             if (!sinCooldown.containsKey(p.getUniqueId())) sinCooldown.put(p.getUniqueId(),getDefaultSins());
 
@@ -364,7 +364,7 @@ public class MoonEnchant extends Enchantment implements Listener {
         return cooldown;
     }
 
-    private void moonArrow(Player p) {
+    private void cosmicArrow(Player p) {
         Arrow laser = (Arrow)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1,0).add(p.getLocation().getDirection().multiply(2)), EntityType.ARROW);
 
         laser.setVelocity(p.getLocation().getDirection());
@@ -395,7 +395,7 @@ public class MoonEnchant extends Enchantment implements Listener {
         },50);
     }
 
-    private void moonTrident(Player p) {
+    private void cosmicTrident(Player p) {
         Trident laser = (Trident)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1,0).add(p.getLocation().getDirection().multiply(2)), EntityType.TRIDENT);
 
         laser.setVelocity(p.getLocation().getDirection().multiply(2));
@@ -428,7 +428,7 @@ public class MoonEnchant extends Enchantment implements Listener {
 
     @Override
     public @NotNull String getName() {
-        return "Moon's Blessing";
+        return "Cosmic Blessing";
     }
 
     @Override
@@ -468,7 +468,7 @@ public class MoonEnchant extends Enchantment implements Listener {
 
     @Override
     public @NotNull Component displayName(int level) {
-        return Component.text("Moon's Blessing");
+        return Component.text("Cosmic Blessing");
     }
 
     @Override

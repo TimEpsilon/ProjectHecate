@@ -9,13 +9,15 @@ import com.sk89q.worldedit.bukkit.BukkitAdapter;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
+import com.sk89q.worldedit.function.mask.BlockTypeMask;
+import com.sk89q.worldedit.function.mask.Mask;
+import com.sk89q.worldedit.function.mask.Masks;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
-import org.bukkit.Bukkit;
+import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
-import org.bukkit.World;
 
 import java.io.*;
 
@@ -43,11 +45,14 @@ public class RitualArena {
             try (EditSession editSession = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld,
                     -1)) {
 
+                Mask mask = new BlockTypeMask(clipboard, BlockTypes.LAPIS_BLOCK);
+                mask = Masks.negate(mask);
+
                 Operation operation = new ClipboardHolder(clipboard)
                         .createPaste(editSession)
                         .to(BlockVector3.at(loc.getX(), loc.getY(), loc.getZ()))
                         .ignoreAirBlocks(false)
-                        .copyBiomes(true)
+                        .maskSource(mask)
                         .build();
 
                 try {

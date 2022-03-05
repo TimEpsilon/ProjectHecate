@@ -1,9 +1,11 @@
 package com.github.tim91690.eclipse.events;
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.misc.Laser;
 import com.github.tim91690.eclipse.misc.MagicCircle;
 import com.github.tim91690.eclipse.structure.RitualArena;
+import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.entity.Player;
@@ -12,12 +14,13 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
-public class MoonRitual {
+public class CosmicRitual {
 
     private final List<Integer> tasks;
 
-    public MoonRitual(Location loc) {
+    public CosmicRitual(Location loc) {
         this.tasks = new ArrayList<>();
 
         //Cercle allume bougie
@@ -102,5 +105,46 @@ public class MoonRitual {
                 p.spawnParticle(Particle.GLOW,p.getEyeLocation(),200,0.1,0.5,0.1);
             }
         },650);
+
+        //Text
+        AtomicInteger iter = new AtomicInteger(0);
+        tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+            switch (iter.get()) {
+                case 0:
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED + "[ALERTE] : Importante quantité d'énergie détectée"));
+                        if (p.getLocation().distance(loc) > 50) p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED + "[ALERTE] : Rapprochez-vous de la zone"));
+                        p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
+                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                            p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
+                        },5);
+                    }
+                    break;
+                case 1:
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        if (p.getLocation().distance(loc) < 50) continue;
+                        p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED +
+                                "[ALERTE] : Votre probabilité de mourir grimpe en flèche. Procédure de téléportation d'urgence enclenchée. S.A.M ne pourra être tenu responsable des potentiels organes perdus en chemin"));
+                        p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
+                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                            p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
+                        },5);
+                    }
+                    break;
+                case 2:
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED +
+                                "[ALERTE] : Le " + ChatColor.MAGIC + "Demiurge " +ChatColor.RESET + ChatColor.RED + "est à l'approche" ));
+                        p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
+                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                            p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
+                        },5);
+                    }
+                    break;
+                case 3:
+                    Bukkit.getScheduler().cancelTask(tasks.get(2));
+            }
+            iter.getAndIncrement();
+        },0,165).getTaskId());
     }
 }

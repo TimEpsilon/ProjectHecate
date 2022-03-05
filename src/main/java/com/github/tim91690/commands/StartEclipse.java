@@ -1,22 +1,17 @@
 package com.github.tim91690.commands;
 
-import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.events.Meteor;
-import com.github.tim91690.eclipse.events.MoonRitual;
+import com.github.tim91690.eclipse.events.CosmicRitual;
 import com.github.tim91690.eclipse.misc.ConfigManager;
 import com.github.tim91690.eclipse.misc.MagicCircle;
 import com.github.tim91690.eclipse.mobs.boss.*;
 import com.github.tim91690.eclipse.structure.RitualArena;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.WitherSkull;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 
 public class StartEclipse implements CommandExecutor {
@@ -53,7 +48,7 @@ public class StartEclipse implements CommandExecutor {
                     Bukkit.broadcast(Component.text(ConfigManager.getLoc().distance(p.getLocation())));
                     break;
                 case "fire":
-                    new MoonRitual(ConfigManager.getLoc());
+                    new CosmicRitual(ConfigManager.getLoc().subtract(0,1,0));
                     break;
                 case "magic":
                     MagicCircle.inCircle(ConfigManager.getLoc().add(0.5,1,0.5),2);

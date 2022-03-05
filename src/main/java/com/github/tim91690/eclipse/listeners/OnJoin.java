@@ -11,6 +11,6 @@ public class OnJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         Player p = e.getPlayer();
-        if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade"))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"moonblade"));
+        if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade"))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade"));
     }
 }
