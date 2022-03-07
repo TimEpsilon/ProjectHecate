@@ -2,11 +2,12 @@ package com.github.tim91690.eclipse.listeners;
 
 import com.github.tim91690.eclipse.mobs.boss.Boss;
 import com.github.tim91690.eclipse.mobs.boss.Demiurge;
-import org.bukkit.entity.EntityType;
-import org.bukkit.entity.ExperienceOrb;
-import org.bukkit.entity.LivingEntity;
+import org.bukkit.Sound;
+import org.bukkit.SoundCategory;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.util.Vector;
@@ -23,7 +24,11 @@ public class BossDamage implements Listener {
         if (!e.getEntity().getScoreboardTags().contains("Boss")) return;
         Boss boss = Boss.getBossInList(e.getEntity());
         if (boss == null) return;
-        if (e.getCause().equals(EntityDamageEvent.DamageCause.FALL)) e.setCancelled(true);
+        if (
+                e.getCause().equals(EntityDamageEvent.DamageCause.FALL)
+                || e.getCause().equals(EntityDamageEvent.DamageCause.BLOCK_EXPLOSION)
+                || e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)
+        ) e.setCancelled(true);
 
         boss.getBossbar().setProgress(((LivingEntity)boss.getEntity()).getHealth() / boss.getMaxHealth());
 
@@ -31,19 +36,34 @@ public class BossDamage implements Listener {
 
         if (boss instanceof Demiurge) {
             double health = ((LivingEntity) boss.getEntity()).getHealth();
-            if (health > boss.getMaxHealth()/2) {
-                if (health > boss.getMaxHealth()*3/4) {
+            if (health > boss.getMaxHealth()/3) {
+                if (health > boss.getMaxHealth()*2/3) {
                     ((Demiurge) boss).setPhase(1);
                 } else {
                     ((Demiurge) boss).setPhase(2);
                 }
             } else {
-                if (health > boss.getMaxHealth()/4) {
-                    ((Demiurge) boss).setPhase(3);
-                } else {
-                    ((Demiurge) boss).setPhase(4);
-                }
+                ((Demiurge) boss).setPhase(3);
             }
+        }
+    }
+
+    @EventHandler
+    public void onDemiurgeHit(EntityDamageByEntityEvent e) {
+        if (!e.getEntity().getScoreboardTags().contains("Boss")) return;
+        Boss boss = Boss.getBossInList(e.getEntity());
+        if (boss == null) return;
+        if (!(boss instanceof Demiurge)) return;
+        Player p = null;
+        if(e.getDamager() instanceof Player) p = (Player)e.getDamager();
+        if(e.getDamager() instanceof Projectile && ((Projectile)e.getDamager()).getShooter() instanceof Player) p = (Player)((Projectile)e.getDamager()).getShooter();
+        if(p == null) return;
+
+        if (((Demiurge)boss).getPhase() == 2) {
+            e.setCancelled(true);
+            p.playSound(boss.getEntity().getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.HOSTILE,30,2);
+        } else {
+            p.playSound(boss.getEntity().getLocation(), Sound.BLOCK_ANVIL_PLACE, SoundCategory.HOSTILE,30,2);
         }
     }
 

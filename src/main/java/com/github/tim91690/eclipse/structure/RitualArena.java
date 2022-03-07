@@ -15,7 +15,10 @@ import com.sk89q.worldedit.function.mask.Masks;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
+import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
+import com.sk89q.worldedit.world.block.BaseBlock;
+import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
 import org.bukkit.Location;
 
@@ -30,6 +33,14 @@ public class RitualArena {
             pasteSchematic("ritual_past.schem",loc);
         } else {
             pasteSchematic("ritual_future.schem",loc);
+        }
+    }
+
+    public static void spawnPylon(Location loc,boolean isActive) {
+        if (isActive) {
+            pasteSchematic("pylon_active.schem",loc);
+        } else {
+            pasteSchematic("pylon.schem",loc);
         }
     }
 

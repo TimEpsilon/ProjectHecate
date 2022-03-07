@@ -51,7 +51,7 @@ public class PhantomOverlord extends Boss {
     }
 
     private void summonSoldiers() {
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
             Phantom ph = (Phantom) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.PHANTOM);
             ph.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(75);
             ph.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(4);

@@ -38,6 +38,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
     @EventHandler
     public void BlessingDamage(EntityDamageByEntityEvent e) {
         if(!e.getEntity().getScoreboardTags().contains("Eclipse")) return;
+        if(e.getEntity().getScoreboardTags().contains("Boss")) return;
         Player p = null;
         if(e.getDamager() instanceof Player) p = (Player)e.getDamager();
         if(e.getDamager() instanceof Projectile && ((Projectile)e.getDamager()).getShooter() instanceof Player) p = (Player)((Projectile)e.getDamager()).getShooter();
@@ -327,11 +328,11 @@ public class CosmicEnchant extends Enchantment implements Listener {
                 if (random.nextInt(6)==0) {
                     e.damage(8);
                     p.addPotionEffect(new PotionEffect(PotionEffectType.HEAL,1,1));
-                    double length = e.getLocation().add(p.getLocation()).length();
+                    double length = e.getLocation().subtract(p.getLocation()).length();
                     Vector direction = p.getEyeLocation().toVector().subtract(e.getEyeLocation().toVector()).multiply(1d/length);
                     Location loc = e.getLocation().add(0,0.5,0).clone();
-                    for (int i=0; i<e.getLocation().add(p.getLocation()).length();i++) {
-                        p.getWorld().spawnParticle(Particle.DRAGON_BREATH,loc,1,0.2,0.2,0.2,0);
+                    for (int i=0; i<length;i++) {
+                        p.getWorld().spawnParticle(Particle.DRAGON_BREATH,loc,10,0.2,0.2,0.2,0);
                         loc.add(direction);
                     }
                 }

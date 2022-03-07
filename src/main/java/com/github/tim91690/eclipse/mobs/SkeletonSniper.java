@@ -37,7 +37,7 @@ public class SkeletonSniper extends EclipseMobs {
 
     private static ItemStack Bow() {
         ItemStack bow = new ItemStack(Material.BOW);
-        bow.addEnchantment(Enchantment.ARROW_KNOCKBACK,2);
+        bow.addEnchantment(Enchantment.ARROW_KNOCKBACK,1);
         return bow;
     }
 

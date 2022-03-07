@@ -1,5 +1,6 @@
 package com.github.tim91690.commands;
 
+import com.github.tim91690.eclipse.events.EnergyPylon;
 import com.github.tim91690.eclipse.events.Meteor;
 import com.github.tim91690.eclipse.events.CosmicRitual;
 import com.github.tim91690.eclipse.misc.ConfigManager;
@@ -20,44 +21,25 @@ public class StartEclipse implements CommandExecutor {
         if (sender instanceof Player) {
             Player p = (Player) sender;
             switch (args[0]) {
-                case "slime":
-                    new KingSlime(p.getLocation());
-                    break;
-                case "phantom":
-                    new PhantomOverlord(p.getLocation());
-                    break;
-                case "rabbit":
-                    new ScarletRabbit(p.getLocation());
-                    break;
-                case "shadow":
-                    new Shadows(p.getLocation());
-                    break;
-                case "meteor":
-                    new Meteor(p.getLocation());
-                    break;
-                case "bee":
-                    new QueenBee(p.getLocation());
-                    break;
-                case "ritual":
-                    RitualArena.spawnRitualArena(false);
-                    break;
-                case "ritual_future":
-                    RitualArena.spawnRitualArena(true);
-                    break;
-                case "distance":
-                    Bukkit.broadcast(Component.text(ConfigManager.getLoc().distance(p.getLocation())));
-                    break;
-                case "fire":
-                    new CosmicRitual(ConfigManager.getLoc().subtract(0,1,0));
-                    break;
-                case "magic":
-                    MagicCircle.inCircle(ConfigManager.getLoc().add(0.5,1,0.5),2);
-                    break;
-                case "demiurge":
-                    new Demiurge(p.getLocation());
-                    break;
+                case "slime" -> new KingSlime(p.getLocation());
+                case "phantom" -> new PhantomOverlord(p.getLocation());
+                case "rabbit" -> new ScarletRabbit(p.getLocation());
+                case "shadow" -> new Shadows(p.getLocation());
+                case "meteor" -> new Meteor(p.getLocation());
+                case "bee" -> new QueenBee(p.getLocation());
+                case "ritual" -> RitualArena.spawnRitualArena(false);
+                case "ritual_future" -> RitualArena.spawnRitualArena(true);
+                case "distance" -> Bukkit.broadcast(Component.text(ConfigManager.getLoc().distance(p.getLocation())));
+                case "fire" -> new CosmicRitual(ConfigManager.getLoc());
+                case "magic" -> MagicCircle.inCircle(ConfigManager.getLoc().add(0.5, 1, 0.5), 2);
+                case "demiurge" -> new Demiurge(p.getLocation());
+                case "pylon" -> {
+                    EnergyPylon.WEST.turnOn();
+                    EnergyPylon.EAST.turnOn();
+                    EnergyPylon.NORTH.turnOn();
+                    EnergyPylon.SOUTH.turnOn();
+                }
             }
-
             return true;
         }
         return false;

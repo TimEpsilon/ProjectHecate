@@ -13,8 +13,7 @@ public class RavagerBeast extends EclipseMobs {
     public RavagerBeast(Location loc) {
         super((LivingEntity)loc.getWorld().spawnEntity(loc, EntityType.RAVAGER),120);
 
-        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(50);
-        this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.8);
+        this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.6);
         this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(5);
 
         this.entity.addScoreboardTag("SemiBoss");

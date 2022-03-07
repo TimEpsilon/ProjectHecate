@@ -20,7 +20,7 @@ public class ZombieTank extends EclipseMobs {
         super(entity,25);
         this.lvl = lvl;
 
-        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
+        this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(50);
         this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.2);
         this.entity.getAttribute(Attribute.ZOMBIE_SPAWN_REINFORCEMENTS).setBaseValue(0.1);
 
@@ -45,18 +45,22 @@ public class ZombieTank extends EclipseMobs {
         WeightCollection<ItemStack> rc;
         float[] weight = getWeightByLevel();
         switch (e) {
-            case FEET:
-                rc = new WeightCollection<ItemStack>().add(weight[0],new ItemStack(Material.LEATHER_BOOTS)).add(weight[1],new ItemStack(Material.IRON_BOOTS)).add(weight[2],new ItemStack(Material.DIAMOND_BOOTS)).add(weight[3],new ItemStack(Material.NETHERITE_BOOTS));
+            case FEET -> {
+                rc = new WeightCollection<ItemStack>().add(weight[0], new ItemStack(Material.LEATHER_BOOTS)).add(weight[1], new ItemStack(Material.IRON_BOOTS)).add(weight[2], new ItemStack(Material.DIAMOND_BOOTS)).add(weight[3], new ItemStack(Material.NETHERITE_BOOTS));
                 return rc.next();
-            case LEGS:
-                rc = new WeightCollection<ItemStack>().add(weight[0],new ItemStack(Material.LEATHER_LEGGINGS)).add(weight[1],new ItemStack(Material.IRON_LEGGINGS)).add(weight[2],new ItemStack(Material.DIAMOND_LEGGINGS)).add(weight[3],new ItemStack(Material.NETHERITE_LEGGINGS));
+            }
+            case LEGS -> {
+                rc = new WeightCollection<ItemStack>().add(weight[0], new ItemStack(Material.LEATHER_LEGGINGS)).add(weight[1], new ItemStack(Material.IRON_LEGGINGS)).add(weight[2], new ItemStack(Material.DIAMOND_LEGGINGS)).add(weight[3], new ItemStack(Material.NETHERITE_LEGGINGS));
                 return rc.next();
-            case CHEST:
-                rc = new WeightCollection<ItemStack>().add(weight[0],new ItemStack(Material.LEATHER_CHESTPLATE)).add(weight[1],new ItemStack(Material.IRON_CHESTPLATE)).add(weight[2],new ItemStack(Material.DIAMOND_CHESTPLATE)).add(weight[3],new ItemStack(Material.NETHERITE_CHESTPLATE));
+            }
+            case CHEST -> {
+                rc = new WeightCollection<ItemStack>().add(weight[0], new ItemStack(Material.LEATHER_CHESTPLATE)).add(weight[1], new ItemStack(Material.IRON_CHESTPLATE)).add(weight[2], new ItemStack(Material.DIAMOND_CHESTPLATE)).add(weight[3], new ItemStack(Material.NETHERITE_CHESTPLATE));
                 return rc.next();
-            case HEAD:
-                rc = new WeightCollection<ItemStack>().add(weight[0],new ItemStack(Material.LEATHER_HELMET)).add(weight[1],new ItemStack(Material.IRON_HELMET)).add(weight[2],new ItemStack(Material.DIAMOND_HELMET)).add(weight[3],new ItemStack(Material.NETHERITE_HELMET));
+            }
+            case HEAD -> {
+                rc = new WeightCollection<ItemStack>().add(weight[0], new ItemStack(Material.LEATHER_HELMET)).add(weight[1], new ItemStack(Material.IRON_HELMET)).add(weight[2], new ItemStack(Material.DIAMOND_HELMET)).add(weight[3], new ItemStack(Material.NETHERITE_HELMET));
                 return rc.next();
+            }
         }
         return null;
     }

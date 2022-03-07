@@ -23,6 +23,8 @@ public class CosmicRitual {
     public CosmicRitual(Location loc) {
         this.tasks = new ArrayList<>();
 
+        Bukkit.getOnlinePlayers().forEach(Player -> Player.setBedSpawnLocation(loc.clone().add(0,3,0),true));
+
         //Cercle allume bougie
         final float[] pos = {0,0,2};
         this.tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
@@ -47,7 +49,7 @@ public class CosmicRitual {
             }
         },0,2).getTaskId());
 
-        //pilier
+        //Pilier
         this.tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
             loc.getWorld().spawnParticle(Particle.REDSTONE,loc.clone().add(0.5,0,0.5).add(5,2,2),100,0.5,1,0.5,0,new Particle.DustOptions(Color.PURPLE,1),true);
             loc.getWorld().spawnParticle(Particle.REDSTONE,loc.clone().add(0.5,0,0.5).add(5,2,-2),100,0.5,1,0.5,0,new Particle.DustOptions(Color.BLUE,1),true);
@@ -82,6 +84,7 @@ public class CosmicRitual {
             }
         },450);
 
+        //Magic circle
         final float[] rot = {0};
         tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
             Location center = loc.clone().add(0.5,1.1,0.5);
@@ -142,7 +145,7 @@ public class CosmicRitual {
                     }
                     break;
                 case 3:
-                    Bukkit.getScheduler().cancelTask(tasks.get(2));
+                    Bukkit.getScheduler().cancelTask(tasks.get(3));
             }
             iter.getAndIncrement();
         },0,165).getTaskId());

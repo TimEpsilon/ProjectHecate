@@ -17,6 +17,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -126,7 +127,7 @@ public abstract class Boss {
         this.bossbarTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getLocation().distance(this.entity.getLocation()) < 40) {
+                if (p.getLocation().distance(this.entity.getLocation()) < 40 && p.getGameMode().equals(GameMode.SURVIVAL)) {
                     //ajoute le joueur si il est aux alentours
                     this.getBossbar().addPlayer(p);
                     this.proxPlayer.add(p);
