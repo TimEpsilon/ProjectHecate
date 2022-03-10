@@ -1,11 +1,11 @@
 package com.github.tim91690.eclipse.events;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.misc.Laser;
 import com.github.tim91690.eclipse.misc.MagicCircle;
+import com.github.tim91690.eclipse.misc.TextManager;
+import com.github.tim91690.eclipse.mobs.boss.Demiurge;
 import com.github.tim91690.eclipse.structure.RitualArena;
-import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.data.Lightable;
 import org.bukkit.entity.Player;
@@ -107,6 +107,8 @@ public class CosmicRitual {
                 p.addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS,40,0));
                 p.spawnParticle(Particle.GLOW,p.getEyeLocation(),200,0.1,0.5,0.1);
             }
+
+            new Demiurge(loc.clone().add(0,16,0));
         },650);
 
         //Text
@@ -115,37 +117,31 @@ public class CosmicRitual {
             switch (iter.get()) {
                 case 0:
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED + "[ALERTE] : Importante quantité d'énergie détectée"));
-                        if (p.getLocation().distance(loc) > 50) p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED + "[ALERTE] : Rapprochez-vous de la zone"));
-                        p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
-                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                            p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
-                        },5);
+                        TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Importante quantité d'énergie détectée",true);
+                        if (p.getLocation().distance(loc) > 50) TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Rapprochez-vous de la zone",true);
                     }
                     break;
                 case 1:
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         if (p.getLocation().distance(loc) < 50) continue;
-                        p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED +
-                                "[ALERTE] : Votre probabilité de mourir grimpe en flèche. Procédure de téléportation d'urgence enclenchée. S.A.M ne pourra être tenu responsable des potentiels organes perdus en chemin"));
-                        p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
-                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                            p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
-                        },5);
+                        TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Votre probabilité de mourir grimpe en flèche. " +
+                                "Procédure de téléportation d'urgence enclenchée. S.A.M ne pourra être tenu responsable des potentiels organes perdus en chemin"
+                                ,true);
                     }
                     break;
                 case 2:
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendMessage(Component.text(CustomItems.PDAText + ChatColor.RED +
-                                "[ALERTE] : Le " + ChatColor.MAGIC + "Demiurge " +ChatColor.RESET + ChatColor.RED + "est à l'approche" ));
-                        p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
-                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
-                            p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1);
-                        },5);
+                        TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Le " + ChatColor.MAGIC + "Demiurge "
+                                +ChatColor.RESET + ChatColor.RED + "est à l'approche"
+                                ,true);
                     }
                     break;
                 case 3:
                     Bukkit.getScheduler().cancelTask(tasks.get(3));
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La présence du Demiurge vous affaiblit. " +
+                                    "Les feux d'artifices sont désactivés." +
+                                    "Utilisez les ventilations alentours pour gagner de l'altitude."
+                            , true), 100);
             }
             iter.getAndIncrement();
         },0,165).getTaskId());

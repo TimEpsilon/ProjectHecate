@@ -3,6 +3,7 @@ package com.github.tim91690.eclipse.events;
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.misc.ConfigManager;
 import com.github.tim91690.eclipse.misc.Laser;
+import com.github.tim91690.eclipse.misc.TextManager;
 import com.github.tim91690.eclipse.mobs.boss.*;
 import com.github.tim91690.eclipse.structure.RitualArena;
 import net.kyori.adventure.text.Component;
@@ -73,6 +74,9 @@ public enum EnergyPylon {
                     e.printStackTrace();
                 }
                 laser.start(EventManager.getPlugin());
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    TextManager.sendSamTextToPlayer(p,ChatColor.GREEN + "[INFO] Le pylône " + this + " est à présent actif.");
+                }
             }
         } else {
             this.pylonLoc.getWorld().spawnParticle(Particle.GLOW,this.pylonLoc,100,2,2,2,0,null,true);

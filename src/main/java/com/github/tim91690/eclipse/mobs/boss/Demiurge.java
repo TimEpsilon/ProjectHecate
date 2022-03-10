@@ -6,13 +6,13 @@ import com.github.tim91690.eclipse.events.EnergyPylon;
 import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.misc.ConfigManager;
 import com.github.tim91690.eclipse.misc.Laser;
+import com.github.tim91690.eclipse.misc.TextManager;
 import com.github.tim91690.eclipse.misc.WeightCollection;
 import com.github.tim91690.eclipse.mobs.*;
 import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlordHorse;
 import com.github.tim91690.eclipse.mobs.semiboss.IllusionerMage;
 import com.github.tim91690.eclipse.mobs.semiboss.PhantomFurries;
 import com.github.tim91690.eclipse.mobs.semiboss.RavagerBeast;
-import com.github.tim91690.eclipse.structure.RitualArena;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -89,6 +89,10 @@ public class Demiurge extends Boss {
                         pylon.turnOn(i);
                         i+=random.nextInt(3)*1200;
                     }
+                    TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La défense du Demiurge grimpe en flèche.");
+                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> TextManager.sendSamTextToPlayer(ChatColor.GREEN +
+                            "[CONSEIL] : Les pylônes alentours peuvent être chargés en énergie. " +
+                            "En activer 4 permettrait d'outrepasser l'armure du Demiurge."), 40);
                     this.hasSpawnedPylons = true;
                 }
                 break;
@@ -105,6 +109,7 @@ public class Demiurge extends Boss {
                     this.ring1.setVelocity(Vector.getRandom().subtract(new Vector(0.5,0,0.5)));
                     this.ring2.setVelocity(Vector.getRandom().subtract(new Vector(0.5,0,0.5)));
                     this.wings.setSmall(true);
+                    TextManager.sendSamTextToPlayer(ChatColor.GREEN  + "[INFO] Décharge énergétique réussie. La défense du Demiurge redescend à des valeurs normales.");
                     this.speedForm = true;
 
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
