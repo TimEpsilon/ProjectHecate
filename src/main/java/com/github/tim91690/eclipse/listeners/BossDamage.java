@@ -1,7 +1,9 @@
 package com.github.tim91690.eclipse.listeners;
 
+import com.github.tim91690.eclipse.misc.TextManager;
 import com.github.tim91690.eclipse.mobs.boss.Boss;
 import com.github.tim91690.eclipse.mobs.boss.Demiurge;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.*;
@@ -36,14 +38,25 @@ public class BossDamage implements Listener {
 
         if (boss instanceof Demiurge) {
             double health = ((LivingEntity) boss.getEntity()).getHealth();
-            if (health > boss.getMaxHealth()/3) {
-                if (health > boss.getMaxHealth()*2/3) {
+            double max = boss.getMaxHealth();
+            if (health > max/3) {
+                if (health > max*2/3) {
                     ((Demiurge) boss).setPhase(1);
+                    int line = (int) Math.round(27*(max-health)/max);
+                    if (line != ((Demiurge) boss).lastLine) {
+                        TextManager.demiurgeLore(line);
+                        ((Demiurge) boss).lastLine = line;
+                    }
                 } else {
                     ((Demiurge) boss).setPhase(2);
                 }
             } else {
                 ((Demiurge) boss).setPhase(3);
+                int line = 10+(int) Math.round(7*(max-3*health)/max);
+                if (line != ((Demiurge) boss).lastLine) {
+                    TextManager.demiurgeLore(line);
+                    ((Demiurge) boss).lastLine = line;
+                }
             }
         }
     }

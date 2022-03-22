@@ -8,7 +8,6 @@ import com.github.tim91690.eclipse.mobs.boss.Boss;
 import com.github.tim91690.eclipse.mobs.boss.Demiurge;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
-import org.bukkit.block.Block;
 import org.bukkit.block.data.type.RespawnAnchor;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -17,7 +16,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.*;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
-import org.bukkit.event.entity.ExplosionPrimeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.potion.PotionEffect;
@@ -29,7 +27,12 @@ import java.util.List;
 
 public class BlockProtection implements Listener {
     private final static Location loc = ConfigManager.getLoc();
-    private final static ArrayList debuffList = new ArrayList(List.of(PotionEffectType.WITHER,PotionEffectType.SLOW,PotionEffectType.WITHER,PotionEffectType.POISON,PotionEffectType.WEAKNESS));
+    private final static ArrayList<PotionEffectType> debuffList = new ArrayList<>(List.of(
+            PotionEffectType.WITHER,
+            PotionEffectType.SLOW,
+            PotionEffectType.WITHER,
+            PotionEffectType.POISON,
+            PotionEffectType.WEAKNESS));
 
     @EventHandler
     public void onBlockBreak(BlockBreakEvent b) {
@@ -59,7 +62,6 @@ public class BlockProtection implements Listener {
     @EventHandler
     public void onAnchorInteract(PlayerInteractEvent e) {
         if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;
-        if (!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ) return;
         if (e.getPlayer().getLocation().distance(loc) > 60) return;
         if (e.getClickedBlock() == null) return;
         if (!e.getClickedBlock().getType().equals(Material.RESPAWN_ANCHOR)) return;
@@ -81,6 +83,7 @@ public class BlockProtection implements Listener {
             for (Boss boss : Boss.getBossList()) {
                 if (!(boss instanceof Demiurge)) continue;
                 ((LivingEntity)boss.getEntity()).damage(boss.getMaxHealth()/3);
+                ((Demiurge) boss).setPhase(3);
                 boss.getBossbar().setProgress(((LivingEntity)boss.getEntity()).getHealth()/boss.getMaxHealth());
             }
 
@@ -145,6 +148,7 @@ public class BlockProtection implements Listener {
         if (!b.getPlayer().getWorld().equals(loc.getWorld())) return;
         if (b.getBlock().getLocation().distance(loc) > 60) return;
         if (!b.getBlock().getType().equals(Material.BUDDING_AMETHYST)) return;
+        if (b.getPlayer().getGameMode().equals(GameMode.CREATIVE)) EnergyPylon.getClosestPylon(b.getBlock().getLocation()).addProgress(100);
         EnergyPylon.getClosestPylon(b.getBlock().getLocation()).addProgress(1);
         b.getPlayer().playSound(b.getBlock().getLocation(),Sound.BLOCK_NOTE_BLOCK_BELL,SoundCategory.PLAYERS,1,2);
         b.getBlock().getWorld().spawnParticle(Particle.ELECTRIC_SPARK,b.getBlock().getLocation(),100,0.6,0.6,0.6,0,null,true);

@@ -28,6 +28,7 @@ import org.bukkit.util.Vector;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 
 public class Demiurge extends Boss {
@@ -40,10 +41,11 @@ public class Demiurge extends Boss {
     private final ArmorStand wings;
     private int phase;
     private int tick;
-    private float speed = 0.2f;
+    private float speed = 0.1f;
     private boolean isFloating = true;
     private boolean hasSpawnedPylons = false;
     private boolean speedForm = false;
+    public int lastLine = 0;
 
     private final static Random random = new Random();
 
@@ -76,6 +78,8 @@ public class Demiurge extends Boss {
         this.shell = modelConstruct(300);
         this.wings = modelConstruct(400,true);
 
+        TextManager.demiurgeLore(0);
+
         tick();
     }
 
@@ -87,7 +91,7 @@ public class Demiurge extends Boss {
                     int i = 0;
                     for (EnergyPylon pylon : EnergyPylon.values()) {
                         pylon.turnOn(i);
-                        i+=random.nextInt(3)*1200;
+                        i+=random.nextInt(36);
                     }
                     TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La défense du Demiurge grimpe en flèche.");
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> TextManager.sendSamTextToPlayer(ChatColor.GREEN +
@@ -100,8 +104,8 @@ public class Demiurge extends Boss {
             case 3:
                 if (!this.speedForm) {
                     this.getEntity().getWorld().spawnParticle(Particle.GLOW_SQUID_INK, this.getEntity().getLocation(), 40, 1, 1, 1, 0, null, true);
-                    this.entity.teleport(center.clone().add(0,90,0));
-                    this.speed = 0.4f;
+                    this.entity.teleport(center.clone().add(0,15,0));
+                    this.speed = 0.3f;
                     this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 500, 3, 3, 3, 1, Material.COPPER_BLOCK.createBlockData());
                     this.getEntity().getWorld().playSound(this.getEntity().getLocation(),Sound.BLOCK_ANVIL_PLACE,SoundCategory.HOSTILE,20,0.6f);
                     this.ring1.setMarker(false);
@@ -109,6 +113,8 @@ public class Demiurge extends Boss {
                     this.ring1.setVelocity(Vector.getRandom().subtract(new Vector(0.5,0,0.5)));
                     this.ring2.setVelocity(Vector.getRandom().subtract(new Vector(0.5,0,0.5)));
                     this.wings.setSmall(true);
+                    this.core.setSmall(true);
+                    this.shell.setSmall(true);
                     TextManager.sendSamTextToPlayer(ChatColor.GREEN  + "[INFO] Décharge énergétique réussie. La défense du Demiurge redescend à des valeurs normales.");
                     this.speedForm = true;
 
@@ -183,6 +189,14 @@ public class Demiurge extends Boss {
         this.entity.getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_WITHER_DEATH,SoundCategory.HOSTILE,20,0);
         this.entity.getWorld().spawnParticle(Particle.TOTEM,this.entity.getLocation(),1000,5,5,5,1,null,true);
         this.entity.getWorld().spawnParticle(Particle.GLOW,this.entity.getLocation(),200,0.5,0.5,0.5,0,null,true);
+
+        AtomicInteger i = new AtomicInteger(18);
+        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+            TextManager.demiurgeLore(i.get());
+            i.getAndIncrement();
+        },0,60).getTaskId();
+
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),330);
     }
 
     private void randomTeleport() {
@@ -209,7 +223,8 @@ public class Demiurge extends Boss {
                 .add(30,"vortex")
                 .add(20,"dash")
                 .add(30,"meteorshower")
-                .add(25,"tp");
+                .add(25,"tp")
+                .add(40,"void");
         String attack = rc.next();
 
         switch (attack) {
