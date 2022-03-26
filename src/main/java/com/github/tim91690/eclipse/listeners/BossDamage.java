@@ -3,7 +3,6 @@ package com.github.tim91690.eclipse.listeners;
 import com.github.tim91690.eclipse.misc.TextManager;
 import com.github.tim91690.eclipse.mobs.boss.Boss;
 import com.github.tim91690.eclipse.mobs.boss.Demiurge;
-import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.*;

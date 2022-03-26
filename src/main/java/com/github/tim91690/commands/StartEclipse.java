@@ -1,5 +1,6 @@
 package com.github.tim91690.commands;
 
+import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.events.EnergyPylon;
 import com.github.tim91690.eclipse.events.Meteor;
 import com.github.tim91690.eclipse.events.CosmicRitual;
@@ -39,6 +40,13 @@ public class StartEclipse implements CommandExecutor {
                     EnergyPylon.NORTH.turnOn();
                     EnergyPylon.SOUTH.turnOn();
                 }
+                case "time" -> Bukkit.broadcastMessage(EventManager.getComet().getTime() +" ticks, " + EventManager.getComet().getTime()/20/60 + "min " + EventManager.getComet().getPhase() + " phase");
+                case "timeset" -> EventManager.getComet().setTime(Integer.parseInt(args[1]));
+                case "start" -> {
+                    if (EventManager.isRunningEvent) return false;
+                    EventManager.getComet().startEvent();
+                }
+                case "stop" -> EventManager.getComet().stopEvent();
             }
             return true;
         }

@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 public class OnJoin implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
+        if (!EventManager.isRunningEvent) return;
         Player p = e.getPlayer();
         if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade"))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade"));
     }

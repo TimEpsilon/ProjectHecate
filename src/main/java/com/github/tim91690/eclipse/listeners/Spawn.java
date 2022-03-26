@@ -1,8 +1,13 @@
 package com.github.tim91690.eclipse.listeners;
 
+import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.misc.WeightCollection;
 import com.github.tim91690.eclipse.mobs.*;
 
+import com.github.tim91690.eclipse.mobs.boss.KingSlime;
+import com.github.tim91690.eclipse.mobs.boss.PhantomOverlord;
+import com.github.tim91690.eclipse.mobs.boss.ScarletRabbit;
+import com.github.tim91690.eclipse.mobs.boss.Shadows;
 import com.github.tim91690.eclipse.mobs.semiboss.DrownedOverlordHorse;
 import com.github.tim91690.eclipse.mobs.semiboss.IllusionerMage;
 import com.github.tim91690.eclipse.mobs.semiboss.PhantomFurries;
@@ -18,37 +23,39 @@ import java.util.Random;
 public class Spawn implements Listener {
 
     private float probaSemiBoss = 0.01f;
+    private float probaBoss = 0.001f;
     private static final Random random = new Random();
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {
+        if (!EventManager.isRunningEvent) return;
         if (!(event.getEntity() instanceof Monster) || !event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL)) return;
 
-        int lvl = 1; //TODO getlevel
+        int lvl = EventManager.getComet().getPhase();
 
         if (random.nextFloat()<probaSemiBoss) {
             event.setCancelled(true);
             spawnSemiBoss(event.getLocation(),lvl);
+            return;
         }
 
+        if (random.nextFloat()<probaBoss) {
+            event.setCancelled(true);
+            spawnBoss(event.getLocation(),lvl);
+            return;
+        }
+
+
         switch (event.getEntity().getType().toString()) {
-            case ("ZOMBIE"):
-            case ("DROWNED"):
-            case ("HUSK"):
-                //Zombie Tank remplace les zombies, drowned et husk
-                new ZombieTank(event.getEntity(),lvl);
-                return;
-            case ("CREEPER"):
-                //Creeper Bomb remplace creeper
-                new CreeperBomb(event.getEntity());
-                return;
-            case ("SKELETON"):
-                //Skeleton Sniper remplace skeletons
-                new SkeletonSniper(event.getEntity());
-                return;
-            case ("SPIDER"):
-                //Spider Crawler remplace spider
-                new SpiderCrawler(event.getEntity());
+            case ("ZOMBIE"), ("DROWNED"), ("HUSK") -> //Zombie Tank remplace les zombies, drowned et husk
+                    new ZombieTank(event.getEntity(), lvl);
+            case ("CREEPER") -> //Creeper Bomb remplace creeper
+                    new CreeperBomb(event.getEntity());
+            case ("SKELETON") -> //Skeleton Sniper remplace skeletons
+                    new SkeletonSniper(event.getEntity());
+            case ("SPIDER") ->
+                    //Spider Crawler remplace spider
+                    new SpiderCrawler(event.getEntity());
         }
     }
 
@@ -61,32 +68,36 @@ public class Spawn implements Listener {
     private void spawnSemiBoss(Location loc,int lvl) {
         WeightCollection<String> rc = new WeightCollection<>();
         switch (lvl) {
-            case 1:
-                rc.add(100,"PhantomFurries");
-                break;
-            case 2:
-                rc.add(70,"RavagerBeast").add(30,"PhantomFurries");
-                break;
-            case 3:
-                rc.add(70,"IllusionerMage").add(25,"RavagerBeast").add(5,"PhantomFurries");
-                break;
-            case 4:
-                rc.add(70,"DrownedOverlord").add(20,"IllusionerMage").add(7,"RavagerBeast").add(3,"PhantomFurries");
+            case 1 -> rc.add(100, "PhantomFurries");
+            case 2 -> rc.add(70, "RavagerBeast").add(30, "PhantomFurries");
+            case 3 -> rc.add(70, "IllusionerMage").add(25, "RavagerBeast").add(5, "PhantomFurries");
+            case 4,5 -> rc.add(70, "DrownedOverlord").add(20, "IllusionerMage").add(7, "RavagerBeast").add(3, "PhantomFurries");
+            default -> rc.add(1,"");
         }
 
         switch (rc.next()) {
-            case "PhantomFurries":
-                new PhantomFurries(loc);
-                break;
-            case "RavagerBeast":
-                new RavagerBeast(loc);
-                break;
-            case "IllusionerMage":
-                new IllusionerMage(loc);
-                break;
-            case "DrownedOverlord":
-                new DrownedOverlordHorse(loc);
-                break;
+            case "PhantomFurries" -> new PhantomFurries(loc);
+            case "RavagerBeast" -> new RavagerBeast(loc);
+            case "IllusionerMage" -> new IllusionerMage(loc);
+            case "DrownedOverlord" -> new DrownedOverlordHorse(loc);
+        }
+    }
+
+    private void spawnBoss(Location loc, int lvl) {
+        WeightCollection<String> rc = new WeightCollection<>();
+        switch (lvl) {
+            case 1 -> rc.add(80, "KingSlime");
+            case 2 -> rc.add(80, "PhantomOverlord").add(20, "KingSlime");
+            case 3 -> rc.add(80, "ScarletRabbit").add(17, "PhantomOverlord").add(3, "KingSlime");
+            case 4,5 -> rc.add(80, "Shadows").add(15, "ScarletRabbit").add(4, "PhantomOverlord").add(1, "KingSlime");
+            default -> rc.add(1,"");
+        }
+
+        switch (rc.next()) {
+            case "KingSlime" -> new KingSlime(loc);
+            case "PhantomOverlord" -> new PhantomOverlord(loc);
+            case "ScarletRabbit" -> new ScarletRabbit(loc);
+            case "Shadows" -> new Shadows(loc);
         }
     }
 }

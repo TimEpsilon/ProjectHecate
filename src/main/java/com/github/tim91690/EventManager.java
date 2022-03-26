@@ -3,6 +3,7 @@ package com.github.tim91690;
 import com.github.tim91690.commands.BossList;
 import com.github.tim91690.commands.GiveCosmicBlade;
 import com.github.tim91690.commands.StartEclipse;
+import com.github.tim91690.eclipse.Comet;
 import com.github.tim91690.eclipse.item.CustomCraft;
 import com.github.tim91690.eclipse.item.enchants.EnchantRegister;
 import com.github.tim91690.eclipse.listeners.ListenerManager;
@@ -12,6 +13,8 @@ import org.bukkit.plugin.java.JavaPlugin;
 public final class EventManager extends JavaPlugin {
 
     public static EventManager plugin;
+    public static boolean isRunningEvent = false;
+    private static Comet comet;
 
     @Override
     public void onEnable() {
@@ -20,7 +23,7 @@ public final class EventManager extends JavaPlugin {
         ListenerManager.registerEvents(this);
         new CustomCraft();
         ConfigManager.loadResource();
-
+        comet = new Comet();
     }
 
     @Override
@@ -41,5 +44,9 @@ public final class EventManager extends JavaPlugin {
 
     public static EventManager getPlugin() {
         return plugin;
+    }
+
+    public static Comet getComet() {
+        return comet;
     }
 }

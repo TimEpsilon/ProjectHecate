@@ -13,9 +13,9 @@ public class ListenerManager {
 
         pm.registerEvents(new BossDamage(),plugin);
         pm.registerEvents(new Loot(),plugin);
-        pm.registerEvents(new Spawn(),plugin);
-        pm.registerEvents(new OnJoin(),plugin);
-        pm.registerEvents(new CosmicEnchant(),plugin);
+        pm.registerEvents(new Spawn(),plugin); //on/off
+        pm.registerEvents(new OnJoin(),plugin); //on/off
+        pm.registerEvents(new CosmicEnchant(),plugin); //on/off
         pm.registerEvents(new BlockProtection(),plugin);
         pm.registerEvents(new SlimeSplit(),plugin);
     }

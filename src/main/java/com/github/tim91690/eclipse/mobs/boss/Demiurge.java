@@ -91,7 +91,7 @@ public class Demiurge extends Boss {
                     int i = 0;
                     for (EnergyPylon pylon : EnergyPylon.values()) {
                         pylon.turnOn(i);
-                        i+=random.nextInt(36);
+                        i+=random.nextInt(3600);
                     }
                     TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La défense du Demiurge grimpe en flèche.");
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> TextManager.sendSamTextToPlayer(ChatColor.GREEN +

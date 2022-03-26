@@ -37,6 +37,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
 
     @EventHandler
     public void BlessingDamage(EntityDamageByEntityEvent e) {
+        if (!EventManager.isRunningEvent) return;
         if(!e.getEntity().getScoreboardTags().contains("Eclipse")) return;
         if(e.getEntity().getScoreboardTags().contains("Boss")) return;
         Player p = null;
@@ -97,6 +98,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
 
     @EventHandler
     public void LaserSword(PlayerInteractEvent e) {
+        if (!EventManager.isRunningEvent) return;
         if(e.getItem() == null) return;
         if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey()))) {
             Player p = e.getPlayer();
@@ -141,6 +143,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
 
     @EventHandler
     public void SinsOfTheCosmos(PlayerInteractEvent e) {
+        if (!EventManager.isRunningEvent) return;
         if (e.getItem() == null) return;
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = e.getPlayer();
