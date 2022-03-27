@@ -1,6 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.commands.Waypoint;
 import com.github.tim91690.eclipse.item.CustomItems;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -17,12 +18,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public abstract class Boss {
     protected static final List<Boss> bossList = new ArrayList<>();
@@ -140,6 +137,10 @@ public abstract class Boss {
         }, 0, 100).getTaskId();
     }
 
+    protected void sendWaypoint(String s) {
+        Waypoint.PlayersHaveMaps.forEach(Player -> Player.sendMessage(s));
+    }
+
     public static List<Boss> getBossList() {
         return bossList;
     }
@@ -152,9 +153,9 @@ public abstract class Boss {
         return bossbar;
     }
 
-    public static Boss getBossInList(Entity entity) {
+    public static Boss getBossInList(UUID uuid) {
         for (Boss boss : bossList) {
-            if (boss.getEntity().equals(entity)) return boss;
+            if (boss.getEntity().getUniqueId().equals(uuid)) return boss;
         }
         return null;
     }

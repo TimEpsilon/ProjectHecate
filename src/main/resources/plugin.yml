@@ -1,12 +1,13 @@
 name: EventManager
 version: ${project.version}
 main: com.github.tim91690.EventManager
-api-version: 1.17
+api-version: 1.18
 
 commands:
   eclipse:
   bosslocation:
   moonblade:
+  showwaypoint:
 
 softdepend:
   - FastAsyncWorldEdit

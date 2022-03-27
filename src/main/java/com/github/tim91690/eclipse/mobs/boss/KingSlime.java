@@ -1,5 +1,7 @@
 package com.github.tim91690.eclipse.mobs.boss;
 
+import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.Comet;
 import com.github.tim91690.eclipse.item.CustomItems;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
@@ -20,6 +22,7 @@ public class KingSlime extends Boss {
         super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime"), BarColor.YELLOW, CustomItems.SOUL_SLOTH.getItem(),1,5);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
+        this.sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints");
 
         //au dessus, frapper le mob est difficile
         ((Slime) this.entity).setSize(14);

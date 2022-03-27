@@ -2,11 +2,11 @@ package com.github.tim91690.eclipse;
 
 import com.github.tim91690.EventManager;
 import com.github.tim91690.eclipse.events.Meteor;
+import com.github.tim91690.eclipse.item.CustomItems;
 import com.github.tim91690.eclipse.mobs.boss.*;
-import org.bukkit.Bukkit;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.World;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.*;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
@@ -21,9 +21,8 @@ public class Comet {
     private int timeSkipTask;
     private final AtomicInteger timer = new AtomicInteger();
     private static final Random random = new Random();
-    private static final float probaBoss = 0.002f;
-    private static final float probaMeteor = 0.001f;
-    private static final float probaBee = 0.003f;
+    private static final float probaMeteor = 0.01f;
+    private static final float probaBee = 0.03f;
 
     public Comet() {
         this.phase = 0;
@@ -63,6 +62,11 @@ public class Comet {
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(timeTask),101);
 
         tick();
+
+        TextComponent xaeros = new TextComponent(CustomItems.PDAText+ ChatColor.GREEN + "Cliquez si Xaero's Minimap est installé");
+        xaeros.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND,"/showwaypoint true"));
+        Bukkit.broadcast(xaeros);
+
     }
 
     private void tick() {
@@ -72,39 +76,60 @@ public class Comet {
         timeSkipTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> world.setFullTime(world.getFullTime()+pass),0,tick).getTaskId();
 
         tickTask = Bukkit.getScheduler().runTaskTimerAsynchronously(EventManager.getPlugin(),()->{
-            changePhase(timer.get());
-            playEvent();
+            boolean hasChanged = changePhase(timer.get());
+            playEvent(hasChanged);
 
             timer.addAndGet(tick);
         },0,tick).getTaskId();
     }
 
-    private void changePhase(int timer) {
+    private boolean changePhase(int timer) {
+        boolean hasChanged;
         if (timer <= 12000) {
+            hasChanged = phase != 0;
             phase = 0;
+            return hasChanged;
         } else if (timer >= timeToLvl5) {
+            hasChanged = phase != 5;
             phase = 5;
+            return hasChanged;
         } else {
+            hasChanged = phase != ((timer-12000)*4)/(timeToLvl5 -12000)+1;
             phase = ((timer-12000)*4)/(timeToLvl5 -12000)+1;
+            return hasChanged;
         }
     }
 
-    private void playEvent() {
+    private void playEvent(boolean spawnBoss) {
         int players = Bukkit.getOnlinePlayers().size();
 
-        Vector bossLoc = new Vector(random.nextGaussian(0, 800), 100, random.nextGaussian(0, 800));
         Vector eventLoc = new Vector(random.nextGaussian(0, 50), 100, random.nextGaussian(0, 50));
 
         switch (phase) {
             case 1 -> {
-                if (random.nextFloat() < probaBoss)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new KingSlime((new Location(world,bossLoc.getX(),100,bossLoc.getZ())).toHighestLocation()), 0);
+                if (spawnBoss) {
+                    int n = players/4 + random.nextInt(3) + 1;
+                    for (int i = 0; i<n; i++) {
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(EventManager.getPlugin(), () -> {
+                            Location loc = getRandomLocation();
+                            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->new KingSlime(loc),0);
+                        }, i*100L);
+                    }
+                }
             }
 
             case 2 -> {
                 if (random.nextFloat() < probaMeteor)
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
-                else if (random.nextFloat() < probaBoss) Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new PhantomOverlord((new Location(world,bossLoc.getX(),100,bossLoc.getZ())).toHighestLocation()), 0);
+                else if (spawnBoss) {
+                    int n = players/4 + random.nextInt(3) + 1;
+                    for (int i = 0; i<n; i++) {
+                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                            Location loc = getRandomLocation();
+                            new PhantomOverlord(loc);
+                        }, i*110L);
+                    }
+                }
             }
 
             case 3 -> {
@@ -112,8 +137,15 @@ public class Comet {
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (random.nextFloat() < probaBee)
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
-                else if (random.nextFloat() < probaBoss)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new ScarletRabbit((new Location(world,bossLoc.getX(),100,bossLoc.getZ())).toHighestLocation()), 0);
+                else if (spawnBoss) {
+                    int n = players/4 + random.nextInt(3) + 1;
+                    for (int i = 0; i<n; i++) {
+                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                            Location loc = getRandomLocation();
+                            new ScarletRabbit(loc);
+                        }, i*120L);
+                    }
+                }
             }
 
             case 4 -> {
@@ -121,8 +153,15 @@ public class Comet {
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (random.nextFloat() < probaBee)
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
-                else if (random.nextFloat() < probaBoss)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Shadows((new Location(world,bossLoc.getX(),100,bossLoc.getZ())).toHighestLocation()), 0);
+                else if (spawnBoss) {
+                    int n = players/4 + random.nextInt(3) + 1;
+                    for (int i = 0; i<n; i++) {
+                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                            Location loc = getRandomLocation();
+                            new Shadows(loc);
+                        }, i*130L);
+                    }
+                }
             }
         }
     }
@@ -140,6 +179,18 @@ public class Comet {
 
         Bukkit.getScheduler().cancelTask(tickTask);
         Bukkit.getScheduler().cancelTask(timeSkipTask);
+
+        EventManager.isRunningEvent = false;
+    }
+
+    private Location getRandomLocation() {
+        double r = random.nextGaussian(1200,400);
+        double theta = random.nextDouble()*2*Math.PI;
+
+        Location loc = new Location(world,r*Math.cos(theta),320,r*Math.sin(theta));
+        while (loc.getBlock().getType().isAir() && loc.getY()>0) loc.subtract(0,1,0);
+
+        return loc;
     }
 
     public int getPhase() {

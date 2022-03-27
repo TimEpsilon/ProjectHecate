@@ -39,7 +39,6 @@ public class CosmicEnchant extends Enchantment implements Listener {
     public void BlessingDamage(EntityDamageByEntityEvent e) {
         if (!EventManager.isRunningEvent) return;
         if(!e.getEntity().getScoreboardTags().contains("Eclipse")) return;
-        if(e.getEntity().getScoreboardTags().contains("Boss")) return;
         Player p = null;
         if(e.getDamager() instanceof Player) p = (Player)e.getDamager();
         if(e.getDamager() instanceof Projectile && ((Projectile)e.getDamager()).getShooter() instanceof Player) p = (Player)((Projectile)e.getDamager()).getShooter();
@@ -51,44 +50,55 @@ public class CosmicEnchant extends Enchantment implements Listener {
                 case 1 -> e.setDamage(e.getDamage() * 1.5);
                 case 2 -> {
                     e.setDamage(e.getDamage() * 2);
-                    ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(1);
+                    if(!e.getEntity().getScoreboardTags().contains("Boss")) ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(1);
                 }
                 case 3 -> {
                     e.setDamage(e.getDamage() * 2.5);
-                    ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(3);
-                    if (random.nextInt(50) == 0)
-                        p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                    if(!e.getEntity().getScoreboardTags().contains("Boss")) {
+                        ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(3);
+                        if (random.nextInt(50) == 0)
+                            p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                    }
+
                 }
                 case 4 -> {
                     e.setDamage(e.getDamage() * 3);
-                    for (int i = 0; i < 2; i++) {
-                        ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(3);
-                        if (random.nextInt(40) == 0)
-                            p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                    if(!e.getEntity().getScoreboardTags().contains("Boss")) {
+                        for (int i = 0; i < 2; i++) {
+                            ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(3);
+                            if (random.nextInt(40) == 0)
+                                p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                        }
                     }
                 }
                 case 5 -> {
                     e.setDamage(e.getDamage() * 3.5);
-                    for (int i = 0; i < 2; i++) {
-                        ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(random.nextInt(5)+1);
-                        if (random.nextInt(30) == 0)
-                            p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                    if(!e.getEntity().getScoreboardTags().contains("Boss")) {
+                        for (int i = 0; i < 2; i++) {
+                            ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(random.nextInt(5) + 1);
+                            if (random.nextInt(30) == 0)
+                                p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                        }
                     }
                 }
                 case 6 -> {
                     e.setDamage(e.getDamage() * 4);
-                    for (int i = 0; i < 3; i++) {
-                        ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(random.nextInt(5)+1);
-                        if (random.nextInt(30) == 0)
-                            p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                    if(!e.getEntity().getScoreboardTags().contains("Boss")) {
+                        for (int i = 0; i < 3; i++) {
+                            ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(random.nextInt(5) + 1);
+                            if (random.nextInt(30) == 0)
+                                p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                        }
                     }
                 }
                 case 7 -> {
                     e.setDamage(e.getDamage() * 4.5);
-                    for (int i = 0; i < 4; i++) {
-                        ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(random.nextInt(7)+1);
-                        if (random.nextInt(25) == 0)
-                            p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                    if(!e.getEntity().getScoreboardTags().contains("Boss")) {
+                        for (int i = 0; i < 4; i++) {
+                            ((ExperienceOrb) p.getWorld().spawnEntity(e.getEntity().getLocation(), EntityType.EXPERIENCE_ORB)).setExperience(random.nextInt(7) + 1);
+                            if (random.nextInt(25) == 0)
+                                p.getWorld().dropItem(e.getEntity().getLocation(), CustomItems.MCOIN.getItem());
+                        }
                     }
                     passiveSin(p, (LivingEntity) e.getEntity());
                 }

@@ -1,8 +1,6 @@
 package com.github.tim91690;
 
-import com.github.tim91690.commands.BossList;
-import com.github.tim91690.commands.GiveCosmicBlade;
-import com.github.tim91690.commands.StartEclipse;
+import com.github.tim91690.commands.*;
 import com.github.tim91690.eclipse.Comet;
 import com.github.tim91690.eclipse.item.CustomCraft;
 import com.github.tim91690.eclipse.item.enchants.EnchantRegister;
@@ -40,6 +38,8 @@ public final class EventManager extends JavaPlugin {
         getCommand("eclipse").setExecutor(new StartEclipse());
         getCommand("bosslocation").setExecutor(new BossList());
         getCommand("moonblade").setExecutor(new GiveCosmicBlade());
+        getCommand("showwaypoint").setExecutor(new Waypoint());
+        getCommand("showwaypoint").setTabCompleter(new WaypointOnTabComplete());
     }
 
     public static EventManager getPlugin() {

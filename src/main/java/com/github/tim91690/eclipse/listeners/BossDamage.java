@@ -23,7 +23,7 @@ public class BossDamage implements Listener {
     @EventHandler
     public void onBossDamage(EntityDamageEvent e) {
         if (!e.getEntity().getScoreboardTags().contains("Boss")) return;
-        Boss boss = Boss.getBossInList(e.getEntity());
+        Boss boss = Boss.getBossInList(e.getEntity().getUniqueId());
         if (boss == null) return;
         if (
                 e.getCause().equals(EntityDamageEvent.DamageCause.FALL)
@@ -63,7 +63,7 @@ public class BossDamage implements Listener {
     @EventHandler
     public void onDemiurgeHit(EntityDamageByEntityEvent e) {
         if (!e.getEntity().getScoreboardTags().contains("Boss")) return;
-        Boss boss = Boss.getBossInList(e.getEntity());
+        Boss boss = Boss.getBossInList(e.getEntity().getUniqueId());
         if (boss == null) return;
         if (!(boss instanceof Demiurge)) return;
         Player p = null;
@@ -82,7 +82,7 @@ public class BossDamage implements Listener {
     @EventHandler
     public void onBossDeath(EntityDeathEvent e) {
         if (!e.getEntity().getScoreboardTags().contains("Boss")) return;
-        Boss boss = Boss.getBossInList(e.getEntity());
+        Boss boss = Boss.getBossInList(e.getEntity().getUniqueId());
         boss.death();
 
         int i = 1;
