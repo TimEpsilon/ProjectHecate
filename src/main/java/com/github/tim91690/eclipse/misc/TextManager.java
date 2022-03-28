@@ -16,6 +16,43 @@ public class TextManager {
     private static final Random random = new Random();
     private static final String demiurgeIntro = ChatColor.DARK_AQUA + "[DEMIURGE] ";
 
+
+    public static void SamExplains(int line) {
+        switch (line) {
+            //start
+            case 0 -> Bukkit.getOnlinePlayers().forEach(Player -> sendSamTextToPlayer(Player,ChatColor.GREEN + "[ALERTE] Comète à l'approche de son périgée. Une importante quantité d'énergie enveloppe la planète.",true));
+            case 1 -> sendSamTextToPlayer(ChatColor.GREEN + "L'énergie donne forme à de puissantes créatures. Merci de survivre et d'en éliminer un maximum afin de ne pas impacter le cours de la bourse");
+            case 2 -> sendSamTextToPlayer(ChatColor.GREEN + "[ASTUCE] : Un arc permet de tirer des flèches");
+
+            //phase 1
+            case 100 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -80min. Le champ diffus énergétique continue d'augmenter");
+            case 101 -> sendSamTextToPlayer(ChatColor.GREEN + "Nous vous rappelons que mourir est strictement prohibé");
+            case 102 -> sendSamTextToPlayer(ChatColor.GREEN + "[PUB] : Avec la nouvelle paire d'ELytras™ Soaring Skies, parcourez le ciel à des vitesses inégalées");
+
+            //phase 2
+            case 200 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -60min. Des débris commencent à entrer la haute atmosphère");
+            case 201 -> sendSamTextToPlayer(ChatColor.GREEN + "[INFO] : En raison du nombre élevé de morts, les impots ont été augmenté de +400%");
+            case 202 -> sendSamTextToPlayer(ChatColor.GREEN + "[SCIENCE] : Les phénomènes célestes sont connus pour attirer de nombreuses créatures, des morts-vivants aux gentils lapins");
+
+            //phase 3
+            case 300 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -40min. Les insectes commencent à s'agiter");
+            case 301 -> sendSamTextToPlayer(ChatColor.GREEN + "[ADMINISTRATION] : Nous vous rappelons que chaque mort nécessite le rédaction d'un dossier à votre charge");
+            case 302 -> sendSamTextToPlayer(ChatColor.GREEN + "[CITATION] : 'Connaissez l'ennemi et connaissez-vous vous-même ; en cent batailles vous ne courrez jamais aucun danger'");
+
+            //phase 4
+            case 400 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -20min. L'énergie augmente exponentiellement");
+            case 401 -> sendSamTextToPlayer(ChatColor.GREEN + "[INFO] : Communication reçue : " + ChatColor.MAGIC + ChatColor.AQUA + "Yaldabaoth à l'approche");
+            case 402 -> sendSamTextToPlayer(ChatColor.GREEN + "[ASTUCE] : Choisissez un dieu et priez");
+
+            //pre phase 5
+            case 490 -> sendSamTextToPlayer(ChatColor.GREEN + "Triangulation en cours...");
+            case 491 -> sendSamTextToPlayer(ChatColor.GREEN + "Pics d'énergies détectés. Il est recommandé de vous préparer à un combat");
+            case 492 -> sendSamTextToPlayer(ChatColor.GREEN + "Source d'énergie trouvée ! Rendez-vous en " + ChatColor.GOLD + "<"+ConfigManager.getLoc().getX()+","+ConfigManager.getLoc().getZ()+">");
+
+            //phase 5
+        }
+    }
+
     public static void sendSamTextToPlayer(Player p, String s, boolean alert) {
         p.sendMessage(Component.text(CustomItems.PDAText + s));
         if (alert) {
