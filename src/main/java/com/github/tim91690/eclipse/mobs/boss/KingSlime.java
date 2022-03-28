@@ -18,11 +18,13 @@ import java.util.List;
 
 public class KingSlime extends Boss {
 
-    public KingSlime(Location loc) {
+    public KingSlime(Location loc, boolean showMessage) {
         super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime"), BarColor.YELLOW, CustomItems.SOUL_SLOTH.getItem(),1,5);
 
-        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
-        this.sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints");
+        if (showMessage) {
+            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getZ() + ">")));
+            sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints");
+        }
 
         //au dessus, frapper le mob est difficile
         ((Slime) this.entity).setSize(14);
@@ -38,6 +40,10 @@ public class KingSlime extends Boss {
         this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(7);
         this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(12);
         this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(2);
+    }
+
+    public KingSlime(Location loc) {
+        this(loc,true);
     }
 
     @Override

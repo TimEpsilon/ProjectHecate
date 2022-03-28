@@ -52,11 +52,14 @@ public enum CustomItems {
     SOUL_WRATH(Material.RABBIT_FOOT,1,ChatColor.DARK_RED+"Foot of Wrath",10,ChatColor.LIGHT_PURPLE+"Âme de Scarlet Devil",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Cosmic Blade",""
             ,ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "'Déesse, chante-nous la colère d’Achille," , ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "qui valut aux Argiens d’innombrables malheurs'"),
     SOUL_PRIDE(Material.BLACK_DYE,1,ChatColor.GOLD+"Spirit of Pride",10,ChatColor.LIGHT_PURPLE+"Âme de Shadow",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Cosmic Blade",""
-            ,ChatColor.DARK_PURPLE +""+ "[PlaceHolder]"),
+            ,ChatColor.DARK_PURPLE +""+ "'La plupart des Hommes ignorent leur ombre.", ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "Elle est « les gens », auxquels on prête la cruauté,"
+            ,ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "la couardise qu'il serait tragique de se reconnaître.",
+            ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC +"Elle est tout ce qui déclenche le dégoût'"),
     SOUL_ENVY(Material.COPPER_INGOT,1,ChatColor.GREEN+"Eye of Envy",10,ChatColor.LIGHT_PURPLE+"Âme du Demiurge",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Cosmic Blade",""
             ,ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "'Du fond de l’abîme Ialdabaôth engendra la matière,", ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "il est le Démiurge'"),
     SOUL_GLUTTONY(Material.HONEYCOMB,1,ChatColor.BLUE+"Honey of Gluttony",10,ChatColor.LIGHT_PURPLE+"Âme de Queen Bee",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Cosmic Blade",""
-            ,ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "[Placeholder]"),
+            ,ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "'Des millions étaient occupés à satisfaire",ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "la vanité et l’ambition d’autres abeilles,",
+            ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC +"qui étaient uniquement employées",ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC +"à consumer les travaux des premières'"),
     SOUL_LUST(Material.GLOWSTONE_DUST,1,ChatColor.DARK_PURPLE+"Dust of Lust",10,ChatColor.LIGHT_PURPLE+"Âme de Night Fairy",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Cosmic Blade",""
             ,ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "'Narcisse fut ébloui par sa propre personne et,", ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "visage immobile, reste cloué sur place'");
 

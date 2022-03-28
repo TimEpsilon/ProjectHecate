@@ -19,11 +19,17 @@ import java.util.List;
 public class ScarletRabbit extends Boss {
 
     public ScarletRabbit(Location loc) {
+        this(loc,true);
+    }
+
+    public ScarletRabbit(Location loc,boolean showMessage) {
 
         super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil"), BarColor.RED, CustomItems.SOUL_WRATH.getItem(),4,20);
 
-        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getY()+" , "+(int)loc.getZ()+">")));
-        this.sendWaypoint("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints");
+        if (showMessage) {
+            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
+            sendWaypoint("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints");
+        }
 
        //killer bunny
         ((Rabbit) this.entity).setRabbitType(Rabbit.Type.THE_KILLER_BUNNY);

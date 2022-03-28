@@ -27,6 +27,7 @@ public final class EventManager extends JavaPlugin {
     @Override
     public void onDisable() {
         EnchantRegister.unregister();
+        comet.stopEvent();
     }
 
     @Override

@@ -32,6 +32,7 @@ public class StartEclipse implements CommandExecutor {
                 case "ritual_future" -> RitualArena.spawnRitualArena(true);
                 case "distance" -> Bukkit.broadcast(Component.text(ConfigManager.getLoc().distance(p.getLocation())));
                 case "fire" -> new CosmicRitual(ConfigManager.getLoc());
+                case "barrier" -> RitualArena.openBarrier();
                 case "magic" -> MagicCircle.inCircle(ConfigManager.getLoc().add(0.5, 1, 0.5), 2);
                 case "demiurge" -> new Demiurge(p.getLocation());
                 case "pylon" -> {

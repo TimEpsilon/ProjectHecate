@@ -1,14 +1,20 @@
 package com.github.tim91690.eclipse;
 
 import com.github.tim91690.EventManager;
+import com.github.tim91690.eclipse.events.CosmicRitual;
 import com.github.tim91690.eclipse.events.Meteor;
 import com.github.tim91690.eclipse.item.CustomItems;
+import com.github.tim91690.eclipse.misc.ConfigManager;
 import com.github.tim91690.eclipse.mobs.boss.*;
+import com.github.tim91690.eclipse.structure.RitualArena;
+import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -61,6 +67,8 @@ public class Comet {
         },0,1).getTaskId();
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(timeTask),101);
 
+        RitualArena.spawnRitualArena(false);
+
         tick();
 
         TextComponent xaeros = new TextComponent(CustomItems.PDAText+ ChatColor.GREEN + "Cliquez si Xaero's Minimap est installé");
@@ -111,8 +119,10 @@ public class Comet {
                     int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLaterAsynchronously(EventManager.getPlugin(), () -> {
-                            Location loc = getRandomLocation();
-                            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->new KingSlime(loc),0);
+                            Vector loc = getRandomLocation();
+                            waitUntilLoaded(loc);
+                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getZ() + ">")));
+                            Boss.sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints");
                         }, i*100L);
                     }
                 }
@@ -125,8 +135,10 @@ public class Comet {
                     int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                            Location loc = getRandomLocation();
-                            new PhantomOverlord(loc);
+                            Vector loc = getRandomLocation();
+                            waitUntilLoaded(loc);
+                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
+                            Boss.sendWaypoint("xaero-waypoint:PhantomOverlord:PO:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":1:false:0:Internal-overworld-waypoints");
                         }, i*110L);
                     }
                 }
@@ -141,8 +153,10 @@ public class Comet {
                     int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                            Location loc = getRandomLocation();
-                            new ScarletRabbit(loc);
+                            Vector loc = getRandomLocation();
+                            waitUntilLoaded(loc);
+                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
+                            Boss.sendWaypoint("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints");
                         }, i*120L);
                     }
                 }
@@ -157,11 +171,17 @@ public class Comet {
                     int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-                            Location loc = getRandomLocation();
-                            new Shadows(loc);
+                            Vector loc = getRandomLocation();
+                            waitUntilLoaded(loc);
+                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
+                            Boss.sendWaypoint("xaero-waypoint:Shadow:S:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":0:false:0:Internal-overworld-waypoints");
                         }, i*130L);
                     }
                 }
+            }
+
+            case 5 -> {
+                if (spawnBoss) initRitual();
             }
         }
     }
@@ -183,14 +203,42 @@ public class Comet {
         EventManager.isRunningEvent = false;
     }
 
-    private Location getRandomLocation() {
+    private Vector getRandomLocation() {
         double r = random.nextGaussian(1200,400);
         double theta = random.nextDouble()*2*Math.PI;
 
-        Location loc = new Location(world,r*Math.cos(theta),320,r*Math.sin(theta));
-        while (loc.getBlock().getType().isAir() && loc.getY()>0) loc.subtract(0,1,0);
+        return new Vector(r*Math.cos(theta),100,r*Math.sin(theta));
+    }
 
-        return loc;
+    private void initRitual() {
+        Location loc = ConfigManager.getLoc();
+
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
+            new CosmicRitual(ConfigManager.getLoc());
+        },6000);
+    }
+
+    private void waitUntilLoaded(Vector vector) {
+        ArrayList<Integer> tasks = new ArrayList<>();
+        tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+            for (Player p : Bukkit.getOnlinePlayers()) {
+                Vector pvec = p.getLocation().toVector();
+                pvec.setY(vector.getY());
+                if (pvec.distance(vector) > 160) continue;
+                Location loc = new Location(world,vector.getX(),320,vector.getZ());
+                while (loc.getBlock().getType().isAir() && loc.getY()>0) {
+                    loc.subtract(0,5,0);
+                }
+                switch (phase) {
+                    case 1 -> new KingSlime(loc.add(0,10,0),false);
+                    case 2 -> new PhantomOverlord(loc.add(0,50,0),false);
+                    case 3 -> new ScarletRabbit(loc,false);
+                    case 4 -> new Shadows(loc,false);
+                }
+                Bukkit.getScheduler().cancelTask(tasks.get(0));
+                break;
+            }
+        },0,60).getTaskId());
     }
 
     public int getPhase() {

@@ -135,6 +135,18 @@ public class BlockProtection implements Listener {
     }
 
     @EventHandler
+    public void onJumppadWalk(PlayerMoveEvent e) {
+        if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;
+        Player p = e.getPlayer();
+        if (p.getLocation().distance(loc) > 80) return;
+
+        if (!p.getLocation().subtract(0,1,0).getBlock().getType().equals(Material.EMERALD_BLOCK)) return;
+
+        p.setVelocity(p.getLocation().toVector().subtract(loc.toVector()).normalize().multiply(3.5));
+        p.playSound(p.getLocation(),Sound.ENTITY_ENDER_DRAGON_FLAP,SoundCategory.PLAYERS,1,0.5f);
+    }
+
+    @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
         if (!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ) return;
         if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;

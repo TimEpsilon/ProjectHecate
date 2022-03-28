@@ -6,6 +6,7 @@ import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
 import com.sk89q.worldedit.WorldEditException;
 import com.sk89q.worldedit.bukkit.BukkitAdapter;
+import com.sk89q.worldedit.bukkit.WorldEditPlugin;
 import com.sk89q.worldedit.extent.clipboard.Clipboard;
 import com.sk89q.worldedit.extent.clipboard.io.BuiltInClipboardFormat;
 import com.sk89q.worldedit.extent.clipboard.io.ClipboardReader;
@@ -15,12 +16,14 @@ import com.sk89q.worldedit.function.mask.Masks;
 import com.sk89q.worldedit.function.operation.Operation;
 import com.sk89q.worldedit.function.operation.Operations;
 import com.sk89q.worldedit.math.BlockVector3;
-import com.sk89q.worldedit.math.Vector3;
 import com.sk89q.worldedit.session.ClipboardHolder;
 import com.sk89q.worldedit.world.block.BaseBlock;
-import com.sk89q.worldedit.world.block.BlockState;
 import com.sk89q.worldedit.world.block.BlockTypes;
+import net.minecraft.world.level.block.AirBlock;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.util.Vector;
 
 import java.io.*;
 
@@ -43,6 +46,25 @@ public class RitualArena {
             pasteSchematic("pylon.schem",loc);
         }
     }
+
+    public static void openBarrier() {
+        Location loc = ConfigManager.getLoc();
+
+        com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(loc.getWorld());
+
+            try (EditSession es = WorldEdit.getInstance().getEditSessionFactory().getEditSession(adaptedWorld,
+                    -1)) {
+
+                es.enableQueue();
+                es.makeCylinder(BlockVector3.at(loc.getX(),loc.getY()+13,loc.getZ()),new BaseBlock(BlockTypes.AIR),50,50,false);
+                es.flushQueue();
+
+                loc.clone().add(0,10,18).getBlock().setType(Material.EMERALD_BLOCK);
+                loc.clone().add(0,10,-18).getBlock().setType(Material.EMERALD_BLOCK);
+                loc.clone().add(18,10,0).getBlock().setType(Material.EMERALD_BLOCK);
+                loc.clone().add(-18,10,0).getBlock().setType(Material.EMERALD_BLOCK);
+            }
+        }
 
     private static void pasteSchematic(String name, Location loc) {
         com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(loc.getWorld());

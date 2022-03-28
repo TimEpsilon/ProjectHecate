@@ -37,6 +37,7 @@ public abstract class Boss {
 
     private static Random random = new Random();
 
+
     /** Crée un boss
      *
      * @param e entité du boss
@@ -137,7 +138,7 @@ public abstract class Boss {
         }, 0, 100).getTaskId();
     }
 
-    protected void sendWaypoint(String s) {
+    public static void sendWaypoint(String s) {
         Waypoint.PlayersHaveMaps.forEach(Player -> Player.sendMessage(s));
     }
 
