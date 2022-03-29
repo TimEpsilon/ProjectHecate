@@ -1,13 +1,13 @@
 package com.github.tim91690.commands;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.eclipse.events.EnergyPylon;
-import com.github.tim91690.eclipse.events.Meteor;
-import com.github.tim91690.eclipse.events.CosmicRitual;
-import com.github.tim91690.eclipse.misc.ConfigManager;
-import com.github.tim91690.eclipse.misc.MagicCircle;
-import com.github.tim91690.eclipse.mobs.boss.*;
-import com.github.tim91690.eclipse.structure.RitualArena;
+import com.github.tim91690.comet.events.EnergyPylon;
+import com.github.tim91690.comet.events.Meteor;
+import com.github.tim91690.comet.events.CosmicRitual;
+import com.github.tim91690.comet.misc.ConfigManager;
+import com.github.tim91690.comet.misc.MagicCircle;
+import com.github.tim91690.comet.mobs.boss.*;
+import com.github.tim91690.comet.structure.RitualArena;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -47,7 +47,7 @@ public class StartEclipse implements CommandExecutor {
                     if (EventManager.isRunningEvent) return false;
                     EventManager.getComet().startEvent();
                 }
-                case "stop" -> EventManager.getComet().stopEvent();
+                case "stop" -> EventManager.getComet().stopEvent(false);
             }
             return true;
         }

@@ -1,7 +1,7 @@
 package com.github.tim91690.commands;
 
 import com.github.tim91690.EventManager;
-import com.github.tim91690.eclipse.item.CustomItems;
+import com.github.tim91690.comet.item.CustomItems;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
