@@ -4,9 +4,8 @@ main: com.github.tim91690.EventManager
 api-version: 1.18
 
 commands:
-  eclipse:
+  comet:
   bosslocation:
-  moonblade:
   showwaypoint:
 
 softdepend:

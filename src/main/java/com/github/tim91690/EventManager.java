@@ -36,9 +36,9 @@ public final class EventManager extends JavaPlugin {
     }
 
     private void registerCommands() {
-        getCommand("eclipse").setExecutor(new StartEclipse());
+        getCommand("comet").setExecutor(new StartComet());
+        getCommand("comet").setTabCompleter(new CometOnTabComplete());
         getCommand("bosslocation").setExecutor(new BossList());
-        getCommand("moonblade").setExecutor(new GiveCosmicBlade());
         getCommand("showwaypoint").setExecutor(new Waypoint());
         getCommand("showwaypoint").setTabCompleter(new WaypointOnTabComplete());
     }

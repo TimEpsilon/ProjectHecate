@@ -274,7 +274,7 @@ public class Comet {
         char[] nums = new char[]{'❶', '❷', '❸', '❹', '❺' };
 
         Bukkit.getOnlinePlayers().forEach(Player -> {
-            double amount = (list.containsKey(Player.getUniqueId())) ? Math.round(list.get(Player.getUniqueId())*1000f)/1000f : 0.0;
+            double amount = (list.containsKey(Player.getUniqueId())) ? Math.round(list.get(Player.getUniqueId())*1000d)/1000d : 0.0;
             Player.sendMessage(ChatColor.GOLD + "Votre Nombre de "+ StatName +" : " + amount + "\n");
         });
 
