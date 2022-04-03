@@ -5,6 +5,7 @@ import com.github.tim91690.comet.item.CustomItems;
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.enchantments.EnchantmentTarget;
 import org.bukkit.entity.*;
@@ -212,6 +213,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
             case 0 -> {
                 //Sloth
                 p.getWorld().spawnParticle(Particle.SLIME, p.getLocation(), 300, 8, 8, 8);
+                p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,100,1));
                 for (Entity e : p.getNearbyEntities(8, 8, 8)) {
                     if (e instanceof LivingEntity && e.getScoreboardTags().contains("Comet")) {
                         ((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 5, false, true));
@@ -224,11 +226,12 @@ public class CosmicEnchant extends Enchantment implements Listener {
             case 1 -> {
                 //Greed
                 p.getWorld().spawnParticle(Particle.TOTEM, p.getLocation(), 200, 5, 5, 5);
+                p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,120,0));
                 for (Entity e : p.getNearbyEntities(5, 5, 5)) {
                     if (e instanceof LivingEntity && e.getScoreboardTags().contains("Comet")) {
                         ExperienceOrb xp = (ExperienceOrb) e.getWorld().spawnEntity(e.getLocation(), EntityType.EXPERIENCE_ORB);
                         for (int i = 0; i < 5; i++) {
-                            xp.setExperience(8);
+                            xp.setExperience(10);
                             xp.setVelocity(Vector.getRandom());
                         }
                     }
@@ -277,7 +280,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
             case 6 -> {
                 //Envy
                 p.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 250, 4, 4, 4, 0);
-                for (Entity e : p.getNearbyEntities(8, 8, 8)) {
+                for (Entity e : p.getNearbyEntities(10, 8, 10)) {
                     if (!e.getScoreboardTags().contains("Comet")) continue;
                     e.getWorld().strikeLightning(e.getLocation());
                 }

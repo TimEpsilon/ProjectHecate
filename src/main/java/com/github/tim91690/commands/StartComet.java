@@ -45,6 +45,7 @@ public class StartComet implements CommandExecutor {
             "magic_circle",
             "start_pylon",
             "set_timer",
+            "add_timer",
             "open_barrier",
             "items"));
 
@@ -127,6 +128,10 @@ public class StartComet implements CommandExecutor {
                         case "set_timer" -> {
                             int time = (args.length < 3) ? 0 : Integer.parseInt(args[2]);
                             EventManager.getComet().setTime(time);
+                        }
+                        case "add_timer" -> {
+                            int time = (args.length < 3) ? 0 : Integer.parseInt(args[2]);
+                            EventManager.getComet().setTime(EventManager.getComet().getTime() + time);
                         }
                         case "open_barrier" -> RitualArena.openBarrier();
                         case "items" -> GiveCosmicBlade.getItems(p);

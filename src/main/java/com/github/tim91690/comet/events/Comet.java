@@ -3,13 +3,13 @@ package com.github.tim91690.comet.events;
 import com.github.tim91690.EventManager;
 import com.github.tim91690.comet.item.CustomItems;
 import com.github.tim91690.comet.misc.ConfigManager;
+import com.github.tim91690.comet.misc.TextManager;
 import com.github.tim91690.comet.mobs.boss.*;
 import com.github.tim91690.comet.structure.RitualArena;
 import net.kyori.adventure.text.Component;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
-import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -26,7 +26,8 @@ public class Comet {
     private final AtomicInteger timer = new AtomicInteger();
     private static final Random random = new Random();
     private static final float probaMeteor = 0.01f;
-    private static final float probaBee = 0.03f;
+    private static final float probaBee = 0.02f;
+    private int lastLine = -1;
     public final Map<UUID,Double> DeathCount = new HashMap<>();
     public final Map<UUID,Double> KillCount = new HashMap<>();
     public final Map<UUID,Double> DamageCount = new HashMap<>();
@@ -87,6 +88,7 @@ public class Comet {
         tickTask = Bukkit.getScheduler().runTaskTimerAsynchronously(EventManager.getPlugin(),()->{
             boolean hasChanged = changePhase(timer.get());
             playEvent(hasChanged);
+            sendText(timer.get());
 
             timer.addAndGet(tick);
         },0,tick).getTaskId();
@@ -106,6 +108,14 @@ public class Comet {
             hasChanged = phase != ((timer-12000)*4)/(timeToLvl5 -12000)+1;
             phase = ((timer-12000)*4)/(timeToLvl5 -12000)+1;
             return hasChanged;
+        }
+    }
+
+    private void sendText(int timer) {
+        int line = (timer*90)/timeToLvl5;
+        if (lastLine != line) {
+            lastLine = line;
+            TextManager.SamExplains(line);
         }
     }
 
@@ -182,6 +192,7 @@ public class Comet {
             }
 
             case 5 -> {
+                Bukkit.broadcastMessage("aaaaaaaaaaaaaaaaa");
                 if (spawnBoss) initRitual();
             }
         }
@@ -231,9 +242,7 @@ public class Comet {
     private void initRitual() {
         Location loc = ConfigManager.getLoc();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
-            new CosmicRitual(loc);
-        },6000);
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> new CosmicRitual(loc),6000);
     }
 
     private void waitUntilLoaded(Vector vector) {
@@ -246,26 +255,27 @@ public class Comet {
             case 4 -> new TempBoss(vector,350,ChatColor.translateAlternateColorCodes('&',"&8&lShadow"),uuid);
         }
 
-        tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                Vector pvec = p.getLocation().toVector();
-                pvec.setY(vector.getY());
-                if (pvec.distance(vector) > 160) continue;
-                Location loc = new Location(world,vector.getX(),320,vector.getZ());
-                while (loc.getBlock().getType().isAir() && loc.getY()>0) {
-                    loc.subtract(0,5,0);
-                }
-                switch (phase) {
-                    case 1 -> new KingSlime(loc.add(0,10,0),false);
-                    case 2 -> new PhantomOverlord(loc.add(0,50,0),false);
-                    case 3 -> new ScarletRabbit(loc,false);
-                    case 4 -> new Shadows(loc,false);
-                }
-                TempBoss.getTempBossList().remove(uuid);
-                Bukkit.getScheduler().cancelTask(tasks.get(0));
-                break;
+
+        Chunk chunk = world.getChunkAt((int) vector.getX(), (int) vector.getZ());
+        tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+
+            if (!chunk.isLoaded()) return;
+            Location loc = new Location(world, vector.getX(), 320, vector.getZ());
+            while (loc.getBlock().getType().isAir() && loc.getY() > 0) {
+                loc.subtract(0, 5, 0);
             }
-        },0,60).getTaskId());
+
+            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> {
+                switch (phase) {
+                    case 1 -> new KingSlime(loc.add(0, 10, 0), false);
+                    case 2 -> new PhantomOverlord(loc.add(0, 50, 0), false);
+                    case 3 -> new ScarletRabbit(loc, false);
+                    case 4 -> new Shadows(loc, false);
+                }
+            },100);
+            TempBoss.getTempBossList().remove(uuid);
+            Bukkit.getScheduler().cancelTask(tasks.get(0));
+        }, 0, 60).getTaskId());
     }
 
     private void showStats(Map<UUID,Double> StatCount,String StatName) {

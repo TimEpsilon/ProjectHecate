@@ -1,7 +1,6 @@
 package com.github.tim91690.comet.listeners;
 
 import com.github.tim91690.EventManager;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;

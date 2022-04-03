@@ -1,6 +1,5 @@
 package com.github.tim91690.comet.mobs;
 
-import com.github.tim91690.EventManager;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -18,7 +17,6 @@ import java.util.Random;
 public class ParanoidEnderman extends CometMobs {
 
     private final static Random random = new Random();
-    private int task;
     private final static ArrayList<Material> blockList = new ArrayList<>(List.of(
             Material.TNT,
             Material.SPONGE,
@@ -27,7 +25,8 @@ public class ParanoidEnderman extends CometMobs {
             Material.COPPER_BLOCK,
             Material.DRIED_KELP_BLOCK,
             Material.CAKE,
-            Material.BONE_BLOCK));
+            Material.BONE_BLOCK,
+            Material.STONECUTTER));
 
 
     public ParanoidEnderman(LivingEntity ender) {
@@ -38,14 +37,6 @@ public class ParanoidEnderman extends CometMobs {
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,10000000,0,false,false));
 
         ((Enderman)this.entity).setCarriedBlock(Bukkit.createBlockData(blockList.get(random.nextInt(blockList.size()))));
-
-        task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
-            if ((!this.entity.isDead())) {
-                ((Enderman) this.entity).teleportRandomly();
-            } else {
-                Bukkit.getScheduler().cancelTask(task);
-            }
-        },0,30).getTaskId();
     }
 
     public ParanoidEnderman(Location loc) {

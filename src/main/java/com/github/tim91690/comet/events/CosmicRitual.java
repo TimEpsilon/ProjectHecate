@@ -141,7 +141,7 @@ public class CosmicRitual {
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La présence du Demiurge vous affaiblit. " +
                                     "Les feux d'artifices sont désactivés." +
                                     "Utilisez les ventilations alentours pour gagner de l'altitude."
-                            , true), 100);
+                            , true), 200);
             }
             iter.getAndIncrement();
         },0,165).getTaskId());
