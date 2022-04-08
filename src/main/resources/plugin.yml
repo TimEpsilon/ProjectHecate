@@ -5,8 +5,14 @@ api-version: 1.18
 
 commands:
   comet:
+    description: Permet de commencer ou arrêter l'event
+    usage: /comet <start/stop/info>
   bosslocation:
+    description: Affiche la position et la vie des Boss restants
+    usage: /bosslocation
   showwaypoint:
+    description: Permet d'envoyer un message Xaero's au joueur lorsqu'un boss spawn
+    usage: /showwaypoint <true/false>
 
 softdepend:
   - FastAsyncWorldEdit
