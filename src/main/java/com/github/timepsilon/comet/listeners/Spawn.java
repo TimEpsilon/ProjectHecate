@@ -30,6 +30,7 @@ public class Spawn implements Listener {
     public void onSpawn(CreatureSpawnEvent event) {
         if (!EventManager.isRunningEvent) return;
         if (!(event.getEntity() instanceof Monster) || (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL) && (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.COMMAND)))) return;
+        if (event.getLocation().getY() < 60) return;
 
         int lvl = EventManager.getComet().getPhase();
 

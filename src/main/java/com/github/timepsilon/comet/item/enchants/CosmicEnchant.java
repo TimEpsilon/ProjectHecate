@@ -381,7 +381,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
     }
 
     private void cosmicArrow(Player p) {
-        Arrow laser = (Arrow)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1,0).add(p.getLocation().getDirection().multiply(2)), EntityType.ARROW);
+        Arrow laser = (Arrow)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1.5,0).add(p.getLocation().getDirection().multiply(2)), EntityType.ARROW);
 
         laser.setVelocity(p.getLocation().getDirection());
         laser.setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
@@ -412,7 +412,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
     }
 
     private void cosmicTrident(Player p) {
-        Trident laser = (Trident)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1,0).add(p.getLocation().getDirection().multiply(2)), EntityType.TRIDENT);
+        Trident laser = (Trident)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1.5,0).add(p.getLocation().getDirection().multiply(2)), EntityType.TRIDENT);
 
         laser.setVelocity(p.getLocation().getDirection().multiply(2));
         laser.setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);

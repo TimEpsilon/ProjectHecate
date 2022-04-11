@@ -38,7 +38,7 @@ dependencies {
     paperDevBundle("1.18.1-R0.1-SNAPSHOT")
 }
 
-group = "com.github.Tim91690"
+group = "com.github.TimEpsilon"
 version = "1.0-SNAPSHOT"
 description = "EventManager"
 java.sourceCompatibility = JavaVersion.VERSION_17

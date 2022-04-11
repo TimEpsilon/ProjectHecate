@@ -18,6 +18,8 @@ import java.util.List;
 
 public class ScarletRabbit extends Boss {
 
+    private int soldierCount = 0;
+
     public ScarletRabbit(Location loc) {
         this(loc,true);
     }
@@ -116,9 +118,11 @@ public class ScarletRabbit extends Boss {
     /** Invoque 3 wither squelettes
      */
     private void souls() {
+        if (soldierCount > 9) return;
         this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
             for (int i = 0; i < 3; i++) {
+                soldierCount += 1;
                 WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
 
                 s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80);

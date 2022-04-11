@@ -29,7 +29,7 @@ public class QueenBee extends Boss {
         this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(50);
         this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(15);
         this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(2);
-        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(10);
+        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(8);
 
         summonBee();
         summonBee();
@@ -41,7 +41,7 @@ public class QueenBee extends Boss {
                 ((Bee) this.entity).setAnger(1000);
                 ((Bee) this.entity).setCannotEnterHiveTicks(1000);
                 ((Bee) this.entity).setHasStung(false);
-                this.entity.getWorld().spawnParticle(Particle.FALLING_HONEY,this.entity.getLocation(),400,10,10,10,0,null,true);
+                this.entity.getWorld().spawnParticle(Particle.FALLING_HONEY,this.entity.getLocation(),400,10,10,10,0);
             }
         },0,40).getTaskId();
 

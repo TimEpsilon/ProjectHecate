@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 public class Comet {
 
     private int phase;
-    private final int timeToLvl5 = 108000; //90min
+    private final int timeToLvl5 = 84000; //50min
     private final World world;
     private int tickTask;
     private int timeSkipTask;
@@ -55,7 +55,6 @@ public class Comet {
         world.setGameRule(GameRule.KEEP_INVENTORY,true);
         world.setGameRule(GameRule.MOB_GRIEFING,false);
         world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE,101);
-        world.setGameRule(GameRule.SHOW_DEATH_MESSAGES,false);
         world.setClearWeatherDuration(180000);
 
         long time = world.getFullTime() % 192000; //Modulo la semaine
@@ -255,7 +254,7 @@ public class Comet {
 
     private void initRitual() {
         Location loc = ConfigManager.getLoc();
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> new CosmicRitual(loc),6000);
+        new CosmicRitual(loc);
     }
 
     private void waitUntilLoaded(Vector vector) {

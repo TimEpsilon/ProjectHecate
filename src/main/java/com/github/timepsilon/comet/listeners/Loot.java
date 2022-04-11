@@ -13,7 +13,7 @@ import java.util.Random;
 public class Loot implements Listener {
 
     private final static float probaDrop = 0.1f;
-    private final static float probaSoul = 0.1f;
+    private final static float probaSoul = 0.3f;
     private final static int semiBossBonus = 8; //bonus = [bonus/2 , bonus] + n
 
     private static Random random = new Random();

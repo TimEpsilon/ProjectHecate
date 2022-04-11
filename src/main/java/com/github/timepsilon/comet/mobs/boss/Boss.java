@@ -125,7 +125,7 @@ public abstract class Boss {
         this.bossbarTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getLocation().distance(this.entity.getLocation()) < 40 && p.getGameMode().equals(GameMode.SURVIVAL)) {
+                if (p.getLocation().distance(this.entity.getLocation()) < 100 && p.getGameMode().equals(GameMode.SURVIVAL)) {
                     //ajoute le joueur si il est aux alentours
                     this.getBossbar().addPlayer(p);
                     this.proxPlayer.add(p);

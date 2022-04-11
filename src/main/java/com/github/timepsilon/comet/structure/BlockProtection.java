@@ -70,6 +70,7 @@ public class BlockProtection implements Listener {
 
         for (EnergyPylon pylon : EnergyPylon.values()) {
             if (pylon.getHasActivated()) rest -=1;
+            if (!pylon.isOn) return;
         }
         if (rest > 0) {
             e.getPlayer().sendMessage(Component.text(ChatColor.RED+ "Il reste " + rest + " pylônes à activer"));

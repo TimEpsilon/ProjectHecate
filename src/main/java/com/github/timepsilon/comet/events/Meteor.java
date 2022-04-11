@@ -44,9 +44,9 @@ public class Meteor {
 
     private void Beacon() {
         this.beaconTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-            this.loc.getWorld().spawnParticle(Particle.GLOW,this.loc.clone().add(0,50,0),1000,5,50,5,0,null,true);
+            this.loc.getWorld().spawnParticle(Particle.GLOW,this.loc.clone().add(0,50,0),1000,5,50,5,0);
             this.loc.getWorld().spawnParticle(Particle.TOTEM,this.loc.clone().add(0,50,0),500,1,50,1,0,null,true);
-            this.loc.getWorld().spawnParticle(Particle.WAX_ON,this.loc,500,30,30,30,0,null,true);
+            this.loc.getWorld().spawnParticle(Particle.WAX_ON,this.loc,500,30,30,30,0);
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.getLocation().distance(this.loc) < 30) {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,40,2));

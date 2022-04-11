@@ -67,9 +67,9 @@ public class Shadows extends Boss {
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,false,false));
 
         this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(60);
-        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(15);
-        this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(15);
-        this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(5);
+        this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(5);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(20);
+        this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(8);
 
         loc.add(0,0.2,0);
 

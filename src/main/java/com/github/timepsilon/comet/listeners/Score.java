@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.entity.EntityResurrectEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 
 import java.util.UUID;
@@ -16,6 +17,14 @@ public class Score implements Listener {
     @EventHandler
     public void onDeath(PlayerDeathEvent e) {
         if (!EventManager.isRunningEvent) return;
+        UUID uuid = e.getEntity().getUniqueId();
+        EventManager.getComet().DeathCount.compute(uuid,(k, v) -> (v == null) ? 1 : v+1);
+    }
+
+    @EventHandler
+    public void onTotemUse(EntityResurrectEvent e) {
+        if (!EventManager.isRunningEvent) return;
+        if (!(e.getEntity() instanceof Player)) return;
         UUID uuid = e.getEntity().getUniqueId();
         EventManager.getComet().DeathCount.compute(uuid,(k, v) -> (v == null) ? 1 : v+1);
     }

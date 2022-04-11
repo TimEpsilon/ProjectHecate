@@ -6,7 +6,10 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -14,6 +17,7 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public enum CustomItems {
 
@@ -22,25 +26,25 @@ public enum CustomItems {
             ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant"),
     COSMICBLADE_LVL1(Material.NETHERITE_SWORD,1,ChatColor.AQUA + "Cosmic Blade",301,EnchantRegister.COSMIC_BLESSING,1,
             ChatColor.LIGHT_PURPLE +"Une épée forgée au coeur d'une comète",ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit",
-            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing I"),
+            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing I","",ChatColor.BLUE+"10.5 Cosmic Damage"),
     COSMICBLADE_LVL2(Material.NETHERITE_SWORD,1,ChatColor.AQUA + "Cosmic Blade",302,EnchantRegister.COSMIC_BLESSING,2,
             ChatColor.LIGHT_PURPLE +"Une épée forgée au coeur d'une comète",ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit",
-            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing II"),
+            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing II","",ChatColor.BLUE+"14 Cosmic Damage"),
     COSMICBLADE_LVL3(Material.NETHERITE_SWORD,1,ChatColor.AQUA + "Cosmic Blade",303,EnchantRegister.COSMIC_BLESSING,3,
             ChatColor.LIGHT_PURPLE +"Une épée forgée au coeur d'une comète",ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit",
-            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing III"),
+            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing III","",ChatColor.BLUE+"17.5 Cosmic Damage"),
     COSMICBLADE_LVL4(Material.NETHERITE_SWORD,1,ChatColor.AQUA + "Cosmic Blade",304,EnchantRegister.COSMIC_BLESSING,4,
             ChatColor.LIGHT_PURPLE +"Une épée forgée au coeur d'une comète",ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit",
-            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing IV"),
+            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing IV","",ChatColor.BLUE+"21 Cosmic Damage"),
     COSMICBLADE_LVL5(Material.NETHERITE_SWORD,1,ChatColor.AQUA + "Cosmic Blade",305,EnchantRegister.COSMIC_BLESSING,5,
             ChatColor.LIGHT_PURPLE +"Une épée forgée au coeur d'une comète",ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit",
-            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing V"),
+            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing V","",ChatColor.BLUE+"24.5 Cosmic Damage"),
     COSMICBLADE_LVL6(Material.NETHERITE_SWORD,1,ChatColor.AQUA + "Cosmic Blade",306,EnchantRegister.COSMIC_BLESSING,6,
             ChatColor.LIGHT_PURPLE +"Une épée forgée au coeur d'une comète",ChatColor.LIGHT_PURPLE +"Sa lame tranche les créatures de la nuit",
-            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing VI"),
+            ChatColor.GREEN+""+ ChatColor.ITALIC+"Peut être améliorée en",ChatColor.GREEN+""+ ChatColor.ITALIC+"l'infusant des restes d'un ennemi puissant","",ChatColor.GRAY+"Cosmic Blessing VI","",ChatColor.BLUE+"28 Cosmic Damage"),
     COSMICBLADE_TRUE(Material.NETHERITE_SWORD,1,ChatColor.AQUA+"True Cosmic Blade",307,EnchantRegister.COSMIC_BLESSING,7,ChatColor.LIGHT_PURPLE +"La forme finale de la lame du cosmos",
             ChatColor.LIGHT_PURPLE +"Infusée par les 7 péchés capitaux",ChatColor.GREEN+""+ChatColor.ITALIC+"Clic droit pour invoquer un péché",ChatColor.GREEN+""+ChatColor.ITALIC+"Shift + clic droit pour changer de péché","",
-            ChatColor.GRAY+"Sins Of The Universe I"),
+            ChatColor.GRAY+"Sins Of The Universe I","",ChatColor.BLUE+"31.5 Cosmic Damage"),
     MCOIN(Material.EMERALD,1,ChatColor.AQUA + "" + ChatColor.BOLD + "M-Coin",42,null,0,true),
     SOUL_MOB(Material.GUNPOWDER,1,ChatColor.AQUA+"Lost Soul",10,ChatColor.LIGHT_PURPLE+ "Âme d'une créature de la nuit",ChatColor.LIGHT_PURPLE+ "La comète augmente leur force...",
             ChatColor.GRAY +""+ ChatColor.ITALIC+"Infusez une épée en netherite avec 8 âmes"),
@@ -85,6 +89,7 @@ public enum CustomItems {
         if(isMcoin) {
             meta.getPersistentDataContainer().set(new NamespacedKey("stonksexchange","customitem"), PersistentDataType.STRING,this.name);
         } else {
+            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(),"AttackSpeed", 20, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
             meta.getPersistentDataContainer().set(new NamespacedKey(EventManager.getPlugin(),"CustomItem"),PersistentDataType.STRING,this.name);
         }
         this.item.setItemMeta(meta);

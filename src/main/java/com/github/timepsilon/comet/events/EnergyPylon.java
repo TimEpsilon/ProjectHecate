@@ -26,6 +26,7 @@ public enum EnergyPylon {
     private int tick;
     private boolean hasActivated = false;
     private Laser laser;
+    public boolean isOn;
 
     private final static int maxProgress = 100;
     private final Location center = ConfigManager.getLoc();
@@ -40,6 +41,7 @@ public enum EnergyPylon {
     }
 
     public void turnOn() {
+        isOn = true;
         Vector rel = this.pylonLoc.toVector().subtract(center.toVector());
         switch (this.bossType) {
             case "KingSlime" -> new KingSlime(this.pylonLoc.clone().subtract(rel.getX() / 4f, -10, rel.getZ() / 4f));
@@ -53,6 +55,7 @@ public enum EnergyPylon {
     }
 
     public void turnOff() {
+        isOn = false;
         Bukkit.getScheduler().cancelTask(this.tick);
         this.laser.stop();
     }

@@ -1,6 +1,6 @@
 name: EventManager
 version: ${project.version}
-main: com.github.tim91690.EventManager
+main: com.github.timepsilon.EventManager
 api-version: 1.18
 
 commands:
