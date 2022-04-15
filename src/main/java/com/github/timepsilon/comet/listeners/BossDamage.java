@@ -33,7 +33,7 @@ public class BossDamage implements Listener {
 
         boss.getBossbar().setProgress(((LivingEntity)boss.getEntity()).getHealth() / boss.getMaxHealth());
 
-        if (random.nextInt(10) == 0) boss.attack(boss.getBossbar().getPlayers());
+        if (random.nextInt(10) == 0) boss.attack(boss.proxPlayer);
 
         if (boss instanceof Demiurge) {
             double health = ((LivingEntity) boss.getEntity()).getHealth();

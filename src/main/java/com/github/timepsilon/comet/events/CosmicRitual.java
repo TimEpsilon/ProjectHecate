@@ -23,7 +23,8 @@ public class CosmicRitual {
     public CosmicRitual(Location loc) {
         this.tasks = new ArrayList<>();
 
-        Bukkit.getOnlinePlayers().forEach(Player -> Player.setBedSpawnLocation(loc.clone().add(0,3,0),true));
+        Bukkit.getScheduler().runTask(EventManager.getPlugin(),()->Bukkit.getOnlinePlayers().forEach(Player -> Player.setBedSpawnLocation(loc.clone().add(0,3,0),true)));
+        //TODO : tester si task async casse pas tout
 
         //Cercle allume bougie
         final float[] pos = {0,0,2};

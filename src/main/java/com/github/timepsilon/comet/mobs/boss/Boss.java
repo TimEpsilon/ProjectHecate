@@ -30,8 +30,9 @@ public abstract class Boss {
     private final int lvl;
     private final int bonus;
     protected final String name;
-    private final List<Player> proxPlayer;
+    public List<Player> proxPlayer;
     private int bossbarTask;
+    private int attackTask;
 
     private final static int bossBonus = 20;
 
@@ -84,6 +85,7 @@ public abstract class Boss {
 
         this.bossbar.setProgress(this.entity.getHealth() / health);
         CustomBossBar();
+        AttackLoop();
     }
 
     //retire le boss de la liste et supprime sa bossbar + give récompense aux joueurs alentours
@@ -103,8 +105,10 @@ public abstract class Boss {
         }
 
         bossList.remove(this);
-        this.bossbar.removeAll();
-        Bukkit.getScheduler().cancelTask(this.bossbarTask);
+        bossbar.removeAll();
+        this.proxPlayer.clear();
+        Bukkit.getScheduler().cancelTask(bossbarTask);
+        Bukkit.getScheduler().cancelTask(attackTask);
     }
 
     private void giveItemToPlayers(List<Player> proxPlayer) {
@@ -124,18 +128,19 @@ public abstract class Boss {
     private void CustomBossBar() {
         this.bossbarTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
 
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getLocation().distance(this.entity.getLocation()) < 100 && p.getGameMode().equals(GameMode.SURVIVAL)) {
-                    //ajoute le joueur si il est aux alentours
-                    this.getBossbar().addPlayer(p);
-                    this.proxPlayer.add(p);
-                }
-                //le retire si il n'y est pas
-                else this.getBossbar().removePlayer(p);
-            }
-            if (this.proxPlayer.size() != 0) this.attack(this.proxPlayer);
-            this.proxPlayer.clear();
-        }, 0, 100).getTaskId();
+            List<Player> prox = getProxPlayer(80);
+            bossbar.removeAll();
+            prox.forEach(bossbar::addPlayer);
+
+        }, 0, 40).getTaskId();
+    }
+
+    private void AttackLoop() {
+        attackTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+            proxPlayer.clear();
+            proxPlayer = getProxPlayer(60);
+            attack(proxPlayer);
+        },0,110).getTaskId();
     }
 
     public static void sendWaypoint(String s) {
@@ -159,6 +164,14 @@ public abstract class Boss {
             if (boss.getEntity().getUniqueId().equals(uuid)) return boss;
         }
         return null;
+    }
+
+    public List<Player> getProxPlayer(int dist) {
+        List<Player> prox = new ArrayList<>();
+        for (Player p : Bukkit.getOnlinePlayers()) {
+            if (p.getLocation().distance(this.entity.getLocation()) < dist && p.getGameMode().equals(GameMode.SURVIVAL)) prox.add(p);
+        }
+        return prox;
     }
 
     public String getName() {

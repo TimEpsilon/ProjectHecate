@@ -107,4 +107,6 @@ public enum CustomItems {
     public ItemStack getItem() {
         return this.item;
     }
+
+    public String getName() { return name;}
 }

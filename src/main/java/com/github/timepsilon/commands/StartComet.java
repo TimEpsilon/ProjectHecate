@@ -105,7 +105,7 @@ public class StartComet implements CommandExecutor {
                         default -> p.sendMessage(Component.text(ChatColor.RED + "Argument Invalide"));
                     }
 
-                    p.sendMessage(Component.text(ChatColor.GREEN + args[1] + "spawné"));
+                    p.sendMessage(Component.text(ChatColor.GREEN + args[1] + " spawné"));
                 }
 
                 case "debug" -> {
