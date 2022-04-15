@@ -27,6 +27,7 @@ public class Shadows extends Boss {
     private static final ItemStack itemBody = getBodyPart(200);
 
     private static final Random random = new Random();
+    public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&8&lShadow");
 
 
     private static ItemStack getBodyPart(int cmd) {
@@ -42,7 +43,7 @@ public class Shadows extends Boss {
     }
 
     public Shadows(Location loc,boolean showMessage) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,ChatColor.translateAlternateColorCodes('&',"&8&lShadow"), BarColor.WHITE, CustomItems.SOUL_PRIDE.getItem(),6,35);
+        super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,NAME, BarColor.WHITE, CustomItems.SOUL_PRIDE.getItem(),6,35);
 
         if (showMessage) {
             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));

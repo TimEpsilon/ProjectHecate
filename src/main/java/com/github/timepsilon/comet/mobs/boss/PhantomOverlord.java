@@ -17,13 +17,14 @@ import java.util.Random;
 public class PhantomOverlord extends Boss {
 
     private static final Random random = new Random();
+    public static final String NAME = ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord";
 
     public PhantomOverlord(Location loc) {
         this(loc,true);
     }
 
     public PhantomOverlord(Location loc,boolean showMessage) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord", BarColor.BLUE, CustomItems.SOUL_GREED.getItem(),2,10);
+        super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,NAME, BarColor.BLUE, CustomItems.SOUL_GREED.getItem(),2,10);
 
         if (showMessage) {
             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));

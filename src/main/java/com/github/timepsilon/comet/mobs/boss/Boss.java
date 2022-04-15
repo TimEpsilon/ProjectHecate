@@ -161,6 +161,10 @@ public abstract class Boss {
         return null;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public double getMaxHealth() {
         return this.maxHealth;
     }

@@ -48,6 +48,8 @@ public class Demiurge extends Boss {
     private boolean speedForm = false;
     public int lastLine = 0;
 
+    public static final String NAME = ChatColor.BOLD+""+ChatColor.AQUA+"Demiurge";
+
     private final static Random random = new Random();
 
     /** 3 phases
@@ -56,7 +58,7 @@ public class Demiurge extends Boss {
      * 3) Le demiurge se téléporte plus souvent et brusquement, spawn des mini-boss, + d'attaques spéciales -> 25% HP, Le demiurge perd ses anneaux et passe en mode vitesse, les joueurs subissent de l'antigravité et sont éjectés
      */
     public Demiurge(Location loc) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.MAGMA_CUBE),2040,ChatColor.BOLD+""+ChatColor.AQUA+"Demiurge", BarColor.GREEN, CustomItems.SOUL_ENVY.getItem(),7,100);
+        super(loc.getWorld().spawnEntity(loc, EntityType.MAGMA_CUBE),2040,NAME, BarColor.GREEN, CustomItems.SOUL_ENVY.getItem(),7,100);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eLe &k&bDemiurge &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
 

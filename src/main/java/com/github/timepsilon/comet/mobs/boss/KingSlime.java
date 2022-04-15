@@ -16,8 +16,10 @@ import java.util.List;
 
 public class KingSlime extends Boss {
 
+    public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime");
+
     public KingSlime(Location loc, boolean showMessage) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime"), BarColor.YELLOW, CustomItems.SOUL_SLOTH.getItem(),1,5);
+        super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,NAME, BarColor.YELLOW, CustomItems.SOUL_SLOTH.getItem(),1,5);
 
         if (showMessage) {
             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getZ() + ">")));

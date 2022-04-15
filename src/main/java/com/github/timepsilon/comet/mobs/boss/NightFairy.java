@@ -17,8 +17,10 @@ public class NightFairy extends Boss {
     int taskTick;
     int beaconTask;
 
+    public static final String NAME = ChatColor.DARK_PURPLE+""+ChatColor.BOLD+"Night Fairy";
+
     public NightFairy(Location loc,int beaconTask) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.BAT),60, ChatColor.DARK_PURPLE+""+ChatColor.BOLD+"Night Fairy", BarColor.PINK, CustomItems.SOUL_LUST.getItem(),3,40);
+        super(loc.getWorld().spawnEntity(loc, EntityType.BAT),60, NAME, BarColor.PINK, CustomItems.SOUL_LUST.getItem(),3,40);
         this.beaconTask = beaconTask;
 
         this.entity.setCustomName(this.name);
