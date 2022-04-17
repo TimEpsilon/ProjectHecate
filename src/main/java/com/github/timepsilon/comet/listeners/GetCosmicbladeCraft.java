@@ -3,14 +3,12 @@ package com.github.timepsilon.comet.listeners;
 import com.github.timepsilon.EventManager;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.TextManager;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.persistence.PersistentDataType;
 
 public class GetCosmicbladeCraft implements Listener {

@@ -28,7 +28,7 @@ public class BossList implements CommandExecutor {
 
             if (bossList.isEmpty() && tempList.isEmpty()) {
                 p.sendMessage(ChatColor.YELLOW + "Aucun Boss n'est actuellement vivant");
-                return false;
+                return true;
             }
             for (Boss boss : bossList) {
                 if (boss instanceof NightFairy ||boss instanceof QueenBee) continue;
@@ -46,7 +46,8 @@ public class BossList implements CommandExecutor {
                 switch (ChatColor.stripColor(boss.getName())) {
                     case "King Slime" -> p.sendMessage(Component.text("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints"));
                     case "Phantom Overlord" -> p.sendMessage(Component.text("xaero-waypoint:PhantomOverlord:PO:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":1:false:0:Internal-overworld-waypoints"));
-                    case "Scarlet Rabbit" -> p.sendMessage(Component.text("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints"));
+                    case "Shadow" -> p.sendMessage(Component.text("xaero-waypoint:Shadow:S:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":0:false:0:Internal-overworld-waypoints"));
+                    case "Scarlet Devil" -> p.sendMessage(Component.text("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints"));
                 }
             }
 
@@ -72,6 +73,7 @@ public class BossList implements CommandExecutor {
 
 
             p.sendMessage("      ");
+            return true;
         }
         return false;
     }

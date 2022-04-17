@@ -26,6 +26,11 @@ public class PhantomOverlord extends Boss {
     public PhantomOverlord(Location loc,boolean showMessage) {
         super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,NAME, BarColor.BLUE, CustomItems.SOUL_GREED.getItem(),2,10);
 
+        while (isSuffocating(loc,7)) {
+            loc.add(0,3,0);
+        }
+        entity.teleport(loc);
+
         if (showMessage) {
             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
             sendWaypoint("xaero-waypoint:PhantomOverlord:PO:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":1:false:0:Internal-overworld-waypoints");

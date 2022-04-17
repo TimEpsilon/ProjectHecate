@@ -1,5 +1,6 @@
 package com.github.timepsilon.comet.listeners;
 
+import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.TextManager;
 import com.github.timepsilon.comet.mobs.boss.Boss;
 import com.github.timepsilon.comet.mobs.boss.Demiurge;
@@ -31,6 +32,7 @@ public class BossDamage implements Listener {
                 || e.getCause().equals(EntityDamageEvent.DamageCause.ENTITY_EXPLOSION)
         ) e.setCancelled(true);
 
+        boss.resync();
         boss.getBossbar().setProgress(((LivingEntity)boss.getEntity()).getHealth() / boss.getMaxHealth());
 
         if (random.nextInt(10) == 0) boss.attack(boss.proxPlayer);
@@ -83,7 +85,9 @@ public class BossDamage implements Listener {
     public void onBossDeath(EntityDeathEvent e) {
         if (!e.getEntity().getScoreboardTags().contains("Boss")) return;
         Boss boss = Boss.getBossInList(e.getEntity().getUniqueId());
+        if (boss == null) return;
         boss.death();
+        e.getEntity().getWorld().dropItem(e.getEntity().getLocation(), CustomItems.POCKET_BANK.getItem());
 
         int i = 1;
         for (int n =1; n <= bossXp; n += i) {

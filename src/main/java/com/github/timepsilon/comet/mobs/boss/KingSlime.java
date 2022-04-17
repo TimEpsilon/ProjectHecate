@@ -21,6 +21,11 @@ public class KingSlime extends Boss {
     public KingSlime(Location loc, boolean showMessage) {
         super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,NAME, BarColor.YELLOW, CustomItems.SOUL_SLOTH.getItem(),1,5);
 
+        while (isSuffocating(loc,4)) {
+            loc.add(0,8,0);
+        }
+        entity.teleport(loc);
+
         if (showMessage) {
             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getZ() + ">")));
             sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints");

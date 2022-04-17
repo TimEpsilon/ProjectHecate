@@ -50,14 +50,14 @@ public abstract class Boss {
      * @param bonus mcoin à drop en bonus
      */
     public Boss(Entity e, int health,String name,BarColor barcolor,ItemStack soul,int lvl,int bonus) {
-        this.bossbar = Bukkit.createBossBar(name, barcolor, BarStyle.SOLID, BarFlag.CREATE_FOG,BarFlag.DARKEN_SKY);
-        this.maxHealth = health;
+        bossbar = Bukkit.createBossBar(name, barcolor, BarStyle.SOLID, BarFlag.CREATE_FOG,BarFlag.DARKEN_SKY);
+        maxHealth = health;
         this.soul = soul;
         this.lvl = lvl;
-        this.entity = (LivingEntity) e;
+        entity = (LivingEntity) e;
         this.name = name;
         this.bonus = bonus;
-        this.proxPlayer = new ArrayList<>();
+        proxPlayer = new ArrayList<>();
 
         //Ne supprime pas l'entité quand trop loin
         this.entity.setPersistent(true);
@@ -139,7 +139,9 @@ public abstract class Boss {
         attackTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
             proxPlayer.clear();
             proxPlayer = getProxPlayer(60);
-            attack(proxPlayer);
+            if (!proxPlayer.isEmpty()) {
+                attack(proxPlayer);
+            }
         },0,110).getTaskId();
     }
 
@@ -180,6 +182,27 @@ public abstract class Boss {
 
     public double getMaxHealth() {
         return this.maxHealth;
+    }
+
+    protected boolean isSuffocating(Location loc,int size) {
+        for (int x = -size; x <= size; x++) {
+            for (int y = -size; y <= size; y++) {
+                for (int z = -size; z <= size; z++) {
+                    if (loc.clone().add(new Vector(x,y,z)).getBlock().isSolid()) return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public void resync() {
+        if (entity.isValid()) return;
+        for (Entity e : entity.getNearbyEntities(30,30,30)) {
+            if (e.getUniqueId().equals(entity.getUniqueId())) {
+                entity = (LivingEntity) e;
+                return;
+            }
+        }
     }
 
     public abstract void attack(List<Player> proxPlayer);

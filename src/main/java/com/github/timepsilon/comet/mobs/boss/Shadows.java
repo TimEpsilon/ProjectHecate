@@ -45,6 +45,11 @@ public class Shadows extends Boss {
     public Shadows(Location loc,boolean showMessage) {
         super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,NAME, BarColor.WHITE, CustomItems.SOUL_PRIDE.getItem(),6,35);
 
+        while (isSuffocating(loc,1)) {
+            loc.add(0,3,0);
+        }
+        entity.teleport(loc);
+
         if (showMessage) {
             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
             sendWaypoint("xaero-waypoint:Shadow:S:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":0:false:0:Internal-overworld-waypoints");
@@ -523,6 +528,19 @@ public class Shadows extends Boss {
                     },140);
                 }
             },60);
+        }
+    }
+
+    @Override
+    public void resync() {
+        if (entity.isValid()) return;
+        Bukkit.broadcastMessage("shadow sync");
+        for (Entity e : entity.getNearbyEntities(30, 30, 30)) {
+            if (e.getUniqueId().equals(entity.getUniqueId())) {
+                entity = (LivingEntity) e;
+            } else if (e.getUniqueId().equals(body.getUniqueId())) {
+                body = (ArmorStand) e;
+            }
         }
     }
 }

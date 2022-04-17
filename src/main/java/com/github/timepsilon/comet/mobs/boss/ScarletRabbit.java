@@ -18,7 +18,6 @@ import java.util.List;
 
 public class ScarletRabbit extends Boss {
 
-    private int soldierCount = 0;
     public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil");
 
     public ScarletRabbit(Location loc) {
@@ -28,6 +27,11 @@ public class ScarletRabbit extends Boss {
     public ScarletRabbit(Location loc,boolean showMessage) {
 
         super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,NAME, BarColor.RED, CustomItems.SOUL_WRATH.getItem(),4,20);
+
+        while (isSuffocating(loc,1)) {
+            loc.add(0,1,0);
+        }
+        entity.teleport(loc);
 
         if (showMessage) {
             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
@@ -58,7 +62,7 @@ public class ScarletRabbit extends Boss {
     @Override
     public void attack(List<Player> proxPlayer) {
         WeightCollection<String> rc;
-        rc = new WeightCollection<String>().add(11,"shockwave").add(10,"lightning").add(9,"spores").add(8,"souls").add(1,"wither").add(60,"void");
+        rc = new WeightCollection<String>().add(12,"shockwave").add(11,"lightning").add(10,"spores").add(5,"souls").add(1,"wither").add(60,"void");
         String attack = rc.next();
         switch (attack) {
             case "shockwave" -> shockwave(proxPlayer);
@@ -119,11 +123,9 @@ public class ScarletRabbit extends Boss {
     /** Invoque 3 wither squelettes
      */
     private void souls() {
-        if (soldierCount > 9) return;
         this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
-            for (int i = 0; i < 3; i++) {
-                soldierCount += 1;
+            for (int i = 0; i < 2; i++) {
                 WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
 
                 s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(80);

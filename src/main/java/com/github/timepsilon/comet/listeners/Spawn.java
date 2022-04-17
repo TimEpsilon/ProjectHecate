@@ -23,14 +23,14 @@ import java.util.Random;
 public class Spawn implements Listener {
 
     private final float probaSemiBoss = 0.01f;
-    private final float probaBoss = 0.001f;
+    private final float probaBoss = 0f;
     private static final Random random = new Random();
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {
         if (!EventManager.isRunningEvent) return;
         if (!(event.getEntity() instanceof Monster) || (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL) && (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.COMMAND)))) return;
-        if (event.getLocation().getY() < 60) return;
+        if (event.getLocation().getY() < 60) event.setCancelled(true);
 
         int lvl = EventManager.getComet().getPhase();
 

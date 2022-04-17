@@ -64,7 +64,7 @@ public class StartComet implements CommandExecutor {
                 case "start" -> {
                     if (EventManager.isRunningEvent) {
                         p.sendMessage(Component.text(ChatColor.RED + "Event déjà en cours"));
-                        return false;
+                        return true;
                     }
                     EventManager.getComet().startEvent();
                     p.sendMessage(Component.text(ChatColor.GREEN + "Début de l'event"));
@@ -74,7 +74,7 @@ public class StartComet implements CommandExecutor {
                 case "stop" -> {
                     if (!EventManager.isRunningEvent) {
                         p.sendMessage(Component.text(ChatColor.RED + "Aucun event en cours"));
-                        return false;
+                        return true;
                     }
                     EventManager.getComet().stopEvent(false);
                     return true;
@@ -83,7 +83,7 @@ public class StartComet implements CommandExecutor {
                 case "info" -> {
                     if (!EventManager.isRunningEvent) {
                         p.sendMessage(Component.text(ChatColor.RED + "Aucun event en cours"));
-                        return false;
+                        return true;
                     }
                     Location loc = ConfigManager.getLoc();
                     p.sendMessage(Component.text(ChatColor.YELLOW + "Ticks since Start : " + EventManager.getComet().getTime()));
@@ -139,6 +139,6 @@ public class StartComet implements CommandExecutor {
                 }
             }
         }
-        return false;
+        return true;
     }
 }

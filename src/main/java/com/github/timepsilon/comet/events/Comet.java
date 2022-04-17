@@ -59,14 +59,12 @@ public class Comet {
 
         long time = world.getFullTime() % 192000; //Modulo la semaine
         long delay;
-        if (time > 109000) delay = 301000 - time; //jusqu'à semaine suivant
-        else delay = 109000 - time; //jusqu'à nouvelle lune de la semaine
+        if (time > 109500) delay = 301500 - time; //jusqu'à semaine suivant
+        else delay = 109500 - time; //jusqu'à nouvelle lune de la semaine
         long days = delay/13000; //nombre de jours restant
         long rest = delay%13000; //nombre de ticks dans le jour restant
         world.setFullTime(world.getFullTime()+days*13000);
-        int timeTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
-            world.setFullTime(world.getFullTime()+rest/100);
-        },0,1).getTaskId();
+        int timeTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> world.setFullTime(world.getFullTime()+rest/100),0,1).getTaskId();
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(timeTask),101);
 
         RitualArena.spawnRitualArena(false);
@@ -95,9 +93,9 @@ public class Comet {
     }
 
     public void lastWave() {
-        int timeInTicks = 12000; //10min
+        int timeInTicks = 16200; //13.5min
 
-        timeSkipTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> world.setFullTime(world.getFullTime()+1),0,2).getTaskId();
+        timeSkipTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> world.setFullTime(world.getFullTime()+1),0,3).getTaskId();
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "10min avant le lever du Soleil. La Comète s'éloigne..."),350);
         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> stopEvent(false),timeInTicks);
     }
@@ -120,7 +118,7 @@ public class Comet {
     }
 
     private void sendText(int timer) {
-        int line = (timer*90)/timeToLvl5;
+        int line = (timer*50)/timeToLvl5;
         if (lastLine != line) {
             lastLine = line;
             TextManager.SamExplains(line);
@@ -131,11 +129,10 @@ public class Comet {
         int players = Bukkit.getOnlinePlayers().size();
 
         Vector eventLoc = new Vector(random.nextGaussian(0, 50), 100, random.nextGaussian(0, 50));
-
+        int n = players/2 + random.nextInt(3) + 1;
         switch (phase) {
             case 1 -> {
                 if (spawnBoss) {
-                    int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLaterAsynchronously(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
@@ -151,7 +148,6 @@ public class Comet {
                 if (random.nextFloat() < probaMeteor)
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (spawnBoss) {
-                    int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
@@ -169,7 +165,6 @@ public class Comet {
                 else if (random.nextFloat() < probaBee)
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (spawnBoss) {
-                    int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
@@ -187,7 +182,6 @@ public class Comet {
                 else if (random.nextFloat() < probaBee)
                     Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (spawnBoss) {
-                    int n = players/4 + random.nextInt(3) + 1;
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
