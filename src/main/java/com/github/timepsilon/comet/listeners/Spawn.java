@@ -22,7 +22,7 @@ import java.util.Random;
 
 public class Spawn implements Listener {
 
-    private final float probaSemiBoss = 0.01f;
+    private final float probaSemiBoss = 0.05f;
     private final float probaBoss = 0f;
     private static final Random random = new Random();
 

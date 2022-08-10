@@ -1,7 +1,8 @@
 name: EventManager
 version: ${project.version}
 main: com.github.timepsilon.EventManager
-api-version: 1.18
+api-version: 1.19
+authors: [ TimEpsilon ]
 
 commands:
   comet:

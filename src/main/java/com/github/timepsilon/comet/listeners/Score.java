@@ -1,6 +1,7 @@
 package com.github.timepsilon.comet.listeners;
 
 import com.github.timepsilon.EventManager;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -25,6 +26,7 @@ public class Score implements Listener {
     public void onTotemUse(EntityResurrectEvent e) {
         if (!EventManager.isRunningEvent) return;
         if (!(e.getEntity() instanceof Player)) return;
+        Bukkit.broadcastMessage(e.getEntity().getName() + "used a totem");
         UUID uuid = e.getEntity().getUniqueId();
         EventManager.getComet().DeathCount.compute(uuid,(k, v) -> (v == null) ? 1 : v+1);
     }

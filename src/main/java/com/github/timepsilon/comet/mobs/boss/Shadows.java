@@ -534,7 +534,6 @@ public class Shadows extends Boss {
     @Override
     public void resync() {
         if (entity.isValid()) return;
-        Bukkit.broadcastMessage("shadow sync");
         for (Entity e : entity.getNearbyEntities(30, 30, 30)) {
             if (e.getUniqueId().equals(entity.getUniqueId())) {
                 entity = (LivingEntity) e;

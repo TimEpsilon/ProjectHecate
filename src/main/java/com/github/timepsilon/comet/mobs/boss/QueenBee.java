@@ -12,15 +12,17 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
+import java.util.Random;
 
 
 public class QueenBee extends Boss {
     int task;
     int colony;
+    private final Random random = new Random();
     public static final String NAME = ChatColor.BLUE+""+ChatColor.BOLD+"Queen Bee";
 
     public QueenBee(Location loc) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.BEE),250, NAME, BarColor.BLUE, CustomItems.SOUL_GLUTTONY.getItem(),5,25);
+        super(loc.getWorld().spawnEntity(loc, EntityType.BEE),200, NAME, BarColor.BLUE, CustomItems.SOUL_GLUTTONY.getItem(),5,25);
         this.colony = 0;
 
         this.entity.setCustomName(this.name);
@@ -32,7 +34,6 @@ public class QueenBee extends Boss {
         this.entity.getAttribute(Attribute.GENERIC_ARMOR_TOUGHNESS).setBaseValue(2);
         this.entity.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).setBaseValue(8);
 
-        summonBee();
         summonBee();
         summonBee();
         summonBee();
@@ -61,11 +62,11 @@ public class QueenBee extends Boss {
         Player closest = null;
         for (Player p : proxPlayer) {
             p.addPotionEffect(new PotionEffect(PotionEffectType.HUNGER,60,0));
-            p.playSound(this.entity.getLocation(),Sound.ENTITY_BEE_LOOP_AGGRESSIVE,SoundCategory.HOSTILE,3,1);
+            if (random.nextFloat() < 0.3) p.playSound(this.entity.getLocation(),Sound.ENTITY_BEE_LOOP_AGGRESSIVE,SoundCategory.HOSTILE,1,1);
             if (this.entity.getLocation().distance(p.getLocation())<distance) distance = this.entity.getLocation().distance(p.getLocation());
             closest = p;
         }
-        if (this.colony < 30) {
+        if (this.colony < 20) {
             this.colony = this.colony +3;
             if (closest != null) ((Bee)this.entity).setTarget(closest);
             summonBee();

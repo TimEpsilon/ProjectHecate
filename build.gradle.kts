@@ -7,35 +7,27 @@
 plugins {
     java
     `maven-publish`
-    id("io.papermc.paperweight.userdev") version "1.3.3"
+    id("io.papermc.paperweight.userdev") version "1.3.7"
 }
 
 repositories {
-    jcenter()
     mavenCentral()
     mavenLocal()
     maven {
-        url = uri("https://papermc.io/repo/repository/maven-public/")
-    }
-
-    maven {
-        url = uri("https://jitpack.io")
-    }
-
-    maven {
+        url = uri("https://repo.papermc.io/repository/maven-public/")
+        //url = uri("https://jitpack.io")
         url = uri("https://repo.maven.apache.org/maven2/")
-    }
-
-    maven {
         url = uri("https://mvn.intellectualsites.com/content/groups/public/")
     }
 
 }
 
 dependencies {
-    compileOnly("com.fastasyncworldedit:FAWE-Core:1.17-157")
-    compileOnly("com.fastasyncworldedit:FAWE-Bukkit:1.17-157")
-    paperDevBundle("1.18.1-R0.1-SNAPSHOT")
+    implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.12"))
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
+    compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
+    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
+    paperDevBundle("1.19-R0.1-SNAPSHOT")
 }
 
 group = "com.github.TimEpsilon"
@@ -43,11 +35,6 @@ version = "1.0-SNAPSHOT"
 description = "EventManager"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
-publishing {
-    publications.create<MavenPublication>("maven") {
-        from(components["java"])
-    }
-}
 
 tasks.withType<JavaCompile>() {
     options.encoding = "UTF-8"

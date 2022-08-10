@@ -51,6 +51,7 @@ public class Meteor {
                 if (p.getLocation().distance(this.loc) < 30) {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,40,2));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,40,0));
+                    p.getWorld().spawnParticle(Particle.HEART,p.getLocation(),3,0.2,0.2,1);
                 }
             }
             if (this.loc.distance(this.fairy.getEntity().getLocation())> 30) this.fairy.getEntity().teleport(this.loc);

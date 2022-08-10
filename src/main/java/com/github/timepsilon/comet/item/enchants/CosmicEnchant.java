@@ -12,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -39,6 +40,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
     public void BlessingDamage(EntityDamageByEntityEvent e) {
         if (!EventManager.isRunningEvent) return;
         if(!e.getEntity().getScoreboardTags().contains("Comet")) return;
+
         Player p = null;
         if(e.getDamager() instanceof Player) p = (Player)e.getDamager();
         if(e.getDamager() instanceof Projectile && ((Projectile)e.getDamager()).getShooter() instanceof Player) p = (Player)((Projectile)e.getDamager()).getShooter();
@@ -211,6 +213,10 @@ public class CosmicEnchant extends Enchantment implements Listener {
         switch (id) {
             case 0 -> {
                 //Sloth
+                /*
+                Applies Resistance 2
+                Gives enemies Slowness 6, Weakness 3
+                 */
                 p.getWorld().spawnParticle(Particle.SLIME, p.getLocation(), 300, 8, 8, 8);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE,100,1));
                 for (Entity e : p.getNearbyEntities(8, 8, 8)) {
@@ -219,11 +225,15 @@ public class CosmicEnchant extends Enchantment implements Listener {
                         ((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.WEAKNESS, 100, 2, false, true));
                     }
                 }
-                timer = 300;
+                timer = 280;
                 sin = Color.YELLOW;
             }
             case 1 -> {
                 //Greed
+                /*
+                Gives Invisibility
+                Spawns XP from enemies
+                 */
                 p.getWorld().spawnParticle(Particle.TOTEM, p.getLocation(), 200, 5, 5, 5);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,120,0));
                 for (Entity e : p.getNearbyEntities(5, 5, 5)) {
@@ -235,30 +245,40 @@ public class CosmicEnchant extends Enchantment implements Listener {
                         }
                     }
                 }
-                timer = 1000;
+                timer = 320;
                 sin = Color.GREEN;
             }
             case 2 -> {
                 //Lust
+                /*
+                Gives Absorption 3, Regeneration 2, Saturation 3
+                 */
                 p.getWorld().spawnParticle(Particle.HEART, p.getLocation(), 50, 1, 1, 1);
                 p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 2000, 2));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION, 300, 1));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 100, 2));
-                timer = 2200;
+                timer = 650;
                 sin = Color.PURPLE;
             }
             case 3 -> {
                 //Wrath
+                /*
+                Gives Strength 2
+                 */
                 p.getWorld().spawnParticle(Particle.BLOCK_CRACK, p.getLocation(), 150, 1, 1, 1, 0, Material.REDSTONE_BLOCK.createBlockData());
                 p.addPotionEffect(new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 300, 1));
-                timer = 1200;
+                timer = 800;
                 sin = Color.RED;
             }
             case 4 -> {
                 //Gluttony
-                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation(), 250, 3, 3, 3, 0);
+                /*
+                Gives 1HP for each enemy
+                Withers enemies
+                 */
+                p.getWorld().spawnParticle(Particle.DRAGON_BREATH, p.getLocation(), 250, 7, 7, 7, 0);
                 int abslvl = 0;
-                for (Entity e : p.getNearbyEntities(4, 4, 4)) {
+                for (Entity e : p.getNearbyEntities(7, 7, 7)) {
                     if (!e.getScoreboardTags().contains("Comet")) continue;
                     ((LivingEntity) e).addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 50, 2));
                     abslvl += 1;
@@ -269,21 +289,28 @@ public class CosmicEnchant extends Enchantment implements Listener {
             }
             case 5 -> {
                 //Pride
+                /*
+                Boosts the user forward
+                Gives Jump 2, Speed 2
+                 */
                 p.getWorld().spawnParticle(Particle.SOUL, p.getLocation(), 150, 2, 2, 2, 0);
                 p.setVelocity(p.getLocation().getDirection().normalize().multiply(3));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.SPEED, 200, 1));
                 p.addPotionEffect(new PotionEffect(PotionEffectType.JUMP, 200, 1));
-                timer = 250;
+                timer = 240;
                 sin = Color.ORANGE;
             }
             case 6 -> {
                 //Envy
-                p.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 250, 4, 4, 4, 0);
+                /*
+                Summons lightning on enemies
+                 */
+                p.getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 250, 6, 6, 6, 0);
                 for (Entity e : p.getNearbyEntities(10, 8, 10)) {
                     if (!e.getScoreboardTags().contains("Comet")) continue;
                     e.getWorld().strikeLightning(e.getLocation());
                 }
-                timer = 800;
+                timer = 500;
                 sin = Color.GREEN;
             }
         }

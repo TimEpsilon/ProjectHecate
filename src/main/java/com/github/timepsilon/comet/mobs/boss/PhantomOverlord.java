@@ -1,5 +1,6 @@
 package com.github.timepsilon.comet.mobs.boss;
 
+import com.github.timepsilon.EventManager;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.mobs.SkeletonSniper;
 import net.kyori.adventure.text.Component;
@@ -17,6 +18,7 @@ import java.util.Random;
 public class PhantomOverlord extends Boss {
 
     private static final Random random = new Random();
+    private int soldiers = 0;
     public static final String NAME = ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord";
 
     public PhantomOverlord(Location loc) {
@@ -54,49 +56,59 @@ public class PhantomOverlord extends Boss {
     public void attack(List<Player> proxPlayer) {
         int n = random.nextInt(7);
         switch (n) {
-            case 0:
-                summonSoldiers();
-                break;
-            case 1:
-                succ(proxPlayer);
-                break;
+            case 0 -> summonSoldiers();
+            case 1,2 -> succ(proxPlayer);
         }
     }
 
     private void summonSoldiers() {
         for (int i = 0; i < 3; i++) {
-            Phantom ph = (Phantom) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.PHANTOM);
-            ph.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(75);
-            ph.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(4);
-
-            ph.setSize(10);
-
-            ph.setHealth(75);
-            ph.addScoreboardTag("Comet");
-
-            ph.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,true,true));
-
-            WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
-
-            s.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,true,true));
-            s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60);
-            s.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
-
-            s.getEquipment().setItemInMainHand(SkeletonSniper.SkeletonBow);
-            s.getEquipment().setItemInMainHandDropChance(0f);
-            s.getEquipment().setItemInOffHand(SkeletonSniper.RandomArrow());
-            s.getEquipment().setItemInOffHandDropChance(0.1f);
-
-            s.setSilent(true);
-            s.setHealth(60);
-
-            s.addScoreboardTag("Comet");
-
-            ph.addPassenger(s);
-
-            this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE,this.getEntity().getLocation(),500,20,20,20,0);
-            this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_PHANTOM_HURT,SoundCategory.HOSTILE,4f,2f);
+            summonSoldier();
         }
+        this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE,this.getEntity().getLocation(),500,20,20,20,0);
+        this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_PHANTOM_HURT,SoundCategory.HOSTILE,4f,2f);
+    }
+
+    private void summonSoldier() {
+        soldiers += 1;
+        Phantom ph = (Phantom) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.PHANTOM);
+        ph.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(75);
+        ph.getAttribute(Attribute.GENERIC_ARMOR).setBaseValue(4);
+
+        ph.setSize(10);
+
+        ph.setHealth(75);
+        ph.addScoreboardTag("Comet");
+
+        ph.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,true,true));
+
+        WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
+
+        s.addPotionEffect(new PotionEffect(PotionEffectType.FIRE_RESISTANCE,2000000,0,true,true));
+        s.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(60);
+        s.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(40);
+
+        s.getEquipment().setItemInMainHand(SkeletonSniper.SkeletonBow);
+        s.getEquipment().setItemInMainHandDropChance(0f);
+        s.getEquipment().setItemInOffHand(SkeletonSniper.RandomArrow());
+        s.getEquipment().setItemInOffHandDropChance(0.1f);
+
+        s.setSilent(true);
+        s.setHealth(60);
+
+        s.addScoreboardTag("Comet");
+
+        ph.addPassenger(s);
+
+        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+            if (s.isDead()) soldiers = soldiers -1;
+        },0,400).getTaskId();
+
+        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().cancelTask(task);
+            s.remove();
+            this.soldiers = this.soldiers -1;
+        },1200);
     }
 
     private void succ(List<Player> proxPlayer) {

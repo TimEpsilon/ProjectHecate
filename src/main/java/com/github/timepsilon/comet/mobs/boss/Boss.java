@@ -171,6 +171,7 @@ public abstract class Boss {
     public List<Player> getProxPlayer(int dist) {
         List<Player> prox = new ArrayList<>();
         for (Player p : Bukkit.getOnlinePlayers()) {
+            if (!p.getWorld().equals(entity.getWorld())) continue;
             if (p.getLocation().distance(this.entity.getLocation()) < dist && p.getGameMode().equals(GameMode.SURVIVAL)) prox.add(p);
         }
         return prox;

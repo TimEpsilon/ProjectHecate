@@ -13,6 +13,7 @@ import org.bukkit.*;
 import org.bukkit.util.Vector;
 
 import java.util.*;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -136,7 +137,11 @@ public class Comet {
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLaterAsynchronously(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
-                            waitUntilLoaded(loc);
+                            try {
+                                waitUntilLoaded(loc);
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getZ() + ">")));
                             Boss.sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints");
                         }, i*100L);
@@ -151,7 +156,11 @@ public class Comet {
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
-                            waitUntilLoaded(loc);
+                            try {
+                                waitUntilLoaded(loc);
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
                             Boss.sendWaypoint("xaero-waypoint:PhantomOverlord:PO:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":1:false:0:Internal-overworld-waypoints");
                         }, i*110L);
@@ -168,7 +177,11 @@ public class Comet {
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
-                            waitUntilLoaded(loc);
+                            try {
+                                waitUntilLoaded(loc);
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
                             Boss.sendWaypoint("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints");
                         }, i*120L);
@@ -185,7 +198,11 @@ public class Comet {
                     for (int i = 0; i<n; i++) {
                         Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
-                            waitUntilLoaded(loc);
+                            try {
+                                waitUntilLoaded(loc);
+                            } catch (ExecutionException | InterruptedException e) {
+                                e.printStackTrace();
+                            }
                             Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
                             Boss.sendWaypoint("xaero-waypoint:Shadow:S:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":0:false:0:Internal-overworld-waypoints");
                         }, i*130L);
@@ -240,7 +257,7 @@ public class Comet {
     }
 
     private Vector getRandomLocation() {
-        double r = random.nextGaussian(1200,400);
+        double r = random.nextGaussian(1500,400);
         double theta = random.nextDouble()*2*Math.PI;
 
         return new Vector(r*Math.cos(theta),100,r*Math.sin(theta));
@@ -251,7 +268,7 @@ public class Comet {
         new CosmicRitual(loc);
     }
 
-    private void waitUntilLoaded(Vector vector) {
+    private void waitUntilLoaded(Vector vector) throws ExecutionException, InterruptedException {
         ArrayList<Integer> tasks = new ArrayList<>();
         UUID uuid = UUID.randomUUID();
         switch (phase) {
@@ -262,14 +279,15 @@ public class Comet {
         }
 
 
-        Chunk chunk = world.getChunkAt((int) vector.getX(), (int) vector.getZ());
+//        Chunk chunk = world.getChunkAtAsync((int) vector.getX(), (int) vector.getZ()).join();
         tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+            if (!world.isChunkLoaded((int) vector.getX() >> 4, (int) vector.getZ() >> 4)) return;
 
-            if (!chunk.isLoaded()) return;
             Location loc = new Location(world, vector.getX(), 320, vector.getZ());
             while (loc.getBlock().getType().isAir() && loc.getY() > 0) {
                 loc.subtract(0, 5, 0);
             }
+            loc.add(0,5,0);
 
             Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> {
                 switch (phase) {
@@ -281,7 +299,7 @@ public class Comet {
             },100);
             TempBoss.getTempBossList().remove(uuid);
             Bukkit.getScheduler().cancelTask(tasks.get(0));
-        }, 0, 60).getTaskId());
+        }, 100, 60).getTaskId());
     }
 
     private void showStats(Map<UUID,Double> StatCount,String StatName) {

@@ -11,23 +11,24 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
 import java.util.List;
+import java.util.Random;
 
 
 public class NightFairy extends Boss {
     int taskTick;
     int beaconTask;
+    private Random random = new Random();
 
     public static final String NAME = ChatColor.DARK_PURPLE+""+ChatColor.BOLD+"Night Fairy";
 
     public NightFairy(Location loc,int beaconTask) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.BAT),60, NAME, BarColor.PINK, CustomItems.SOUL_LUST.getItem(),3,40);
+        super(loc.getWorld().spawnEntity(loc, EntityType.ALLAY),60, NAME, BarColor.PINK, CustomItems.SOUL_LUST.getItem(),3,40);
         this.beaconTask = beaconTask;
 
         this.entity.setCustomName(this.name);
         this.entity.setCustomNameVisible(true);
-        this.entity.setSilent(true);
-        this.entity.getEquipment().setItemInMainHand(new ItemStack(Material.TORCH));
-        this.entity.getEquipment().setItemInMainHandDropChance(0);
+        this.entity.getEquipment().setHelmet(new ItemStack(Material.TORCH));
+        this.entity.getEquipment().setHelmetDropChance(0);
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,100000000,0,false,false));
 
         this.taskTick = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
@@ -48,6 +49,9 @@ public class NightFairy extends Boss {
 
     @Override
     public void attack(List<Player> proxPlayer) {
+        if (random.nextFloat() < 0.5) {
+            entity.getWorld().playSound(entity.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_CHIME,SoundCategory.HOSTILE,1,1);
+        }
         //c'est une gentille fée
         //elle attaquerait jamais quelqu'un :(
     }

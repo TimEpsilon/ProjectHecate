@@ -22,6 +22,7 @@ public class Loot implements Listener {
     public void mobDeath(EntityDeathEvent event) {
         LivingEntity e = event.getEntity();
         if (!e.getScoreboardTags().contains("Comet")) return;
+        if (e.getKiller() == null) return;
 
         if (random.nextFloat() < probaSoul) e.getWorld().dropItem(e.getLocation(),CustomItems.SOUL_MOB.getItem());
 

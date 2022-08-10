@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
-import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -28,14 +27,15 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.util.Vector;
 
 /**
  * A whole class to create Guardian Lasers and Ender Crystal Beams using packets and reflection.<br>
  * Inspired by the API <a href="https://www.spigotmc.org/resources/guardianbeamapi.18329">GuardianBeamAPI</a><br>
- * <b>1.9 -> 1.18.2</b>
+ * <b>1.9 -> 1.19</b>
  *
  * @see <a href="https://github.com/SkytAsul/GuardianBeam">GitHub repository</a>
- * @version 2.2.3
+ * @version 2.3.0
  * @author SkytAsul
  */
 public abstract class Laser {
@@ -94,7 +94,7 @@ public abstract class Laser {
      * @param plugin plugin used to start the task
      */
     public void start(Plugin plugin) {
-        Validate.isTrue(main == null, "Task already started");
+        if (main != null) throw new IllegalStateException("Task already started");
         this.plugin = plugin;
         main = new BukkitRunnable() {
             int time = 0;
@@ -147,7 +147,7 @@ public abstract class Laser {
      * This will destroy the laser for every player and start execute all runnables passed with {@link Laser#executeEnd}
      */
     public void stop() {
-        Validate.isTrue(main != null, "Task not started");
+        if (main == null) throw new IllegalStateException("Task not started");
         main.cancel();
     }
 
@@ -217,8 +217,8 @@ public abstract class Laser {
     }
 
     private BukkitTask moveInternal(Location location, int ticks, BukkitTask oldTask, Supplier<Location> locationSupplier, ReflectiveConsumer<Location> moveConsumer, Runnable callback) {
-        Validate.isTrue(ticks > 0);
-        Validate.isTrue(plugin != null, "Task didn't start once");
+        if (ticks <= 0) throw new IllegalArgumentException("Ticks must be a positive value");
+        if (plugin == null) throw new IllegalStateException("The laser must have been started a least once");
         if (oldTask != null && !oldTask.isCancelled()) oldTask.cancel();
         return new BukkitRunnable() {
             double xPerTick = (location.getX() - locationSupplier.get().getX()) / ticks;
@@ -293,6 +293,9 @@ public abstract class Laser {
 
         protected LivingEntity endEntity;
 
+        private Location correctStart;
+        private Location correctEnd;
+
         /**
          * Creates a new Guardian Laser instance
          * @param start Location where laser will starts
@@ -341,7 +344,7 @@ public abstract class Laser {
             fakeGuardianDataWatcher = Packets.createFakeDataWatcher();
             Packets.initGuardianWatcher(fakeGuardianDataWatcher, targetID);
             if (Packets.version >= 17) {
-                guardian = Packets.createGuardian(start, guardianUUID, guardianID);
+                guardian = Packets.createGuardian(getCorrectStart(), guardianUUID, guardianID);
             }
             metadataPacketGuardian = Packets.createPacketMetadata(guardianID, fakeGuardianDataWatcher);
 
@@ -351,7 +354,7 @@ public abstract class Laser {
 
         private void initSquid() throws ReflectiveOperationException {
             if (Packets.version >= 17) {
-                squid = Packets.createSquid(end, squidUUID, squidID);
+                squid = Packets.createSquid(getCorrectEnd(), squidUUID, squidID);
             }
             metadataPacketSquid = Packets.createPacketMetadata(squidID, Packets.fakeSquidWatcher);
             Packets.setDirtyWatcher(Packets.fakeSquidWatcher);
@@ -360,7 +363,7 @@ public abstract class Laser {
         private Object getGuardianSpawnPacket() throws ReflectiveOperationException {
             if (createGuardianPacket == null) {
                 if (Packets.version < 17) {
-                    createGuardianPacket = Packets.createPacketEntitySpawnLiving(start, Packets.mappings.getGuardianID(), guardianUUID, guardianID);
+                    createGuardianPacket = Packets.createPacketEntitySpawnLiving(getCorrectStart(), Packets.mappings.getGuardianID(), guardianUUID, guardianID);
                 }else {
                     createGuardianPacket = Packets.createPacketEntitySpawnLiving(guardian);
                 }
@@ -371,7 +374,7 @@ public abstract class Laser {
         private Object getSquidSpawnPacket() throws ReflectiveOperationException {
             if (createSquidPacket == null) {
                 if (Packets.version < 17) {
-                    createSquidPacket = Packets.createPacketEntitySpawnLiving(end, Packets.mappings.getSquidID(), squidUUID, squidID);
+                    createSquidPacket = Packets.createPacketEntitySpawnLiving(getCorrectEnd(), Packets.mappings.getSquidID(), squidUUID, squidID);
                 }else {
                     createSquidPacket = Packets.createPacketEntitySpawnLiving(squid);
                 }
@@ -420,6 +423,26 @@ public abstract class Laser {
             return endEntity == null ? end : endEntity.getLocation();
         }
 
+        protected Location getCorrectStart() {
+            if (correctStart == null) {
+                correctStart = start.clone();
+                correctStart.subtract(0, 0.5, 0);
+            }
+            return correctStart;
+        }
+
+        protected Location getCorrectEnd() {
+            if (correctEnd == null) {
+                correctEnd = end.clone();
+                correctEnd.subtract(0, 0.5, 0);
+
+                Vector corrective = correctEnd.toVector().subtract(getCorrectStart().toVector()).normalize();
+                correctEnd.subtract(corrective);
+
+            }
+            return correctEnd;
+        }
+
         @Override
         protected boolean isCloseEnough(Player player) {
             return player == endEntity || super.isCloseEnough(player);
@@ -450,21 +473,31 @@ public abstract class Laser {
         @Override
         public void moveStart(Location location) throws ReflectiveOperationException {
             this.start = location;
+            correctStart = null;
+
             createGuardianPacket = null; // will force re-generation of spawn packet
-            moveFakeEntity(start, guardianID, guardian);
+            moveFakeEntity(getCorrectStart(), guardianID, guardian);
+
+            if (squid != null) {
+                correctEnd = null;
+                createSquidPacket = null;
+                moveFakeEntity(getCorrectEnd(), squidID, squid);
+            }
         }
 
         @Override
         public void moveEnd(Location location) throws ReflectiveOperationException {
             this.end = location;
             createSquidPacket = null; // will force re-generation of spawn packet
+            correctEnd = null;
+
             if (squid == null) {
                 initSquid();
                 for (Player p : show) {
                     Packets.sendPackets(p, getSquidSpawnPacket(), metadataPacketSquid);
                 }
             }else {
-                moveFakeEntity(end, squidID, squid);
+                moveFakeEntity(getCorrectEnd(), squidID, squid);
             }
             if (targetUUID != squidUUID) {
                 endEntity = null;
@@ -714,8 +747,8 @@ public abstract class Laser {
                 if (version >= 13) {
                     crystalType = entityTypesClass.getDeclaredField(mappings.getCrystalTypeName()).get(null);
                     if (version >= 17) {
-                        squidType = entityTypesClass.getDeclaredField("aJ").get(null);
-                        guardianType = entityTypesClass.getDeclaredField("K").get(null);
+                        squidType = entityTypesClass.getDeclaredField(mappings.getSquidTypeName()).get(null);
+                        guardianType = entityTypesClass.getDeclaredField(mappings.getGuardianTypeName()).get(null);
                     }
                 }
 
@@ -729,8 +762,8 @@ public abstract class Laser {
                     watcherRegister = getMethod(dataWatcherClass, "register");
                 }
                 if (version >= 15) watcherDirty = getMethod(dataWatcherClass, "markDirty");
-                packetSpawnLiving = getNMSClass("network.protocol.game", "PacketPlayOutSpawnEntityLiving").getDeclaredConstructor(version < 17 ? new Class<?>[0] : new Class<?>[] { getNMSClass("world.entity", "EntityLiving") });
                 packetSpawnNormal = getNMSClass("network.protocol.game", "PacketPlayOutSpawnEntity").getDeclaredConstructor(version < 17 ? new Class<?>[0] : new Class<?>[] { getNMSClass("world.entity", "Entity") });
+                packetSpawnLiving = version >= 19 ? packetSpawnNormal : getNMSClass("network.protocol.game", "PacketPlayOutSpawnEntityLiving").getDeclaredConstructor(version < 17 ? new Class<?>[0] : new Class<?>[] { getNMSClass("world.entity", "EntityLiving") });
                 packetRemove = getNMSClass("network.protocol.game", "PacketPlayOutEntityDestroy").getDeclaredConstructor(version == 17 && versionMinor == 0 ? int.class : int[].class);
                 packetMetadata = getNMSClass("network.protocol.game", "PacketPlayOutEntityMetadata").getDeclaredConstructor(int.class, dataWatcherClass, boolean.class);
                 packetTeleport = getNMSClass("network.protocol.game", "PacketPlayOutEntityTeleport").getDeclaredConstructor(version < 17 ? new Class<?>[0] : new Class<?>[] { entityClass });
@@ -746,7 +779,7 @@ public abstract class Laser {
                     crystalConstructor = crystalClass.getDeclaredConstructor(nmsWorld.getClass().getSuperclass(), double.class, double.class, double.class);
                 }
 
-                Object[] entityConstructorParams = version < 14 ? new Object[] { nmsWorld } : new Object[] { entityTypesClass.getDeclaredField(version < 17 ? "SQUID" : "aJ").get(null), nmsWorld };
+                Object[] entityConstructorParams = version < 14 ? new Object[] { nmsWorld } : new Object[] { entityTypesClass.getDeclaredField(mappings.getSquidTypeName()).get(null), nmsWorld };
                 fakeSquid = squidConstructor.newInstance(entityConstructorParams);
                 fakeSquidWatcher = createFakeDataWatcher();
                 tryWatcherSet(fakeSquidWatcher, watcherObject1, (byte) 32);
@@ -773,7 +806,7 @@ public abstract class Laser {
                 }
 
                 enabled = true;
-            }catch (ReflectiveOperationException e) {
+            }catch (Exception e) {
                 e.printStackTrace();
                 String errorMsg = "Laser Beam reflection failed to initialize. The util is disabled. Please ensure your version (" + Bukkit.getServer().getClass().getPackage().getName() + ") is supported.";
                 if (logger == null)
@@ -947,7 +980,6 @@ public abstract class Laser {
         }
 
         private static void setField(Object instance, String name, Object value) throws ReflectiveOperationException {
-            Validate.notNull(instance);
             Field field = instance.getClass().getDeclaredField(name);
             field.setAccessible(true);
             field.set(instance, value);
@@ -962,6 +994,138 @@ public abstract class Laser {
         private static Class<?> getNMSClass(String package17, String className) throws ClassNotFoundException {
             return Class.forName((version < 17 ? npack : "net.minecraft." + package17) + "." + className);
         }
+
+        private enum ProtocolMappings {
+            V1_9(9, "Z", "bA", "bB", "b", "c", 94, 68),
+            V1_10(10, V1_9),
+            V1_11(11, V1_10),
+            V1_12(12, V1_11),
+            V1_13(13, "ac", "bF", "bG", "b", "c", 70, 28),
+            V1_14(14, "W", "b", "bD", "c", "d", 73, 30),
+            V1_15(15, "T", "b", "bA", "c", "d", 74, 31),
+            V1_16(16, null, "b", "d", "c", "d", -1, 31){
+                @Override
+                public int getSquidID() {
+                    return Packets.versionMinor < 2 ? 74 : 81;
+                }
+
+                @Override
+                public String getWatcherFlags() {
+                    return Packets.versionMinor < 2 ? "T" : "S";
+                }
+            },
+            V1_17(17, "Z", "b", "e", "c", "d", 86, 35, "K", "aJ", "u", "setCollisionRule", "getPlayerNameSet"),
+            V1_18(18, null, "b", "e", "c", "d", 86, 35, "K", "aJ", "u", "a", "g"){
+                @Override
+                public String getWatcherFlags() {
+                    return Packets.versionMinor < 2 ? "aa" : "Z";
+                }
+            },
+            V1_19(19, "Z", "b", "e", "c", "d", 89, 38, "N", "aM", "w", "a", "g"),
+            ;
+
+            private final int major;
+            private final String watcherFlags;
+            private final String watcherSpikes;
+            private final String watcherTargetEntity;
+            private final String watcherTargetLocation;
+            private final String watcherBasePlate;
+            private final int squidID;
+            private final int guardianID;
+            private final String guardianTypeName;
+            private final String squidTypeName;
+            private final String crystalTypeName;
+            private final String teamSetCollision;
+            private final String teamGetPlayers;
+
+            private ProtocolMappings(int major, ProtocolMappings parent) {
+                this(major, parent.watcherFlags, parent.watcherSpikes, parent.watcherTargetEntity, parent.watcherTargetLocation, parent.watcherBasePlate, parent.squidID, parent.guardianID, parent.guardianTypeName, parent.squidTypeName, parent.crystalTypeName, parent.teamSetCollision, parent.teamGetPlayers);
+            }
+
+            private ProtocolMappings(int major,
+                                     String watcherFlags, String watcherSpikes, String watcherTargetEntity, String watcherTargetLocation, String watcherBasePlate,
+                                     int squidID, int guardianID) {
+                this(major, watcherFlags, watcherSpikes, watcherTargetEntity, watcherTargetLocation, watcherBasePlate, squidID, guardianID, null, "SQUID", "END_CRYSTAL", null, null);
+            }
+
+            private ProtocolMappings(int major,
+                                     String watcherFlags, String watcherSpikes, String watcherTargetEntity, String watcherTargetLocation, String watcherBasePlate,
+                                     int squidID, int guardianID,
+                                     String guardianTypeName, String squidTypeName, String crystalTypeName, String teamSetCollision, String teamGetPlayers) {
+                this.major = major;
+                this.watcherFlags = watcherFlags;
+                this.watcherSpikes = watcherSpikes;
+                this.watcherTargetEntity = watcherTargetEntity;
+                this.watcherTargetLocation = watcherTargetLocation;
+                this.watcherBasePlate = watcherBasePlate;
+                this.squidID = squidID;
+                this.guardianID = guardianID;
+                this.guardianTypeName = guardianTypeName;
+                this.squidTypeName = squidTypeName;
+                this.crystalTypeName = crystalTypeName;
+                this.teamSetCollision = teamSetCollision;
+                this.teamGetPlayers = teamGetPlayers;
+            }
+
+            public int getMajor() {
+                return major;
+            }
+
+            public String getWatcherFlags() {
+                return watcherFlags;
+            }
+
+            public String getWatcherSpikes() {
+                return watcherSpikes;
+            }
+
+            public String getWatcherTargetEntity() {
+                return watcherTargetEntity;
+            }
+
+            public String getWatcherTargetLocation() {
+                return watcherTargetLocation;
+            }
+
+            public String getWatcherBasePlate() {
+                return watcherBasePlate;
+            }
+
+            public int getSquidID() {
+                return squidID;
+            }
+
+            public int getGuardianID() {
+                return guardianID;
+            }
+
+            public String getGuardianTypeName() {
+                return guardianTypeName;
+            }
+
+            public String getSquidTypeName() {
+                return squidTypeName;
+            }
+
+            public String getCrystalTypeName() {
+                return crystalTypeName;
+            }
+
+            public String getTeamSetCollision() {
+                return teamSetCollision;
+            }
+
+            public String getTeamGetPlayers() {
+                return teamGetPlayers;
+            }
+
+            public static ProtocolMappings getMappings(int major) {
+                for (ProtocolMappings map : values()) {
+                    if (major == map.getMajor()) return map;
+                }
+                return null;
+            }
+        }
     }
 
     @FunctionalInterface
@@ -969,123 +1133,4 @@ public abstract class Laser {
         abstract void accept(T t) throws ReflectiveOperationException;
     }
 
-    private enum ProtocolMappings {
-        V1_9(9, "Z", "bA", "bB", "b", "c", 94, 68),
-        V1_10(10, V1_9),
-        V1_11(11, V1_10),
-        V1_12(12, V1_11),
-        V1_13(13, "ac", "bF", "bG", "b", "c", 70, 28),
-        V1_14(14, "W", "b", "bD", "c", "d", 73, 30),
-        V1_15(15, "T", "b", "bA", "c", "d", 74, 31),
-        V1_16(16, null, "b", "d", "c", "d", -1, 31, "u", null, null){
-            @Override
-            public int getSquidID() {
-                return Packets.versionMinor < 2 ? 74 : 81;
-            }
-
-            @Override
-            public String getWatcherFlags() {
-                return Packets.versionMinor < 2 ? "T" : "S";
-            }
-        },
-        V1_17(17, "Z", "b", "e", "c", "d", 86, 35, "u", "setCollisionRule", "getPlayerNameSet"),
-        V1_18(18, null, "b", "e", "c", "d", 86, 35, "u", "a", "g"){
-            @Override
-            public String getWatcherFlags() {
-                return Packets.versionMinor < 2 ? "aa" : "Z";
-            }
-        },
-        ;
-
-        private final int major;
-        private final String watcherFlags;
-        private final String watcherSpikes;
-        private final String watcherTargetEntity;
-        private final String watcherTargetLocation;
-        private final String watcherBasePlate;
-        private final int squidID;
-        private final int guardianID;
-        private final String crystalTypeName;
-        private final String teamSetCollision;
-        private final String teamGetPlayers;
-
-        private ProtocolMappings(int major, ProtocolMappings parent) {
-            this(major, parent.watcherFlags, parent.watcherSpikes, parent.watcherTargetEntity, parent.watcherTargetLocation, parent.watcherBasePlate, parent.squidID, parent.guardianID, parent.crystalTypeName, parent.teamSetCollision, parent.teamGetPlayers);
-        }
-
-        private ProtocolMappings(int major,
-                                 String watcherFlags, String watcherSpikes, String watcherTargetEntity, String watcherTargetLocation, String watcherBasePlate,
-                                 int squidID, int guardianID) {
-            this(major, watcherFlags, watcherSpikes, watcherTargetEntity, watcherTargetLocation, watcherBasePlate, squidID, guardianID, "END_CRYSTAL", null, null);
-        }
-
-        private ProtocolMappings(int major,
-                                 String watcherFlags, String watcherSpikes, String watcherTargetEntity, String watcherTargetLocation, String watcherBasePlate,
-                                 int squidID, int guardianID,
-                                 String crystalTypeName, String teamSetCollision, String teamGetPlayers) {
-            this.major = major;
-            this.watcherFlags = watcherFlags;
-            this.watcherSpikes = watcherSpikes;
-            this.watcherTargetEntity = watcherTargetEntity;
-            this.watcherTargetLocation = watcherTargetLocation;
-            this.watcherBasePlate = watcherBasePlate;
-            this.squidID = squidID;
-            this.guardianID = guardianID;
-            this.crystalTypeName = crystalTypeName;
-            this.teamSetCollision = teamSetCollision;
-            this.teamGetPlayers = teamGetPlayers;
-        }
-
-        public int getMajor() {
-            return major;
-        }
-
-        public String getWatcherFlags() {
-            return watcherFlags;
-        }
-
-        public String getWatcherSpikes() {
-            return watcherSpikes;
-        }
-
-        public String getWatcherTargetEntity() {
-            return watcherTargetEntity;
-        }
-
-        public String getWatcherTargetLocation() {
-            return watcherTargetLocation;
-        }
-
-        public String getWatcherBasePlate() {
-            return watcherBasePlate;
-        }
-
-        public int getSquidID() {
-            return squidID;
-        }
-
-        public int getGuardianID() {
-            return guardianID;
-        }
-
-        public String getCrystalTypeName() {
-            return crystalTypeName;
-        }
-
-        public String getTeamSetCollision() {
-            return teamSetCollision;
-        }
-
-        public String getTeamGetPlayers() {
-            return teamGetPlayers;
-        }
-
-        public static ProtocolMappings getMappings(int major) {
-            for (ProtocolMappings map : values()) {
-                if (major == map.getMajor()) return map;
-            }
-            return null;
-        }
-
-    }
 }

@@ -89,10 +89,13 @@ public enum CustomItems {
         meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
         meta.lore(itemlore);
         if(isMcoin) {
-            meta.getPersistentDataContainer().set(new NamespacedKey("stonksexchange","customitem"), PersistentDataType.STRING,this.name);
+            meta.getPersistentDataContainer().set(new NamespacedKey("stonkexchange","customitem"), PersistentDataType.STRING,this.name);
         } else {
-            meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(),"AttackSpeed", 20, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
             meta.getPersistentDataContainer().set(new NamespacedKey(EventManager.getPlugin(),"CustomItem"),PersistentDataType.STRING,this.name);
+            if (material.equals(Material.NETHERITE_SWORD)) {
+                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(),"AttackSpeed", 20, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
+                meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(),"AttackDamage", 7, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
+            }
         }
         this.item.setItemMeta(meta);
         if (ench != null) this.item.addUnsafeEnchantment(ench,lvl);
