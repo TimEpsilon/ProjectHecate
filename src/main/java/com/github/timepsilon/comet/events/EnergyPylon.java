@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.events;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.misc.Laser;
 import com.github.timepsilon.comet.misc.TextManager;
@@ -37,7 +37,7 @@ public enum EnergyPylon {
     }
 
     public void turnOn(int delay) {
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), (@NotNull Runnable) this::turnOn,delay);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), (@NotNull Runnable) this::turnOn,delay);
     }
 
     public void turnOn() {
@@ -51,7 +51,7 @@ public enum EnergyPylon {
         }
         RitualArena.spawnPylon(this.pylonLoc,false);
 
-        this.tick = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> tick(this.progress > maxProgress),0,10).getTaskId();
+        this.tick = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> tick(this.progress > maxProgress),0,10).getTaskId();
     }
 
     public void turnOff() {
@@ -76,7 +76,7 @@ public enum EnergyPylon {
                 } catch (ReflectiveOperationException e) {
                     e.printStackTrace();
                 }
-                laser.start(EventManager.getPlugin());
+                laser.start(ProjectHecate.getPlugin());
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     TextManager.sendSamTextToPlayer(p,ChatColor.GREEN + "[INFO] Le pylône " + this + " est à présent actif.");
                 }

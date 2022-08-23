@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.item.enchants;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import org.bukkit.*;
 import org.bukkit.entity.*;
 import org.bukkit.util.Vector;
@@ -37,16 +37,16 @@ public class CosmicLaser {
 
     private void summon(int delay) {
         if (delay == 0) return;
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() ->
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() ->
                 this.laser.getWorld().spawnParticle(Particle.REDSTONE,this.laser.getLocation(),
                 20,0.3,0.3,0.3,0,new Particle.DustOptions(this.color,2),true),0,1)
                 .getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> Bukkit.getScheduler().cancelTask(task),delay);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> Bukkit.getScheduler().cancelTask(task),delay);
     }
 
     private void damageTick(int delay) {
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
             if (!this.laser.isOnGround()) {
                 this.laser.setGravity(true);
                 this.laser.getWorld().spawnParticle(Particle.REDSTONE,this.laser.getLocation(),25,0.2,0.2,0.2,0,new Particle.DustOptions(this.color,1),true);
@@ -56,7 +56,7 @@ public class CosmicLaser {
             }
         },delay,1).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             this.laser.remove();
             Bukkit.getScheduler().cancelTask(task);
         },100+delay);

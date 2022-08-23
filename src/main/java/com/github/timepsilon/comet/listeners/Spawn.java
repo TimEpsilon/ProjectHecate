@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.listeners;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.WeightCollection;
 import com.github.timepsilon.comet.mobs.*;
 
@@ -28,11 +28,11 @@ public class Spawn implements Listener {
 
     @EventHandler
     public void onSpawn(CreatureSpawnEvent event) {
-        if (!EventManager.isRunningEvent) return;
+        if (!ProjectHecate.isRunningEvent) return;
         if (!(event.getEntity() instanceof Monster) || (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL) && (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.COMMAND)))) return;
         if (event.getLocation().getY() < 60) event.setCancelled(true);
 
-        int lvl = EventManager.getComet().getPhase();
+        int lvl = ProjectHecate.getComet().getPhase();
 
         if (random.nextFloat()<probaSemiBoss) {
             event.setCancelled(true);

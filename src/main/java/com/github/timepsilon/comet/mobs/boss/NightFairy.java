@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.mobs.boss;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
@@ -31,7 +31,7 @@ public class NightFairy extends Boss {
         this.entity.getEquipment().setHelmetDropChance(0);
         this.entity.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,100000000,0,false,false));
 
-        this.taskTick = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        this.taskTick = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             this.getEntity().getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation(),10,0.05,0.05,0.05,0,new Particle.DustOptions(Color.fromRGB(242,204,209),1),true);
             this.getEntity().getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation(),20,0.4,0.4,0.4,0,new Particle.DustOptions(Color.fromRGB(220,0,140),1),true);
             this.getEntity().getWorld().spawnParticle(Particle.DRAGON_BREATH,this.getEntity().getLocation(),3,0,0,0,0,null,true);
@@ -52,6 +52,7 @@ public class NightFairy extends Boss {
         if (random.nextFloat() < 0.5) {
             entity.getWorld().playSound(entity.getLocation(),Sound.BLOCK_AMETHYST_BLOCK_CHIME,SoundCategory.HOSTILE,1,1);
         }
+        resync();
         //c'est une gentille fée
         //elle attaquerait jamais quelqu'un :(
     }

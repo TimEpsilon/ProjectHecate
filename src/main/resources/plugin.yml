@@ -1,6 +1,6 @@
-name: EventManager
+name: ProjectHecate
 version: ${project.version}
-main: com.github.timepsilon.EventManager
+main: com.github.timepsilon.ProjectHecate
 api-version: 1.19
 authors: [ TimEpsilon ]
 

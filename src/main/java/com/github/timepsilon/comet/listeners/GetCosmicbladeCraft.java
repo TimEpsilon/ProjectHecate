@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.listeners;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.TextManager;
 import org.bukkit.ChatColor;
@@ -14,12 +14,12 @@ import org.bukkit.persistence.PersistentDataType;
 public class GetCosmicbladeCraft implements Listener {
     @EventHandler
     public void onJoin(EntityPickupItemEvent e) {
-        if (!EventManager.isRunningEvent) return;
+        if (!ProjectHecate.isRunningEvent) return;
         if (!(e.getEntity() instanceof Player p)) return;
         if (!(e.getItem().getItemStack().getItemMeta().getPersistentDataContainer().has(CustomItems.CustomItemKey, PersistentDataType.STRING))) return;
         if (!(e.getItem().getItemStack().getItemMeta().getPersistentDataContainer().get(CustomItems.CustomItemKey,PersistentDataType.STRING).contains(CustomItems.SOUL_MOB.getName()))) return;
-        if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade"))) {
-            p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade"));
+        if (!p.hasDiscoveredRecipe(new NamespacedKey(ProjectHecate.getPlugin(),"cosmicblade"))) {
+            p.discoverRecipe(new NamespacedKey(ProjectHecate.getPlugin(),"cosmicblade"));
             TextManager.sendSamTextToPlayer(p, ChatColor.GREEN + "[INFO] : Vous avez obtenu une âme. Obtenez en 8 ainsi qu'une épée en netherite et réalisez le craft suivant :");
             p.sendMessage(ChatColor.YELLOW + "┌─┬─┬─┐");
             p.sendMessage(ChatColor.YELLOW + "│ * │ * │ * │");

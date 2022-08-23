@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.mobs.boss;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.WeightCollection;
 import net.kyori.adventure.text.Component;
@@ -16,6 +16,7 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -34,6 +35,9 @@ public class Shadows extends Boss {
         ItemStack item = new ItemStack(Material.NETHERITE_HOE);
         ItemMeta meta = item.getItemMeta();
         meta.setCustomModelData(cmd);
+        List<Component> lore = new ArrayList<>();
+        lore.add(Component.text("Huh, cet objet n'est pas censé être là. Prévenez un admin"));
+        meta.lore(lore);
         item.setItemMeta(meta);
         return item;
     }
@@ -95,7 +99,7 @@ public class Shadows extends Boss {
      * Répète chaque tick
      */
     public void idle() {
-        this.position_task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+        this.position_task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
             this.entity.getWorld().spawnParticle(Particle.REDSTONE,this.getEntity().getLocation(),
                     30, 0.4, 0.5,0.4,0, new Particle.DustOptions(Color.BLACK,1),true);
             this.body.teleport(this.entity.getLocation().add(0,0.2,0));
@@ -158,7 +162,7 @@ public class Shadows extends Boss {
         this.body.getEquipment().setItemInMainHand(itemArm);
         this.body.getEquipment().setItemInOffHand(itemArm);
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
             this.entity.getEquipment().setItemInMainHand(itemArm);
             this.entity.getEquipment().setItemInOffHand(itemArm);
             this.body.getEquipment().setItemInMainHand(null);
@@ -188,7 +192,7 @@ public class Shadows extends Boss {
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 12) {
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, this.getEntity().getLocation(), 1000, 5, 5, 5, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                     //Effect
                     this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB, p.getLocation(), 400, 0.5, 1, 0.5, 0);
                     p.playSound(this.getEntity().getLocation(), Sound.AMBIENT_SOUL_SAND_VALLEY_MOOD,SoundCategory.HOSTILE, 1f, 0.7f);
@@ -203,7 +207,7 @@ public class Shadows extends Boss {
                     p.sendTitle(" ",ChatColor.DARK_GRAY+rc.next(),5,80,0);
 
                     //Fake message
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[random.nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next()),60);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> p.sendMessage("<"+((Player)Bukkit.getOnlinePlayers().toArray()[random.nextInt(Bukkit.getOnlinePlayers().size())]).getName()+"> " + rc.next()),60);
                 },40);
             }
         }
@@ -253,9 +257,16 @@ public class Shadows extends Boss {
                 p.sendMessage(ChatColor.ITALIC+""+ChatColor.GRAY+"Vous ressentez une soudaine pulsion de jeter quelque chose...");
 
                 //Fake message
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                     p.sendMessage("<"+p.getName()+"> Je n'ai pas besoin de ça...");
-                    p.dropItem(true);
+                    List<ItemStack> hotbar = new ArrayList<>();
+                    for (int i = 0; i < 9; i++) {
+                        hotbar.add(p.getInventory().getContents()[i]);
+                    }
+                    Collections.shuffle(hotbar);
+                    for (int i = 0; i<9; i++) {
+                        p.getInventory().setItem(i,hotbar.get(i));
+                    }
                     p.updateInventory();
                 },40);
             }
@@ -289,14 +300,14 @@ public class Shadows extends Boss {
         this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,SoundCategory.HOSTILE,1,0.5f);
 
         //particules à chaque localisation
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             for (Location loc : randomLoc) {
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,70,0.2,0.7,0.2,0);
             }
         },0,1).getTaskId();
 
         //Téléportation après 2s
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             this.getEntity().teleport(randomLoc.get(1));
             this.body.teleport(this.entity.getLocation().add(0,0.2,0));
             this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.HOSTILE,1,2);
@@ -316,7 +327,7 @@ public class Shadows extends Boss {
 
         //4 Localisations random + localisation actuelle
         List<Location> randomLoc = new ArrayList<>();
-        for (int i=0;i<4;i++) {
+        for (int i=0;i<3;i++) {
             Location loc = this.entity.getLocation().add(Math.random()*24-12,Math.random()*6-3,Math.random()*24-12);
             if (loc.getBlock().isEmpty() && loc.add(0,1,0).getBlock().isEmpty()) randomLoc.add(loc);
             else {
@@ -332,14 +343,14 @@ public class Shadows extends Boss {
         randomLoc.add(this.entity.getLocation());
         this.getEntity().getWorld().playSound(this.entity.getLocation(),Sound.ENTITY_ZOMBIE_VILLAGER_CURE,SoundCategory.HOSTILE,1,0.3f);
 
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             for (Location loc : randomLoc) {
                 this.getEntity().getWorld().spawnParticle(Particle.SPELL_MOB,loc,70,0.2,0.7,0.2,0);
                 this.getEntity().getWorld().spawnParticle(Particle.SOUL,loc,5,0.8,0.7,0.8,0.1);
             }
         },0,1).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             this.getEntity().teleport(randomLoc.get(0));
             this.body.teleport(this.entity.getLocation().add(0,0.2,0));
             this.getEntity().getWorld().playSound(randomLoc.get(1),Sound.ENTITY_ENDERMAN_TELEPORT,SoundCategory.HOSTILE,1,2);
@@ -368,7 +379,7 @@ public class Shadows extends Boss {
 
                 final int j = i;
                 tasks.add(
-                        Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                        Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
                     if (clone.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j-1));
                     clone.getWorld().spawnParticle(Particle.REDSTONE,clone.getLocation().add(0,0.8,0),
                             30, 0.2, 0.5,0.2,0, new Particle.DustOptions(Color.BLACK,1),true);
@@ -387,7 +398,7 @@ public class Shadows extends Boss {
         }
         if (player) {
             this.entity.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.entity.getLocation(),100,1,0,1);
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                 for (float i = 0;i<24;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 1d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
                     loc.setYaw(i*360f/20f-90f);
@@ -409,7 +420,7 @@ public class Shadows extends Boss {
         if (player) {
             this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),200,2,1,2);
 
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                 for (float i = 0;i<24;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 24), 0d, Math.sin(i * 2 * Math.PI / 24)).multiply(0.2));
                     loc.setYaw(i*360f/24f-90f);
@@ -420,7 +431,7 @@ public class Shadows extends Boss {
                 }
             },40);
 
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                 for (float i = 0;i<30;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 30), 0d, Math.sin(i * 2 * Math.PI / 30)).multiply(0.2));
                     loc.setYaw(i*360f/20f-90f);
@@ -431,7 +442,7 @@ public class Shadows extends Boss {
                 }
             },60);
 
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                 for (float i = 0;i<20;i++) {
                     Location loc = this.entity.getLocation().add(new Vector(Math.cos(i * 2 * Math.PI / 20), 0d, Math.sin(i * 2 * Math.PI / 20)).multiply(0.2));
                     loc.setYaw(i*360f/20f-90f);
@@ -457,7 +468,7 @@ public class Shadows extends Boss {
 
         if(prox) {
             this.entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY,this.entity.getLocation(),200,3,3,3);
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                 ArrayList<Integer> tasks = new ArrayList<>();
                 for (int i = 0;i<4;i++) {
                     Vex vex = (Vex)this.entity.getWorld().spawnEntity(this.entity.getLocation(),EntityType.VEX);
@@ -472,13 +483,13 @@ public class Shadows extends Boss {
 
                     final int j = i;
                     tasks.add(
-                            Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                            Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
                                 if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j));
                                 vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation(),
                                         10, 0.1, 0.1,0.1,0);
                             },0,1).getTaskId()
                     );
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> vex.setHealth(0),200);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> vex.setHealth(0),200);
                 }
             },60);
         }
@@ -498,9 +509,9 @@ public class Shadows extends Boss {
         if(prox) {
             this.entity.getWorld().spawnParticle(Particle.VILLAGER_ANGRY,this.entity.getLocation(),200,3,3,3);
             this.entity.getWorld().spawnParticle(Particle.SOUL,this.entity.getLocation(),50,3,3,3);
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                 ArrayList<Integer> tasks = new ArrayList<>();
-                for (int i = 0;i<5;i++) {
+                for (int i = 0;i<3;i++) {
                     Vex vex = (Vex)this.entity.getWorld().spawnEntity(this.entity.getLocation(),EntityType.VEX);
 
                     vex.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,10000000,0,false,false));
@@ -513,7 +524,7 @@ public class Shadows extends Boss {
 
                     final int j = i;
                     tasks.add(
-                            Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                            Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
                                 if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j));
                                 vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation(),
                                         10, 0.1, 0.1,0.1,0);
@@ -522,7 +533,7 @@ public class Shadows extends Boss {
                             },0,1).getTaskId()
                     );
                     vex.getWorld().playSound(vex.getLocation(),Sound.ENTITY_TNT_PRIMED,SoundCategory.HOSTILE,1f,0.8f);
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                         vex.getWorld().createExplosion(vex.getLocation(),3,false,false);
                         vex.remove();
                     },140);

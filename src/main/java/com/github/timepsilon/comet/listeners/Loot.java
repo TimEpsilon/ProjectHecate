@@ -1,11 +1,14 @@
 package com.github.timepsilon.comet.listeners;
 
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import java.util.Random;
@@ -23,6 +26,10 @@ public class Loot implements Listener {
         LivingEntity e = event.getEntity();
         if (!e.getScoreboardTags().contains("Comet")) return;
         if (e.getKiller() == null) return;
+
+        Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        assert scarlet != null;
+        scarlet.removeEntry(e.getUniqueId().toString());
 
         if (random.nextFloat() < probaSoul) e.getWorld().dropItem(e.getLocation(),CustomItems.SOUL_MOB.getItem());
 

@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.mobs.boss;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.WeightCollection;
 import net.kyori.adventure.text.Component;
@@ -79,7 +79,7 @@ public class ScarletRabbit extends Boss {
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 8) {
                 this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 400, 8, 2, 8, 0, Material.DIRT.createBlockData());
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                     p.setVelocity(new Vector(0, 2, 0));
                     this.getEntity().getWorld().spawnParticle(Particle.BLOCK_CRACK, this.getEntity().getLocation(), 300, 8, 2, 8, 0, Material.DIRT.createBlockData());
                     this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_BREAK_BLOCK,SoundCategory.HOSTILE, 2f, 0.8f);
@@ -94,7 +94,7 @@ public class ScarletRabbit extends Boss {
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 10) {
                 this.getEntity().getWorld().spawnParticle(Particle.ELECTRIC_SPARK, p.getLocation(), 50, 1, 1, 1, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                     Location loc = p.getLocation();
                     loc.add(new Vector(Math.random()*4-2,0,Math.random()*4-2));
                     p.getWorld().strikeLightning(loc);
@@ -109,7 +109,7 @@ public class ScarletRabbit extends Boss {
         for (Player p : proxPlayer) {
             if (this.getEntity().getLocation().distance(p.getLocation()) <= 12) {
                 this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 500, 2, 2, 2, 0);
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.WITHER, 60, 2));
                     this.getEntity().getWorld().spawnParticle(Particle.WARPED_SPORE, this.getEntity().getLocation(), 1500, 5, 5, 5, 10);
                     this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, SoundCategory.HOSTILE, 3f, 0f);
@@ -124,7 +124,7 @@ public class ScarletRabbit extends Boss {
      */
     private void souls() {
         this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
             for (int i = 0; i < 2; i++) {
                 WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
 
@@ -151,7 +151,7 @@ public class ScarletRabbit extends Boss {
      */
     private void wither() {
         this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),200,2,2,2,0);
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
             Wither s = (Wither) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER);
 
             s.setCustomName(ChatColor.DARK_RED + "Wrath Spirit");

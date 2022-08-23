@@ -31,8 +31,8 @@ dependencies {
 }
 
 group = "com.github.TimEpsilon"
-version = "1.0-SNAPSHOT"
-description = "EventManager"
+version = "1.0"
+description = "ProjectHecate"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
 

@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.events;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.misc.TextManager;
@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 public class Comet {
 
     private int phase;
-    private final int timeToLvl5 = 84000; //50min
+    private final int timeToLvl5 = 60000; //50min
     private final World world;
     private int tickTask;
     private int timeSkipTask;
@@ -46,7 +46,7 @@ public class Comet {
     }
 
     public void startEvent() {
-        EventManager.isRunningEvent = true;
+        ProjectHecate.isRunningEvent = true;
 
         world.setGameRule(GameRule.DO_DAYLIGHT_CYCLE,false);
         world.setGameRule(GameRule.DO_FIRE_TICK,false);
@@ -54,19 +54,20 @@ public class Comet {
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN,true);
         world.setGameRule(GameRule.DO_WEATHER_CYCLE,false);
         world.setGameRule(GameRule.KEEP_INVENTORY,true);
-        world.setGameRule(GameRule.MOB_GRIEFING,false);
         world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE,101);
         world.setClearWeatherDuration(180000);
 
         long time = world.getFullTime() % 192000; //Modulo la semaine
         long delay;
+        //109500 = ticks avant 19h30 soir de nouvelle lune de la semaine
+        //301500 = ticks avant 19h30 soir de nouvelle lune de la semaine suivante
         if (time > 109500) delay = 301500 - time; //jusqu'à semaine suivant
         else delay = 109500 - time; //jusqu'à nouvelle lune de la semaine
-        long days = delay/13000; //nombre de jours restant
-        long rest = delay%13000; //nombre de ticks dans le jour restant
-        world.setFullTime(world.getFullTime()+days*13000);
-        int timeTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> world.setFullTime(world.getFullTime()+rest/100),0,1).getTaskId();
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(timeTask),101);
+        long days = delay/24000; //nombre de jours restant
+        long rest = delay%24000; //nombre de ticks dans le jour restant
+        world.setFullTime(world.getFullTime()+days*24000);
+        int timeTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> world.setFullTime(world.getFullTime()+rest/100),0,1).getTaskId();
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> Bukkit.getScheduler().cancelTask(timeTask),100);
 
         RitualArena.spawnRitualArena(false);
 
@@ -80,25 +81,28 @@ public class Comet {
 
     private void tick() {
         int tick = 100;
-        int pass = Math.round(5000f/ timeToLvl5 *tick);
+        int pass = (int) Math.floor(4500f/ timeToLvl5 *tick);
 
-        timeSkipTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> world.setFullTime(world.getFullTime()+pass),0,tick).getTaskId();
+        //1 minecraft hour = 1000 ticks
+        //Starts at 19h30 (13500)
+        //adds 8 ticks to the world every 100 ticks for 60 000 ticks
+        timeSkipTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> world.setFullTime(world.getFullTime()+pass),0,tick).getTaskId();
 
-        tickTask = Bukkit.getScheduler().runTaskTimerAsynchronously(EventManager.getPlugin(),()->{
+        tickTask = Bukkit.getScheduler().runTaskTimerAsynchronously(ProjectHecate.getPlugin(),()->{
             boolean hasChanged = changePhase(timer.get());
             playEvent(hasChanged);
             sendText(timer.get());
-
             timer.addAndGet(tick);
+
         },0,tick).getTaskId();
     }
 
     public void lastWave() {
-        int timeInTicks = 16200; //13.5min
+        int timeInTicks = 18000; //15min
 
-        timeSkipTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> world.setFullTime(world.getFullTime()+1),0,3).getTaskId();
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "10min avant le lever du Soleil. La Comète s'éloigne..."),350);
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> stopEvent(false),timeInTicks);
+        timeSkipTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> world.setFullTime(world.getFullTime()+1),0,4).getTaskId();
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "15min avant le lever du Soleil. La Comète s'éloigne..."),350);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> stopEvent(false),timeInTicks);
     }
 
     private boolean changePhase(int timer) {
@@ -135,7 +139,7 @@ public class Comet {
             case 1 -> {
                 if (spawnBoss) {
                     for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLaterAsynchronously(EventManager.getPlugin(), () -> {
+                        Bukkit.getScheduler().runTaskLaterAsynchronously(ProjectHecate.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
                             try {
                                 waitUntilLoaded(loc);
@@ -151,10 +155,10 @@ public class Comet {
 
             case 2 -> {
                 if (random.nextFloat() < probaMeteor)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (spawnBoss) {
                     for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
                             try {
                                 waitUntilLoaded(loc);
@@ -170,12 +174,12 @@ public class Comet {
 
             case 3 -> {
                 if (random.nextFloat() < probaMeteor)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (random.nextFloat() < probaBee)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (spawnBoss) {
                     for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
                             try {
                                 waitUntilLoaded(loc);
@@ -191,12 +195,12 @@ public class Comet {
 
             case 4 -> {
                 if (random.nextFloat() < probaMeteor)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (random.nextFloat() < probaBee)
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (spawnBoss) {
                     for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                             Vector loc = getRandomLocation();
                             try {
                                 waitUntilLoaded(loc);
@@ -215,6 +219,10 @@ public class Comet {
                     initRitual();
                     Bukkit.getScheduler().cancelTask(timeSkipTask);
                     Bukkit.getScheduler().cancelTask(tickTask);
+                    long time = world.getFullTime();
+                    long remain = 18000 - (time%24000);
+                    Bukkit.getScheduler().runTask(ProjectHecate.getPlugin(),()->world.setFullTime(time + remain));
+
                 }
             }
         }
@@ -227,30 +235,29 @@ public class Comet {
         world.setGameRule(GameRule.DO_IMMEDIATE_RESPAWN,false);
         world.setGameRule(GameRule.DO_WEATHER_CYCLE,true);
         world.setGameRule(GameRule.KEEP_INVENTORY,false);
-        world.setGameRule(GameRule.MOB_GRIEFING,true);
         world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE,100);
         world.setGameRule(GameRule.SHOW_DEATH_MESSAGES,true);
 
-        EventManager.isRunningEvent = false;
+        ProjectHecate.isRunningEvent = false;
 
         Bukkit.getScheduler().cancelTask(timeSkipTask);
 
         if (isRestarting) return;
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "Le jour se lève... L'énergie de la Comète est à présent négligeable."),0);
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "Sans la présence de la Comète, vos artéfacts ont perdu leur pouvoir... Jusqu'à son prochain passage..."),50);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "Le jour se lève... L'énergie de la Comète est à présent négligeable."),0);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "Sans la présence de la Comète, vos artéfacts ont perdu leur pouvoir... Jusqu'à son prochain passage..."),50);
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> {
             showStats(DeathCount,"Morts");
             Bukkit.getOnlinePlayers().forEach(Player -> Player.playSound(Player.getLocation(),Sound.ENTITY_ITEM_PICKUP,SoundCategory.PLAYERS,1,0.5f));
         },100);
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> {
             showStats(KillCount,"Kills");
             Bukkit.getOnlinePlayers().forEach(Player -> Player.playSound(Player.getLocation(),Sound.ENTITY_ITEM_PICKUP,SoundCategory.PLAYERS,1,0.5f));
         },200);
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> {
             showStats(DamageCount,"Damage");
             Bukkit.getOnlinePlayers().forEach(Player -> Player.playSound(Player.getLocation(),Sound.ENTITY_ITEM_PICKUP,SoundCategory.PLAYERS,1,0.5f));
         },300);
@@ -280,7 +287,7 @@ public class Comet {
 
 
 //        Chunk chunk = world.getChunkAtAsync((int) vector.getX(), (int) vector.getZ()).join();
-        tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+        tasks.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
             if (!world.isChunkLoaded((int) vector.getX() >> 4, (int) vector.getZ() >> 4)) return;
 
             Location loc = new Location(world, vector.getX(), 320, vector.getZ());
@@ -289,7 +296,7 @@ public class Comet {
             }
             loc.add(0,5,0);
 
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> {
                 switch (phase) {
                     case 1 -> new KingSlime(loc.add(0, 10, 0), false);
                     case 2 -> new PhantomOverlord(loc.add(0, 50, 0), false);

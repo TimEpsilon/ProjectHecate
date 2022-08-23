@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.mobs;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -35,7 +35,7 @@ public class WickedWitch extends CometMobs {
         this.entity.getAttribute(Attribute.GENERIC_FOLLOW_RANGE).setBaseValue(50);
         this.entity.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED).setBaseValue(0.1);
 
-        task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+        task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
             if ((this.entity.isValid())) {
                 ThrownPotion potion = (ThrownPotion) entity.getWorld().spawnEntity(entity.getLocation().add(0,2,0), EntityType.SPLASH_POTION);
                 potion.setItem(itemPotion);

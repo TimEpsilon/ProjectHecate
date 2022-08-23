@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.events;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.mobs.boss.NightFairy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,26 +14,33 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import java.util.Random;
+
 public class Meteor {
-    private Location loc;
-    private int fallingTask;
+    private final Location loc;
+    private final int fallingTask;
     private int beaconTask;
-    private Fireball fireball;
+    private final Fireball fireball;
     private NightFairy fairy;
+
+    private static final Random random = new Random();
 
     public Meteor(Location loc) {
         this.loc = loc;
 
-        this.fireball = (Fireball)loc.getWorld().spawnEntity(loc.clone().add(0,100,0), EntityType.FIREBALL);
-        this.fireball.setDirection(new Vector(0,-0.1,0));
-        this.fireball.setVelocity(new Vector(0,-0.1,0));
-        this.fireball.setVisualFire(true);
+        double theta = random.nextDouble(2*Math.PI);
 
-        this.fireball.getWorld().playSound(this.loc,"minecraft:meteor_fall", SoundCategory.AMBIENT,20,1);
+        fireball = (Fireball)loc.getWorld().spawnEntity(loc.clone().add(40*Math.cos(theta),100,40*Math.sin(theta)), EntityType.FIREBALL);
+        Vector direction = loc.toVector().subtract(fireball.getLocation().toVector()).normalize().multiply(0.1);
+        fireball.setDirection(direction);
+        fireball.setVelocity(direction);
+        fireball.setVisualFire(true);
 
-        this.fallingTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
-            if(this.fireball.isDead()) MeteorDeath();
-            loc.getWorld().spawnParticle(Particle.GLOW_SQUID_INK,this.fireball.getLocation(),60,1,3,1,0,null,true);
+        fireball.getWorld().playSound(this.loc,"minecraft:custom/meteor_fall", SoundCategory.AMBIENT,20,1);
+
+        this.fallingTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
+            if(fireball.isDead()) MeteorDeath();
+            loc.getWorld().spawnParticle(Particle.GLOW_SQUID_INK,fireball.getLocation(),50,1,2,1,0,null,true);
         },0,1).getTaskId();
     }
 
@@ -43,7 +50,7 @@ public class Meteor {
     }
 
     private void Beacon() {
-        this.beaconTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        this.beaconTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             this.loc.getWorld().spawnParticle(Particle.GLOW,this.loc.clone().add(0,50,0),1000,5,50,5,0);
             this.loc.getWorld().spawnParticle(Particle.TOTEM,this.loc.clone().add(0,50,0),500,1,50,1,0,null,true);
             this.loc.getWorld().spawnParticle(Particle.WAX_ON,this.loc,500,30,30,30,0);
@@ -64,7 +71,7 @@ public class Meteor {
 
         this.fairy = new NightFairy(this.loc,this.beaconTask);
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             Bukkit.getScheduler().cancelTask(this.beaconTask);
         },6000);
     }

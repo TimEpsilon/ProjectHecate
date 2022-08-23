@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.item;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -37,7 +37,7 @@ public class CustomCraft {
     }
 
     private void shapeSquareRecipe(String name, ItemStack result, ItemStack middle, ItemStack soul) {
-        NamespacedKey key = new NamespacedKey(EventManager.getPlugin(),name);
+        NamespacedKey key = new NamespacedKey(ProjectHecate.getPlugin(),name);
         ShapedRecipe rc = new ShapedRecipe(key,result);
         rc.shape("020","010","000");
         rc.setIngredient('0',new RecipeChoice.ExactChoice(CustomItems.SOUL_MOB.getItem()));

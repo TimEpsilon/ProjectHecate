@@ -1,7 +1,7 @@
 package com.github.timepsilon.comet.mobs.boss;
 
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.events.EnergyPylon;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.ConfigManager;
@@ -97,7 +97,7 @@ public class Demiurge extends Boss {
                         i+=random.nextInt(3600);
                     }
                     TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La défense du Demiurge grimpe en flèche.");
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> TextManager.sendSamTextToPlayer(ChatColor.GREEN +
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> TextManager.sendSamTextToPlayer(ChatColor.GREEN +
                             "[CONSEIL] : Les pylônes alentours peuvent être chargés en énergie. " +
                             "En activer 4 permettrait d'outrepasser l'armure du Demiurge."), 40);
                     this.hasSpawnedPylons = true;
@@ -121,7 +121,7 @@ public class Demiurge extends Boss {
                     TextManager.sendSamTextToPlayer(ChatColor.GREEN  + "[INFO] Décharge énergétique réussie. La défense du Demiurge redescend à des valeurs normales.");
                     this.speedForm = true;
 
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()->{
                         this.ring1.setMarker(true);
                         this.ring2.setMarker(true);
                     },60);
@@ -141,7 +141,7 @@ public class Demiurge extends Boss {
         float Tring1 = 900;
         float Tring2 = 1100;
         float Twings = 100;
-        this.tick = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        this.tick = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             int t = this.entity.getTicksLived();
 
             if (this.isFloating) {
@@ -194,14 +194,14 @@ public class Demiurge extends Boss {
         this.entity.getWorld().spawnParticle(Particle.GLOW,this.entity.getLocation(),200,0.5,0.5,0.5,0,null,true);
 
         AtomicInteger i = new AtomicInteger(18);
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
             TextManager.demiurgeLore(i.get());
             i.getAndIncrement();
         },0,60).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),330);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),330);
 
-        EventManager.getComet().lastWave();
+        ProjectHecate.getComet().lastWave();
 
         RitualArena.openBarrier();
 
@@ -218,7 +218,7 @@ public class Demiurge extends Boss {
     @Override
     public void attack(List<Player> proxPlayer) {
         if (proxPlayer.isEmpty()) return;
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), ()->{
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), ()->{
             if (random.nextInt(2) == 0) randomTeleport();
         },30);
         if (this.phase == 2 && random.nextInt(20)!=0) return;
@@ -230,7 +230,8 @@ public class Demiurge extends Boss {
                 .add(50,"fireball")
                 .add(30,"vortex")
                 .add(20,"dash")
-                .add(30,"meteorshower")
+                .add(35,"meteor")
+                .add(30,"bullethell")
                 .add(25,"tp")
                 .add(40,"void");
         String attack = rc.next();
@@ -242,8 +243,9 @@ public class Demiurge extends Boss {
             case "fireball" -> attackFireball();
             case "vortex" -> attackVortex(proxPlayer);
             case "dash" -> attackDash(proxPlayer);
-            case "meteorshower" -> attackMeteor(proxPlayer);
+            case "bullethell" -> attackBulletHell(proxPlayer);
             case "tp" -> attackTp();
+            case "meteor" -> attackMeteor(proxPlayer);
         }
     }
 
@@ -306,18 +308,18 @@ public class Demiurge extends Boss {
         switch (this.phase) {
             case 3:
                 for (Player p : proxPlayer) {
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
                         Vector direction = p.getLocation().toVector().subtract(this.getEntity().getLocation().toVector()).clone().normalize().multiply(2);
                         WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(this.getEntity().getLocation(), EntityType.WITHER_SKULL);
                         skull.setCharged(true);
                         skull.setDirection(direction); 
-                        },60);
+                        },50);
                 }
 
 
             case 2:
                 ArrayList<Integer> tasks = new ArrayList<>();
-                for (int i = 0;i<8;i++) {
+                for (int i = 0;i<5;i++) {
                     Vex vex = (Vex)this.entity.getWorld().spawnEntity(this.entity.getLocation(),EntityType.VEX);
 
                     vex.addPotionEffect(new PotionEffect(PotionEffectType.INVISIBILITY,10000000,0,false,false));
@@ -330,39 +332,39 @@ public class Demiurge extends Boss {
 
                     final int j = i;
                     tasks.add(
-                            Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+                            Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
                                 if (vex.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(j));
                                 vex.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,vex.getLocation(),
-                                        10, 0.1, 0.1,0.1,0);
+                                        6, 0.1, 0.1,0.1,0);
                             },0,1).getTaskId()
                     );
 
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> vex.setHealth(0),200);
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> vex.setHealth(0),200);
                 }
 
             case 1:
-                int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> {
+                int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> {
                     double yaw = random.nextDouble(2*Math.PI);
                     double pitch = -random.nextDouble(Math.PI/2);
                     double coscos = Math.cos(pitch) * Math.cos(yaw);
                     double cossin = -Math.cos(pitch) * Math.sin(yaw);
-                    Location loc = this.entity.getLocation().add(new Vector(cossin, Math.sin(pitch), coscos).multiply(0.2));
+                    Location loc = entity.getLocation().add(new Vector(cossin, Math.sin(pitch), coscos).multiply(0.2));
                     loc.setYaw((float)yaw);
                     loc.setPitch((float)pitch);
-                    WitherSkull skull = (WitherSkull)this.entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
+                    WitherSkull skull = (WitherSkull) entity.getWorld().spawnEntity(loc, EntityType.WITHER_SKULL);
                     skull.setDirection(new Vector(cossin, Math.sin(pitch), coscos).multiply(0.2));
                 },0,2).getTaskId();
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),50);
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),50);
         }
     }
 
-    private void attackMeteor(List<Player> proxPlayer) {
+    private void attackBulletHell(List<Player> proxPlayer) {
         switch (this.phase) {
             case 3:
                 List<Integer> meteorTask = new ArrayList<>();
                 for (Player p : proxPlayer) {
-                    meteorTask.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
-                        for (int i = 0; i < 3 * this.phase - 6; i++) {
+                    meteorTask.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
+                        for (int i = 0; i < 2; i++) {
                             WitherSkull skull = (WitherSkull) p.getWorld().spawnEntity(p.getLocation().add(random.nextFloat(8) - 4, 15, random.nextFloat(8) - 4), EntityType.WITHER_SKULL);
                             p.playSound(p.getLocation(), Sound.ENTITY_BLAZE_SHOOT, SoundCategory.HOSTILE, 1, 1);
                             skull.setVelocity(new Vector(0, -0.5, 0));
@@ -371,12 +373,12 @@ public class Demiurge extends Boss {
                         }
                     }, 0, 20).getTaskId());
                 }
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> meteorTask.forEach(integer -> Bukkit.getScheduler().cancelTask(integer)), 100);
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> meteorTask.forEach(integer -> Bukkit.getScheduler().cancelTask(integer)), 80);
             case 2:
             case 1:
                 List<Integer> bulletTask = new ArrayList<>();
                 for (Player p : proxPlayer) {
-                    bulletTask.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+                    bulletTask.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
                         for (int i = 0; i < 4 * this.phase; i++) {
                             double angle = random.nextDouble(2 * Math.PI);
                             WitherSkull skull = (WitherSkull) p.getWorld().spawnEntity(p.getLocation().add(15 * Math.cos(angle), 0, 15 * Math.sin(angle)), EntityType.WITHER_SKULL);
@@ -386,7 +388,7 @@ public class Demiurge extends Boss {
                         }
                     }, 0, 20).getTaskId());
                 }
-                Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> bulletTask.forEach(integer -> Bukkit.getScheduler().cancelTask(integer)), 100);
+                Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> bulletTask.forEach(integer -> Bukkit.getScheduler().cancelTask(integer)), 80);
         }
     }
 
@@ -400,17 +402,17 @@ public class Demiurge extends Boss {
             } catch (ReflectiveOperationException e) {
                 e.printStackTrace();
             }
-            laser.start(EventManager.getPlugin());
+            laser.start(ProjectHecate.getPlugin());
             Laser finalLaser = laser;
-            int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
-                finalLaser.moveEnd(target.getLocation().add(0,-0.5,0),1,null);
+            int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
+                finalLaser.moveEnd(target.getLocation().add(0,-0.5,0),4,null);
                 finalLaser.moveStart(this.getEntity().getLocation(),1,null);
-            },0,1).getTaskId();
+            },0,4).getTaskId();
 
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                 finalLaser.stop();
                 Bukkit.getScheduler().cancelTask(task);
-                Vector direction = this.getEntity().getLocation().toVector().subtract(target.getLocation().toVector()).normalize().multiply(-1);
+                Vector direction = this.getEntity().getLocation().toVector().subtract(finalLaser.getEnd().toVector()).normalize().multiply(-1);
                 this.getEntity().getWorld().spawnArrow(this.getEntity().getLocation().add(direction),direction,8,0);
             },60);
 
@@ -430,10 +432,10 @@ public class Demiurge extends Boss {
         this.getEntity().setVelocity(direction.clone().multiply(5/length));
 
         for (int i = 0; i<length; i+=2) {
-            start.getWorld().spawnParticle(Particle.CLOUD,start.clone().add(direction.clone().multiply(i/length)),30,1,1,1,0,null,true);
+            start.getWorld().spawnParticle(Particle.CLOUD,start.clone().add(direction.clone().multiply(i/length)),30,1.5,1.5,1.5,0,null,true);
         }
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             this.isFloating = true;
             for (int i = 0; i<length; i+=2) {
                 start.getWorld().createExplosion(start.clone().add(direction.clone().multiply(i/length)),2,false,false,this.entity);
@@ -444,7 +446,8 @@ public class Demiurge extends Boss {
     private void attackFireball() {
         switch (this.phase) {
             case 1:
-                for (double a = 0; a < 2*Math.PI;a = a + Math.PI/8) {
+            case 2:
+                for (double a = 0; a < 2*Math.PI;a = a + Math.PI/7) {
                     SmallFireball fireball = (SmallFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+random.nextFloat())*2,0,Math.sin(a+random.nextFloat())*2), EntityType.SMALL_FIREBALL);
                     fireball.setVelocity(new Vector(0,-1,0));
                     fireball.setDirection(new Vector(0,-1,0));
@@ -453,7 +456,7 @@ public class Demiurge extends Boss {
                     fireball.setDirection(new Vector(0,-0.5,0));
                 }
                 break;
-            case 2:
+            case 3:
                 for (double a = 0; a < 2*Math.PI;a = a + Math.PI/10) {
                     LargeFireball fireball = (LargeFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+random.nextFloat())*3,0,Math.sin(a+random.nextFloat())*3), EntityType.FIREBALL);
                     fireball.setVelocity(new Vector(0,-1,0));
@@ -462,13 +465,9 @@ public class Demiurge extends Boss {
                     smallFireball.setVelocity(new Vector(0,-1,0));
                     smallFireball.setDirection(new Vector(0,-1,0));
                 }
-                break;
-            case 3:
-                for (double a = 0; a < 2*Math.PI;a += Math.PI) {
-                    DragonFireball fireball = (DragonFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(a+random.nextFloat())*3,0,Math.sin(a+random.nextFloat())*3), EntityType.DRAGON_FIREBALL);
-                    fireball.setVelocity(new Vector(0,-2,0));
-                    fireball.setDirection(new Vector(0,-1,0));
-                }
+                DragonFireball fireball = (DragonFireball) this.getEntity().getWorld().spawnEntity(this.getEntity().getLocation().add(Math.cos(random.nextDouble(2*Math.PI))*3,0,Math.sin(random.nextDouble(2*Math.PI))*3), EntityType.DRAGON_FIREBALL);
+                fireball.setVelocity(new Vector(0,-2,0));
+                fireball.setDirection(new Vector(0,-1,0));
                 break;
         }
 
@@ -495,7 +494,7 @@ public class Demiurge extends Boss {
                     ShulkerBullet bullet = (ShulkerBullet) entity.getWorld().spawnEntity(entity.getLocation().subtract(0,5,0),EntityType.SHULKER_BULLET);
                     bullet.setTarget(p);
                     Vector toVortex = p.getLocation().toVector().subtract(this.getEntity().getLocation().toVector()).normalize();
-                    p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,100,3,true,true));
+                    p.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION,100,4,true,true));
                     p.setVelocity(toVortex.multiply(-2));
                 }
                 break;
@@ -503,14 +502,39 @@ public class Demiurge extends Boss {
     }
 
     private void attackTp() {
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()-> {
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> {
             LargeFireball fireball = (LargeFireball) this.getEntity().getWorld().spawnEntity(this.entity.getLocation(),EntityType.FIREBALL);
             fireball.setVelocity(new Vector(0,-1,0));
             fireball.setDirection(new Vector(0,-1,0));
             randomTeleport();
         },0,10).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),10 + 10L *this.phase);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),10 + 10L *this.phase);
+    }
+
+    private void attackMeteor(List<Player> proxPlayer) {
+        List<Integer> tasks = new ArrayList<>();
+        for (int i = 0; i < phase*2+1; i++) {
+            int finalI = i;
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()->{
+                double theta = random.nextDouble(2*Math.PI);
+                Location loc = proxPlayer.get(random.nextInt(proxPlayer.size())).getLocation();
+
+                LargeFireball fireball = (LargeFireball) entity.getWorld().spawnEntity(loc.clone().add(20*Math.cos(theta),100,20*Math.sin(theta)), EntityType.FIREBALL);
+                Vector direction = loc.toVector().subtract(fireball.getLocation().toVector()).normalize().multiply(0.1);
+                fireball.setDirection(direction);
+                fireball.setVelocity(direction);
+                fireball.setVisualFire(true);
+
+                fireball.getWorld().playSound(loc,"minecraft:custom/meteor_fall", SoundCategory.AMBIENT,20,1);
+
+
+                tasks.add(finalI,Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
+                    if(fireball.isDead()) Bukkit.getScheduler().cancelTask(tasks.get(finalI));
+                    loc.getWorld().spawnParticle(Particle.GLOW_SQUID_INK,fireball.getLocation(),20,1,2,1,0,null,true);
+                },0,1).getTaskId());
+            }, 20L *i);
+        }
     }
 
     private ArmorStand modelConstruct(int cmd) {

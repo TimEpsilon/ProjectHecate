@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.listeners;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -16,7 +16,7 @@ public class CustomDeath implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent e) {
-        if (!EventManager.isRunningEvent) return;
+        if (!ProjectHecate.isRunningEvent) return;
         Component message = e.deathMessage().color(NamedTextColor.GRAY).decorate(TextDecoration.ITALIC);
         message = Component.text(ChatColor.GRAY +""+ ChatColor.ITALIC + "[DEATH] ").append(message);
         e.deathMessage(message);

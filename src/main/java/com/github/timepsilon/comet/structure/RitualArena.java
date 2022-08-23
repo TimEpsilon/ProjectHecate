@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.structure;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -65,7 +65,7 @@ public class RitualArena {
     private static void pasteSchematic(String name, Location loc) {
         com.sk89q.worldedit.world.World adaptedWorld = BukkitAdapter.adapt(loc.getWorld());
 
-        InputStream is = EventManager.getPlugin().getResource(name);
+        InputStream is = ProjectHecate.getPlugin().getResource(name);
         BuiltInClipboardFormat format = BuiltInClipboardFormat.SPONGE_SCHEMATIC;
 
         try (ClipboardReader reader = format.getReader(is)) {

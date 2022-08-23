@@ -1,7 +1,7 @@
 package com.github.timepsilon.comet.structure;
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.events.EnergyPylon;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.mobs.boss.Boss;
@@ -99,7 +99,7 @@ public class BlockProtection implements Listener {
     public void onBlockIgnite(BlockIgniteEvent e) {
         if (!e.getBlock().getWorld().equals(loc.getWorld())) return;
         if (e.getBlock().getLocation().distance(loc) > 60) return;
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             e.getBlock().setType(Material.AIR);
         },100);
     }

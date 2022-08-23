@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.mobs.boss;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -38,7 +38,7 @@ public class QueenBee extends Boss {
         summonBee();
         summonBee();
 
-        this.task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        this.task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             if (this.entity.getHealth() < this.getMaxHealth()) {
                 ((Bee) this.entity).setAnger(1000);
                 ((Bee) this.entity).setCannotEnterHiveTicks(1000);
@@ -82,11 +82,11 @@ public class QueenBee extends Boss {
         bee.setBaby();
         bee.setAge(-100000);
 
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             if (bee.isDead()) this.colony = this.colony -1;
         },0,400).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             Bukkit.getScheduler().cancelTask(task);
             bee.remove();
             this.colony = this.colony -1;

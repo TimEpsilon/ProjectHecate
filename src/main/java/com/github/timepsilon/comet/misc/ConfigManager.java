@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.misc;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -14,12 +14,12 @@ public class ConfigManager {
     private static Location loc = null;
 
     public static void loadResource() {
-        EventManager.getPlugin().saveDefaultConfig();
+        ProjectHecate.getPlugin().saveDefaultConfig();
     }
 
 
     private static FileConfiguration load() {
-        File file = new File(EventManager.getPlugin().getDataFolder(),"config.yml");
+        File file = new File(ProjectHecate.getPlugin().getDataFolder(),"config.yml");
         return YamlConfiguration.loadConfiguration(file);
     }
 

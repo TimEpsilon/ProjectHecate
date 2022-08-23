@@ -6,6 +6,8 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scoreboard.Team;
 
+import java.util.Random;
+
 public abstract class CometMobs {
 
     protected LivingEntity entity;

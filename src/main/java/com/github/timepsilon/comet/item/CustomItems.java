@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.item;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.enchants.EnchantRegister;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
@@ -69,7 +69,7 @@ public enum CustomItems {
     ;
 
 
-    public static NamespacedKey CustomItemKey = new NamespacedKey(EventManager.getPlugin(),"CustomItem");
+    public static NamespacedKey CustomItemKey = new NamespacedKey(ProjectHecate.getPlugin(),"CustomItem");
     public final static String PDAText = ChatColor.GREEN + "" + ChatColor.BOLD + "[S.A.M.] ";
     private final ItemStack item;
     private String name;
@@ -91,7 +91,7 @@ public enum CustomItems {
         if(isMcoin) {
             meta.getPersistentDataContainer().set(new NamespacedKey("stonkexchange","customitem"), PersistentDataType.STRING,this.name);
         } else {
-            meta.getPersistentDataContainer().set(new NamespacedKey(EventManager.getPlugin(),"CustomItem"),PersistentDataType.STRING,this.name);
+            meta.getPersistentDataContainer().set(new NamespacedKey(ProjectHecate.getPlugin(),"CustomItem"),PersistentDataType.STRING,this.name);
             if (material.equals(Material.NETHERITE_SWORD)) {
                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, new AttributeModifier(UUID.randomUUID(),"AttackSpeed", 20, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));
                 meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(UUID.randomUUID(),"AttackDamage", 7, AttributeModifier.Operation.ADD_NUMBER, EquipmentSlot.HAND));

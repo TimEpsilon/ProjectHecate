@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.events;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.Laser;
 import com.github.timepsilon.comet.misc.MagicCircle;
 import com.github.timepsilon.comet.misc.TextManager;
@@ -23,12 +23,12 @@ public class CosmicRitual {
     public CosmicRitual(Location loc) {
         this.tasks = new ArrayList<>();
 
-        Bukkit.getScheduler().runTask(EventManager.getPlugin(),()->Bukkit.getOnlinePlayers().forEach(Player -> Player.setBedSpawnLocation(loc.clone().add(0,3,0),true)));
-        //TODO : tester si task async casse pas tout
+        Bukkit.getScheduler().runTask(ProjectHecate.getPlugin(),()->Bukkit.getOnlinePlayers().forEach(Player -> Player.setBedSpawnLocation(loc.clone().add(0,3,0),true)));
+
 
         //Cercle allume bougie
         final float[] pos = {0,0,2};
-        this.tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        this.tasks.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             loc.getWorld().spawnParticle(Particle.FLAME,loc.clone().add(pos[1]*Math.cos(pos[0] *Math.PI/180)+0.5,pos[2],pos[1]*Math.sin(pos[0] *Math.PI/180)+0.5),1,0.1,0.1,0.1,0,null,true);
             loc.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,loc.clone().add(-pos[1]*Math.cos(pos[0] *Math.PI/180)+0.5,pos[2],pos[1]*Math.sin(-pos[0] *Math.PI/180)+0.5),1,0.1,0.1,0.1,0,null,true);
             pos[0] = pos[0] +5;
@@ -51,7 +51,7 @@ public class CosmicRitual {
         },0,2).getTaskId());
 
         //Pilier
-        this.tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        this.tasks.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             loc.getWorld().spawnParticle(Particle.REDSTONE,loc.clone().add(0.5,0,0.5).add(5,2,2),100,0.5,1,0.5,0,new Particle.DustOptions(Color.PURPLE,1),true);
             loc.getWorld().spawnParticle(Particle.REDSTONE,loc.clone().add(0.5,0,0.5).add(5,2,-2),100,0.5,1,0.5,0,new Particle.DustOptions(Color.BLUE,1),true);
             loc.getWorld().spawnParticle(Particle.REDSTONE,loc.clone().add(0.5,0,0.5).add(-5,2,2),100,0.5,1,0.5,0,new Particle.DustOptions(Color.ORANGE,1),true);
@@ -63,7 +63,8 @@ public class CosmicRitual {
             },432,5).getTaskId());
 
         //Laser
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()->{
+            loc.getWorld().playSound(loc,"minecraft:custom/sos",SoundCategory.AMBIENT,10,0.5f);
             loc.getWorld().playSound(loc,Sound.BLOCK_BEACON_AMBIENT,SoundCategory.AMBIENT,5,0.2f);
             for (int x = -5;x<=5;x=x+10) {
                 for (int y = -2;y<=2;y=y+4) {
@@ -75,10 +76,10 @@ public class CosmicRitual {
                     } catch (ReflectiveOperationException e) {
                         e.printStackTrace();
                     }
-                    laser.start(EventManager.getPlugin());
+                    laser.start(ProjectHecate.getPlugin());
                     Laser finalLaser = laser;
                     laser.moveEnd(loc.clone().add(0.5,32,0.5),200, finalLaser::stop);
-                    laser2.start(EventManager.getPlugin());
+                    laser2.start(ProjectHecate.getPlugin());
                     Laser finalLaser1 = laser2;
                     laser2.moveEnd(loc.clone().add(0.5,32,0.5),200, finalLaser1::stop);
                 }
@@ -87,7 +88,7 @@ public class CosmicRitual {
 
         //Magic circle
         final float[] rot = {0};
-        tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+        tasks.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
             Location center = loc.clone().add(0.5,1.1,0.5);
             center.setYaw(rot[0]);
             MagicCircle.inCircle(center,2);
@@ -97,7 +98,7 @@ public class CosmicRitual {
         },450,2).getTaskId());
 
         //Map change, boss spawn
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()->{
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()->{
             loc.getWorld().spawnParticle(Particle.GLOW_SQUID_INK,loc,3000,20,3,20,0,null,true);
             RitualArena.spawnRitualArena(true);
             loc.getWorld().playSound(loc,Sound.ENTITY_WITHER_SPAWN,SoundCategory.HOSTILE,30,0);
@@ -114,7 +115,7 @@ public class CosmicRitual {
 
         //Text
         AtomicInteger iter = new AtomicInteger(0);
-        tasks.add(Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        tasks.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             switch (iter.get()) {
                 case 0:
                     for (Player p : Bukkit.getOnlinePlayers()) {
@@ -140,7 +141,7 @@ public class CosmicRitual {
                     break;
                 case 3:
                     Bukkit.getScheduler().cancelTask(tasks.get(3));
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),()-> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La présence du Demiurge vous affaiblit. " +
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La présence du Demiurge vous affaiblit. " +
                                     "Les feux d'artifices sont désactivés." +
                                     "Utilisez les ventilations alentours pour gagner de l'altitude."
                             , true), 200);

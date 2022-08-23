@@ -1,7 +1,7 @@
 package com.github.timepsilon.comet.mobs.boss;
 
-import com.github.timepsilon.EventManager;
-import com.github.timepsilon.commands.Waypoint;
+import com.github.timepsilon.ProjectHecate;
+import com.github.timepsilon.comet.commands.Waypoint;
 import com.github.timepsilon.comet.item.CustomItems;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
@@ -121,12 +121,12 @@ public abstract class Boss {
             for (ItemStack item : remaining.values()) {
                 p.getWorld().dropItem(p.getLocation(),item);
             }
-            if (!p.hasDiscoveredRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade_bless"+this.lvl))) p.discoverRecipe(new NamespacedKey(EventManager.getPlugin(),"cosmicblade_bless"+this.lvl));
+            if (!p.hasDiscoveredRecipe(new NamespacedKey(ProjectHecate.getPlugin(),"cosmicblade_bless"+this.lvl))) p.discoverRecipe(new NamespacedKey(ProjectHecate.getPlugin(),"cosmicblade_bless"+this.lvl));
         }
     }
 
     private void CustomBossBar() {
-        this.bossbarTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(), () -> {
+        this.bossbarTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
 
             List<Player> prox = getProxPlayer(80);
             bossbar.removeAll();
@@ -136,7 +136,7 @@ public abstract class Boss {
     }
 
     private void AttackLoop() {
-        attackTask = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+        attackTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
             proxPlayer.clear();
             proxPlayer = getProxPlayer(60);
             if (!proxPlayer.isEmpty()) {
@@ -172,7 +172,7 @@ public abstract class Boss {
         List<Player> prox = new ArrayList<>();
         for (Player p : Bukkit.getOnlinePlayers()) {
             if (!p.getWorld().equals(entity.getWorld())) continue;
-            if (p.getLocation().distance(this.entity.getLocation()) < dist && p.getGameMode().equals(GameMode.SURVIVAL)) prox.add(p);
+            if (p.getLocation().distance(this.entity.getLocation()) < dist) prox.add(p);
         }
         return prox;
     }

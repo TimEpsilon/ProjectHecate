@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.item.enchants;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import io.papermc.paper.enchantments.EnchantmentRarity;
 import net.kyori.adventure.text.Component;
@@ -12,7 +12,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
@@ -28,7 +27,7 @@ import java.util.*;
 
 public class CosmicEnchant extends Enchantment implements Listener {
     public CosmicEnchant() {
-        super(new NamespacedKey(EventManager.getPlugin(),"cosmic_blessing"));
+        super(new NamespacedKey(ProjectHecate.getPlugin(),"cosmic_blessing"));
     }
 
     private final HashMap<UUID, Boolean> playerList = new HashMap<>();
@@ -38,7 +37,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
 
     @EventHandler
     public void BlessingDamage(EntityDamageByEntityEvent e) {
-        if (!EventManager.isRunningEvent) return;
+        if (!ProjectHecate.isRunningEvent) return;
         if(!e.getEntity().getScoreboardTags().contains("Comet")) return;
 
         Player p = null;
@@ -110,7 +109,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
 
     @EventHandler
     public void LaserSword(PlayerInteractEvent e) {
-        if (!EventManager.isRunningEvent) return;
+        if (!ProjectHecate.isRunningEvent) return;
         if(e.getItem() == null) return;
         if (e.getAction() == Action.LEFT_CLICK_AIR && e.getItem().getEnchantments().containsKey(Enchantment.getByKey(EnchantRegister.COSMIC_BLESSING.getKey()))) {
             Player p = e.getPlayer();
@@ -124,7 +123,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
                 case 5 -> cosmicTrident(p);
                 case 6 -> {
                     playerList.replace(p.getUniqueId(), false);
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                         playerList.replace(p.getUniqueId(), true);
                         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, SoundCategory.PLAYERS, 1, 2);
                         p.spawnParticle(Particle.REDSTONE, p.getLocation(), 30, 1, 0.5, 1, new Particle.DustOptions(Color.LIME, 1));
@@ -135,7 +134,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
                     if (!p.isSneaking()) return;
                     playerList.replace(p.getUniqueId(), false);
 
-                    Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
                         playerList.replace(p.getUniqueId(), true);
                         p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_XYLOPHONE, SoundCategory.PLAYERS, 1, 2);
                         p.spawnParticle(Particle.REDSTONE, p.getLocation(), 30, 1, 0.5, 1, new Particle.DustOptions(Color.LIME, 1));
@@ -155,7 +154,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
 
     @EventHandler
     public void SinsOfTheCosmos(PlayerInteractEvent e) {
-        if (!EventManager.isRunningEvent) return;
+        if (!ProjectHecate.isRunningEvent) return;
         if (e.getItem() == null) return;
         if (e.getAction() == Action.RIGHT_CLICK_AIR || e.getAction() == Action.RIGHT_CLICK_BLOCK) {
             Player p = e.getPlayer();
@@ -320,7 +319,7 @@ public class CosmicEnchant extends Enchantment implements Listener {
         sinCooldown.replace(p.getUniqueId(), newSinCooldown);
 
         final Color color = sin;
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_CHIME,SoundCategory.PLAYERS,1,1);
             p.spawnParticle(Particle.REDSTONE,p.getLocation(),50,1,0.5,1,new Particle.DustOptions(color,1));
         },timer);
@@ -408,13 +407,13 @@ public class CosmicEnchant extends Enchantment implements Listener {
     }
 
     private void cosmicArrow(Player p) {
-        Arrow laser = (Arrow)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1.5,0).add(p.getLocation().getDirection().multiply(2)), EntityType.ARROW);
+        Arrow laser = (Arrow)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1.7,0).add(p.getLocation().getDirection().multiply(2)), EntityType.ARROW);
 
         laser.setVelocity(p.getLocation().getDirection());
         laser.setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
         laser.setShooter(p);
 
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
             if (laser.isOnGround() || laser.getVelocity().length() < 0.1 || laser.isDead() ) {
                 laser.setTicksLived(1190);
                 laser.remove();
@@ -424,14 +423,14 @@ public class CosmicEnchant extends Enchantment implements Listener {
             }
         },0,1).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
             Bukkit.getScheduler().cancelTask(task);
             laser.setTicksLived(1190);
             laser.remove();
         },80);
 
         playerList.replace(p.getUniqueId(),false);
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             playerList.replace(p.getUniqueId(),true);
             p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_XYLOPHONE,SoundCategory.PLAYERS,1,2);
             p.spawnParticle(Particle.REDSTONE,p.getLocation(),30,1,0.5,1,new Particle.DustOptions(Color.LIME,1));
@@ -439,13 +438,13 @@ public class CosmicEnchant extends Enchantment implements Listener {
     }
 
     private void cosmicTrident(Player p) {
-        Trident laser = (Trident)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1.5,0).add(p.getLocation().getDirection().multiply(2)), EntityType.TRIDENT);
+        Trident laser = (Trident)p.getLocation().getWorld().spawnEntity(p.getLocation().add(0,1.7,0).add(p.getLocation().getDirection().multiply(2)), EntityType.TRIDENT);
 
         laser.setVelocity(p.getLocation().getDirection().multiply(2));
         laser.setPickupStatus(AbstractArrow.PickupStatus.CREATIVE_ONLY);
         laser.setShooter(p);
 
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),()->{
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
             if (laser.isOnGround() || laser.getVelocity().length() < 1) {
                 laser.setTicksLived(1190);
                 laser.remove();
@@ -455,14 +454,14 @@ public class CosmicEnchant extends Enchantment implements Listener {
             }
         },0,1).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(), () -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
             Bukkit.getScheduler().cancelTask(task);
             laser.setTicksLived(1190);
             laser.remove();
         },100);
 
         playerList.replace(p.getUniqueId(),false);
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             playerList.replace(p.getUniqueId(),true);
             p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_XYLOPHONE,SoundCategory.PLAYERS,1,2);
             p.spawnParticle(Particle.REDSTONE,p.getLocation(),30,1,0.5,1,new Particle.DustOptions(Color.LIME,1));

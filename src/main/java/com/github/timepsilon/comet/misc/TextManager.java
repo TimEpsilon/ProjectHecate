@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.misc;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
@@ -58,7 +58,7 @@ public class TextManager {
         p.sendMessage(Component.text(CustomItems.PDAText + s));
         if (alert) {
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_BIT, SoundCategory.PLAYERS,1,1);
-            Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1),5);
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> p.playSound(p.getLocation(),Sound.BLOCK_NOTE_BLOCK_BIT,SoundCategory.PLAYERS,1,1),5);
         } else {
             p.playSound(p.getLocation(), Sound.BLOCK_NOTE_BLOCK_HARP, SoundCategory.PLAYERS,1,1);
         }

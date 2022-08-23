@@ -1,6 +1,6 @@
 package com.github.timepsilon.comet.mobs.boss;
 
-import com.github.timepsilon.EventManager;
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.mobs.SkeletonSniper;
 import net.kyori.adventure.text.Component;
@@ -59,6 +59,10 @@ public class PhantomOverlord extends Boss {
             case 0 -> summonSoldiers();
             case 1,2 -> succ(proxPlayer);
         }
+        for (Player p : proxPlayer) {
+            if (p.getStatistic(Statistic.TIME_SINCE_REST) > 100000) continue;
+            p.setStatistic(Statistic.TIME_SINCE_REST,100000);
+        }
     }
 
     private void summonSoldiers() {
@@ -100,11 +104,11 @@ public class PhantomOverlord extends Boss {
 
         ph.addPassenger(s);
 
-        int task = Bukkit.getScheduler().runTaskTimer(EventManager.getPlugin(),() -> {
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),() -> {
             if (s.isDead()) soldiers = soldiers -1;
         },0,400).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(EventManager.getPlugin(),() -> {
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             Bukkit.getScheduler().cancelTask(task);
             s.remove();
             this.soldiers = this.soldiers -1;
