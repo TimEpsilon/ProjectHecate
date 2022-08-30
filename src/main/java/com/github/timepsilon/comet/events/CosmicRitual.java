@@ -120,12 +120,12 @@ public class CosmicRitual {
                 case 0:
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Importante quantité d'énergie détectée",true);
-                        if (p.getLocation().distance(loc) > 50) TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Rapprochez-vous de la zone",true);
+                        if (!p.getWorld().equals(loc.getWorld()) || p.getLocation().distance(loc) > 50) TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Rapprochez-vous de la zone",true);
                     }
                     break;
                 case 1:
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        if (p.getLocation().distance(loc) < 50) continue;
+                        if (!p.getWorld().equals(loc.getWorld()) || p.getLocation().distance(loc) < 50) continue;
                         TextManager.sendSamTextToPlayer(p,ChatColor.RED + "[ALERTE] : Votre probabilité de mourir grimpe en flèche. " +
                                 "Procédure de téléportation d'urgence enclenchée. S.A.M ne pourra être tenu responsable des potentiels organes perdus en chemin"
                                 ,true);

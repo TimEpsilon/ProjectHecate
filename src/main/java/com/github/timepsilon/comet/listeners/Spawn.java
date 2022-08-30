@@ -23,7 +23,6 @@ import java.util.Random;
 public class Spawn implements Listener {
 
     private final float probaSemiBoss = 0.05f;
-    private final float probaBoss = 0f;
     private static final Random random = new Random();
 
     @EventHandler
@@ -39,13 +38,6 @@ public class Spawn implements Listener {
             spawnSemiBoss(event.getLocation(),lvl);
             return;
         }
-
-        if (random.nextFloat()<probaBoss) {
-            event.setCancelled(true);
-            spawnBoss(event.getLocation(),lvl);
-            return;
-        }
-
 
         switch (event.getEntity().getType().toString()) {
             case ("ZOMBIE"), ("DROWNED"), ("HUSK") -> //Zombie Tank remplace les zombies, drowned et husk

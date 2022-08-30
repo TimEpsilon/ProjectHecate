@@ -96,7 +96,7 @@ public enum EnergyPylon {
             }
 
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.getLocation().distance(this.pylonLoc) > 6) continue;
+                if (!p.getWorld().equals(pylonLoc.getWorld()) || p.getLocation().distance(this.pylonLoc) > 6) continue;
                 p.sendActionBar(Component.text(ChatColor.YELLOW + "" + ChatColor.BOLD + "[ " + progressText + " ]"));
             }
         }

@@ -65,7 +65,8 @@ public enum CustomItems {
             ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC +"qui étaient uniquement employées",ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC +"à consumer les travaux des premières'"),
     SOUL_LUST(Material.GLOWSTONE_DUST,ChatColor.DARK_PURPLE+"Dust of Lust",10,ChatColor.LIGHT_PURPLE+"Âme de Night Fairy",ChatColor.GRAY +""+ ChatColor.ITALIC+"Permet de renforcer la Cosmic Blade",""
             ,ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "'Narcisse fut ébloui par sa propre personne et,", ChatColor.DARK_PURPLE + "" + ChatColor.ITALIC + "visage immobile, reste cloué sur place'"),
-    POCKET_BANK(Material.IRON_INGOT,ChatColor.BLUE + "" + ChatColor.BOLD + "Pocket Vault", 12,ChatColor.GRAY+"Permet d'accéder à votre compte",ChatColor.GRAY + "" +ChatColor.ITALIC + "Usage unique")
+    POCKET_BANK(Material.IRON_INGOT,ChatColor.BLUE + "" + ChatColor.BOLD + "Pocket Vault", 12,ChatColor.GRAY+"Permet d'accéder à votre compte",ChatColor.GRAY + "" +ChatColor.ITALIC + "Usage unique"),
+    GRAPPLING_HOOK(Material.FISHING_ROD,ChatColor.DARK_GRAY + "" + ChatColor.BOLD + "Grappling Hook", 420,ChatColor.GRAY + "Permet de s'accrocher à des chaines")
     ;
 
 

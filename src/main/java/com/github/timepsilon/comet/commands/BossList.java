@@ -4,6 +4,7 @@ import com.github.timepsilon.comet.mobs.boss.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -30,8 +31,9 @@ public class BossList implements CommandExecutor {
                 return true;
             }
             for (Boss boss : bossList) {
-                if (boss instanceof NightFairy ||boss instanceof QueenBee) continue;
                 Location loc = boss.getEntity().getLocation();
+                String dist = (p.getWorld().equals(loc.getWorld())) ? ""+loc.distance(p.getLocation()) : "NaN";
+
                 p.sendMessage(ChatColor.YELLOW + "⚔ : " + boss.getEntity().getCustomName()
                         + ChatColor.YELLOW + ", ♥ : " + ChatColor.RED + (int)((LivingEntity)boss.getEntity()).getHealth()
                         + ChatColor.YELLOW + ", ⌚ : "
@@ -39,7 +41,7 @@ public class BossList implements CommandExecutor {
                         +(int)loc.getX()+" , "
                         +(int)loc.getY()+" , "
                         +(int)loc.getZ()+"> ("
-                        +(int)loc.distance(p.getLocation())
+                        +dist
                         +"m)");
                 if (!Waypoint.PlayersHaveMaps.contains(p)) continue;
                 switch (ChatColor.stripColor(boss.getName())) {
@@ -47,11 +49,14 @@ public class BossList implements CommandExecutor {
                     case "Phantom Overlord" -> p.sendMessage(Component.text("xaero-waypoint:PhantomOverlord:PO:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":1:false:0:Internal-overworld-waypoints"));
                     case "Shadow" -> p.sendMessage(Component.text("xaero-waypoint:Shadow:S:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":0:false:0:Internal-overworld-waypoints"));
                     case "Scarlet Devil" -> p.sendMessage(Component.text("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints"));
+                    case "Night Fairy" -> p.sendMessage(Component.text("xaero-waypoint:NightFairy:NF:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":d:false:0:Internal-overworld-waypoints"));
+                    case "Queen Bee" -> p.sendMessage(Component.text("xaero-waypoint:QueenBee:QB:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":6:false:0:Internal-overworld-waypoints"));
                 }
             }
 
             for (TempBoss boss : tempList.values()) {
                 Vector loc = boss.getLocation();
+                String dist = (p.getWorld().getEnvironment().equals(World.Environment.NORMAL)) ? ""+loc.distance(p.getLocation().toVector()) : "NaN";
                 p.sendMessage(ChatColor.YELLOW + "⚔ : " + boss.getName()
                         + ChatColor.YELLOW + ", ♥ : " + ChatColor.RED + boss.getHealth()
                         + ChatColor.YELLOW + ", ⌚ : "
@@ -59,7 +64,7 @@ public class BossList implements CommandExecutor {
                         +(int)loc.getX()+" , "
                         +(int)loc.getY()+" , "
                         +(int)loc.getZ()+"> ("
-                        +(int)loc.distance(p.getLocation().toVector())
+                        +dist
                         +"m)");
 
                 if (!Waypoint.PlayersHaveMaps.contains(p)) continue;

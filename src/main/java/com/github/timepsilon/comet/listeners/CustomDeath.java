@@ -7,6 +7,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -22,7 +23,7 @@ public class CustomDeath implements Listener {
         e.deathMessage(message);
 
         Location loc = e.getPlayer().getLocation();
-
+        if (!loc.getWorld().getEnvironment().equals(World.Environment.NORMAL)) return;
         if (loc.distance(ConfigManager.getLoc()) < 160) return;
 
         loc.add(Vector.getRandom().subtract(new Vector(0.5,0,0.5).multiply(64)));

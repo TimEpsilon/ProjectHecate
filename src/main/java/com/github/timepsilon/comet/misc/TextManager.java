@@ -25,32 +25,32 @@ public class TextManager {
             case 6 -> sendSamTextToPlayer(ChatColor.GREEN + "[ASTUCE] : Un arc permet de tirer des flèches");
 
             //phase 1
-            case 10 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -40min. Le champ diffus énergétique continue d'augmenter");
-            case 13 -> sendSamTextToPlayer(ChatColor.GREEN + "Nous vous rappelons que mourir est strictement prohibé");
-            case 17 -> sendSamTextToPlayer(ChatColor.GREEN + "[PUB] : Avec la nouvelle paire d'Elytras™ Soaring Skies, parcourez le ciel à des vitesses inégalées");
+            case 10 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -80min. Le champ diffus énergétique continue d'augmenter");
+            case 15 -> sendSamTextToPlayer(ChatColor.GREEN + "Nous vous rappelons que mourir est strictement prohibé");
+            case 24 -> sendSamTextToPlayer(ChatColor.GREEN + "[PUB] : Avec la nouvelle paire d'Elytras™ Soaring Skies, parcourez le ciel à des vitesses inégalées");
 
             //phase 2
-            case 20 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -30min. Des débris commencent à entrer la haute atmosphère");
-            case 24 -> sendSamTextToPlayer(ChatColor.GREEN + "[INFO] : En raison du nombre élevé de morts, les impots ont été augmenté de +400%");
-            case 27 -> sendSamTextToPlayer(ChatColor.GREEN + "[SCIENCE] : Les phénomènes célestes sont connus pour attirer de nombreuses créatures, des morts-vivants aux gentils lapins");
+            case 30 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -60min. Des débris commencent à entrer la haute atmosphère");
+            case 36 -> sendSamTextToPlayer(ChatColor.GREEN + "[INFO] : En raison du nombre élevé de morts, les impots ont été augmenté de +400%");
+            case 47 -> sendSamTextToPlayer(ChatColor.GREEN + "[SCIENCE] : Les phénomènes célestes sont connus pour attirer de nombreuses créatures, des morts-vivants aux gentils lapins");
 
             //phase 3
-            case 30 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -20min. Les insectes commencent à s'agiter");
-            case 34 -> sendSamTextToPlayer(ChatColor.GREEN + "[ADMINISTRATION] : Nous vous rappelons que chaques morts nécessitent la rédaction d'un dossier à votre charge");
-            case 38 -> sendSamTextToPlayer(ChatColor.GREEN + "[CITATION] : 'Connaissez l'ennemi et connaissez-vous vous-même ; en cent batailles vous ne courrez jamais aucun danger'");
+            case 50 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -40min. Les insectes commencent à s'agiter");
+            case 56 -> sendSamTextToPlayer(ChatColor.GREEN + "[ADMINISTRATION] : Nous vous rappelons que chaques morts nécessitent la rédaction d'un dossier à votre charge");
+            case 65 -> sendSamTextToPlayer(ChatColor.GREEN + "[CITATION] : 'Connaissez l'ennemi et connaissez-vous vous-même ; en cent batailles vous ne courrez jamais aucun danger'");
 
             //phase 4
-            case 40 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -10min. L'énergie augmente exponentiellement");
-            case 43 -> sendSamTextToPlayer(ChatColor.GREEN + "[INFO] : Communication reçue : " + ChatColor.AQUA + ChatColor.MAGIC + "Yaldabaoth à l'approche");
-            case 46 -> sendSamTextToPlayer(ChatColor.GREEN + "[ASTUCE] : Choisissez un dieu et priez");
+            case 70 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -20min. L'énergie augmente exponentiellement");
+            case 76 -> sendSamTextToPlayer(ChatColor.GREEN + "[INFO] : Communication reçue : " + ChatColor.AQUA + ChatColor.MAGIC + "Yaldabaoth à l'approche");
+            case 78 -> sendSamTextToPlayer(ChatColor.GREEN + "[ASTUCE] : Choisissez un dieu et priez");
 
             //pre phase 5
-            case 41 -> sendSamTextToPlayer(ChatColor.GREEN + "Triangulation en cours...");
-            case 42 -> sendSamTextToPlayer(ChatColor.GREEN + "Pics d'énergies détectés. Il est recommandé de vous préparer à un combat");
-            case 44 -> sendSamTextToPlayer(ChatColor.GREEN + "Source d'énergie trouvée ! Rendez-vous en " + ChatColor.GOLD + "<"+ConfigManager.getLoc().getX()+","+ConfigManager.getLoc().getZ()+">");
-            case 45 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -5min");
+            case 80 -> sendSamTextToPlayer(ChatColor.GREEN + "Triangulation en cours...");
+            case 81 -> sendSamTextToPlayer(ChatColor.GREEN + "Pics d'énergies détectés. Il est recommandé de vous préparer à un combat");
+            case 84 -> sendSamTextToPlayer(ChatColor.GREEN + "Source d'énergie trouvée ! Rendez-vous en " + ChatColor.GOLD + "<"+ConfigManager.getLoc().getX()+","+ConfigManager.getLoc().getZ()+">");
+            case 85 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -5min");
             //phase 5
-            case 50 -> sendSamTextToPlayer(ChatColor.GREEN + "Comète à son périgée!");
+            case 90 -> sendSamTextToPlayer(ChatColor.GREEN + "Comète à son périgée!");
         }
     }
 
@@ -129,6 +129,9 @@ public class TextManager {
                     p.playSound(p.getLocation(), Sound.AMBIENT_BASALT_DELTAS_MOOD, SoundCategory.HOSTILE, 1, 1);
                 }
             }
+
+            //TODO Phase 4 et 5
+
             //mort
             case 18 -> demiurgeTalk("Votre détermination dépasse la mienne");
             case 19 -> demiurgeTalk("Avec l'éloignement de la Comète, mes forces s'épuisent");

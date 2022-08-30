@@ -7,9 +7,12 @@ import com.github.timepsilon.comet.misc.TextManager;
 import com.github.timepsilon.comet.mobs.boss.*;
 import com.github.timepsilon.comet.structure.RitualArena;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.entity.SpawnCategory;
+import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import java.util.*;
@@ -20,14 +23,14 @@ import java.util.stream.Collectors;
 public class Comet {
 
     private int phase;
-    private final int timeToLvl5 = 60000; //50min
+    private final int timeToLvl5 = 108000; //90min = 10 + 4*20
     private final World world;
     private int tickTask;
     private int timeSkipTask;
     private final AtomicInteger timer = new AtomicInteger();
     private static final Random random = new Random();
-    private static final float probaMeteor = 0.01f;
-    private static final float probaBee = 0.02f;
+    private static final float probaMeteor = 0.04f;
+    private static final float probaBee = 0.6f;
     private int lastLine = -1;
     public final Map<UUID,Double> DeathCount = new HashMap<>();
     public final Map<UUID,Double> KillCount = new HashMap<>();
@@ -56,6 +59,15 @@ public class Comet {
         world.setGameRule(GameRule.KEEP_INVENTORY,true);
         world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE,101);
         world.setClearWeatherDuration(180000);
+        world.setSpawnLimit(SpawnCategory.MONSTER,55);
+
+        //team
+        Team scarlet;
+        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
+            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+            scarlet.color(NamedTextColor.DARK_RED);
+            scarlet.setAllowFriendlyFire(false);
+        }
 
         long time = world.getFullTime() % 192000; //Modulo la semaine
         long delay;
@@ -85,11 +97,12 @@ public class Comet {
 
         //1 minecraft hour = 1000 ticks
         //Starts at 19h30 (13500)
-        //adds 8 ticks to the world every 100 ticks for 60 000 ticks
+        //adds 4 ticks to the world every 100 ticks for 108 000 ticks
         timeSkipTask = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> world.setFullTime(world.getFullTime()+pass),0,tick).getTaskId();
 
         tickTask = Bukkit.getScheduler().runTaskTimerAsynchronously(ProjectHecate.getPlugin(),()->{
             boolean hasChanged = changePhase(timer.get());
+            //TODO : show boss message spawn to closest players
             playEvent(hasChanged);
             sendText(timer.get());
             timer.addAndGet(tick);
@@ -123,7 +136,7 @@ public class Comet {
     }
 
     private void sendText(int timer) {
-        int line = (timer*50)/timeToLvl5;
+        int line = (timer*90)/timeToLvl5;
         if (lastLine != line) {
             lastLine = line;
             TextManager.SamExplains(line);
@@ -216,6 +229,7 @@ public class Comet {
 
             case 5 -> {
                 if (spawnBoss) {
+                    //TODO : check if all bosses are dead
                     initRitual();
                     Bukkit.getScheduler().cancelTask(timeSkipTask);
                     Bukkit.getScheduler().cancelTask(tickTask);
@@ -237,6 +251,12 @@ public class Comet {
         world.setGameRule(GameRule.KEEP_INVENTORY,false);
         world.setGameRule(GameRule.PLAYERS_SLEEPING_PERCENTAGE,100);
         world.setGameRule(GameRule.SHOW_DEATH_MESSAGES,true);
+        world.setSpawnLimit(SpawnCategory.MONSTER,-1);
+
+        //team
+        Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+        assert scarlet != null;
+        scarlet.unregister();
 
         ProjectHecate.isRunningEvent = false;
 

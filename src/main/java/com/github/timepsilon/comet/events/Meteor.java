@@ -55,6 +55,7 @@ public class Meteor {
             this.loc.getWorld().spawnParticle(Particle.TOTEM,this.loc.clone().add(0,50,0),500,1,50,1,0,null,true);
             this.loc.getWorld().spawnParticle(Particle.WAX_ON,this.loc,500,30,30,30,0);
             for (Player p : Bukkit.getOnlinePlayers()) {
+                if (!p.getWorld().equals(loc.getWorld())) continue;
                 if (p.getLocation().distance(this.loc) < 30) {
                     p.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION,40,2));
                     p.addPotionEffect(new PotionEffect(PotionEffectType.REGENERATION,40,0));

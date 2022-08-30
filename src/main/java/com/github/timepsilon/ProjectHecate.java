@@ -2,7 +2,6 @@ package com.github.timepsilon;
 
 import com.github.timepsilon.comet.commands.*;
 import com.github.timepsilon.comet.events.Comet;
-import com.github.timepsilon.comet.item.CustomCraft;
 import com.github.timepsilon.comet.item.enchants.EnchantRegister;
 import com.github.timepsilon.comet.listeners.ListenerManager;
 import com.github.timepsilon.comet.misc.ConfigManager;
@@ -19,7 +18,6 @@ public final class ProjectHecate extends JavaPlugin {
         registerCommands();
         EnchantRegister.register();
         ListenerManager.registerEvents(this);
-        new CustomCraft();
         ConfigManager.loadResource();
         comet = new Comet();
     }

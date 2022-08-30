@@ -15,10 +15,12 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import java.util.List;
+import java.util.Random;
 
 public class ScarletRabbit extends Boss {
 
     public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil");
+    private static final Random random = new Random();
 
     public ScarletRabbit(Location loc) {
         this(loc,true);
@@ -69,7 +71,7 @@ public class ScarletRabbit extends Boss {
             case "lightning" -> lightning(proxPlayer);
             case "spores" -> spores(proxPlayer);
             case "souls" -> souls();
-            case "wither" -> wither();
+            case "wither" -> wither(proxPlayer);
         }
     }
 
@@ -149,14 +151,14 @@ public class ScarletRabbit extends Boss {
 
     /** Invoque un wither (semiboss)
      */
-    private void wither() {
+    private void wither(List<Player> prox) {
         this.getEntity().getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME,this.getEntity().getLocation(),200,2,2,2,0);
         Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
             Wither s = (Wither) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER);
 
             s.setCustomName(ChatColor.DARK_RED + "Wrath Spirit");
             s.setCustomNameVisible(true);
-
+            s.setTarget(prox.get(random.nextInt(prox.size())));
             s.addScoreboardTag("Comet");
             s.addScoreboardTag("SemiBoss");
 

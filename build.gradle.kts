@@ -26,12 +26,12 @@ dependencies {
     implementation(platform("com.intellectualsites.bom:bom-1.18.x:1.12"))
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Core")
     compileOnly("com.fastasyncworldedit:FastAsyncWorldEdit-Bukkit") { isTransitive = false }
-    compileOnly("io.papermc.paper:paper-api:1.19-R0.1-SNAPSHOT")
-    paperDevBundle("1.19-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.19.2-R0.1-SNAPSHOT")
+    paperDevBundle("1.19.2-R0.1-SNAPSHOT")
 }
 
 group = "com.github.TimEpsilon"
-version = "1.0"
+version = "1.1"
 description = "ProjectHecate"
 java.sourceCompatibility = JavaVersion.VERSION_17
 
