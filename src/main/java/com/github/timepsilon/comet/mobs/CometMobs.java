@@ -1,17 +1,15 @@
 package com.github.timepsilon.comet.mobs;
 
-import net.kyori.adventure.text.format.NamedTextColor;
+import com.github.timepsilon.ProjectHecate;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.scoreboard.Team;
 
-import java.util.Random;
-
 public abstract class CometMobs {
 
     protected LivingEntity entity;
-
+    private int despawn;
 
     public CometMobs(LivingEntity e, int health) {
         this.entity = e;
@@ -19,21 +17,28 @@ public abstract class CometMobs {
         this.entity.setHealth(health);
 
         this.entity.addScoreboardTag("Comet");
-        Team scarlet;
-        //team
-        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
-            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-            scarlet.color(NamedTextColor.DARK_RED);
-        } else {
-            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        }
+        Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
 
         scarlet.addEntry(this.entity.getUniqueId().toString());
 
-
+        removeIfDespawn();
     }
 
     public LivingEntity getEntity() {
         return this.entity;
+    }
+
+    public void removeIfDespawn() {
+        despawn = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
+            if (!entity.isValid()) {
+                Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
+                if (scarlet != null) {
+                    if (scarlet.getEntries().contains(entity.getUniqueId().toString())) {
+                        scarlet.removeEntry(entity.getUniqueId().toString());
+                        Bukkit.getScheduler().cancelTask(despawn);
+                    }
+                }
+            }
+        },1200,1200).getTaskId();
     }
 }

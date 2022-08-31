@@ -1,6 +1,5 @@
 package com.github.timepsilon.comet.listeners;
 
-import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.*;
@@ -19,7 +18,7 @@ public class Loot implements Listener {
     private final static float probaSoul = 0.3f;
     private final static int semiBossBonus = 8; //bonus = [bonus/2 , bonus] + n
 
-    private static Random random = new Random();
+    private static final Random random = new Random();
 
     @EventHandler
     public void mobDeath(EntityDeathEvent event) {
@@ -28,7 +27,6 @@ public class Loot implements Listener {
         if (e.getKiller() == null) return;
 
         Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        assert scarlet != null;
         scarlet.removeEntry(e.getUniqueId().toString());
 
         if (random.nextFloat() < probaSoul) e.getWorld().dropItem(e.getLocation(),CustomItems.SOUL_MOB.getItem());

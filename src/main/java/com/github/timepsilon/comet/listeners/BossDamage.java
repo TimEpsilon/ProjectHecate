@@ -1,5 +1,6 @@
 package com.github.timepsilon.comet.listeners;
 
+import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.TextManager;
 import com.github.timepsilon.comet.mobs.boss.Boss;
@@ -97,5 +98,11 @@ public class BossDamage implements Listener {
             i = random.nextInt(30)+1;
         }
         //600 xp par boss
+
+        if (ProjectHecate.getComet().getPhase() == 5 && !(ProjectHecate.getComet().finalBoss)) {
+            ProjectHecate.getComet().initRitual();
+            //Check if in phase 5 and if every boss is dead before starting ritual
+        }
+
     }
 }

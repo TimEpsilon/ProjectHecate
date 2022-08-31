@@ -46,8 +46,7 @@ public class TextManager {
 
             //pre phase 5
             case 80 -> sendSamTextToPlayer(ChatColor.GREEN + "Triangulation en cours...");
-            case 81 -> sendSamTextToPlayer(ChatColor.GREEN + "Pics d'énergies détectés. Il est recommandé de vous préparer à un combat");
-            case 84 -> sendSamTextToPlayer(ChatColor.GREEN + "Source d'énergie trouvée ! Rendez-vous en " + ChatColor.GOLD + "<"+ConfigManager.getLoc().getX()+","+ConfigManager.getLoc().getZ()+">");
+            case 83 -> sendSamTextToPlayer(ChatColor.GREEN + "Pics d'énergies détectés. Il est recommandé de vous préparer à un combat");
             case 85 -> sendSamTextToPlayer(ChatColor.GREEN + "Périgée -5min");
             //phase 5
             case 90 -> sendSamTextToPlayer(ChatColor.GREEN + "Comète à son périgée!");

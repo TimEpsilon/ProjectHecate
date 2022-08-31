@@ -14,7 +14,7 @@ public class ListenerManager {
         pm.registerEvents(new BossDamage(),plugin);
         pm.registerEvents(new Loot(),plugin);
         pm.registerEvents(new Spawn(),plugin);
-        pm.registerEvents(new GetCosmicbladeCraft(),plugin);
+        pm.registerEvents(new EnhanceCosmicBlade(),plugin);
         pm.registerEvents(new CosmicEnchant(),plugin);
         pm.registerEvents(new BlockProtection(),plugin);
         pm.registerEvents(new SlimeSplit(),plugin);

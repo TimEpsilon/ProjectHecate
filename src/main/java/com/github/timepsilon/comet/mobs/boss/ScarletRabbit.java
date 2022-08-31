@@ -14,6 +14,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -21,6 +22,7 @@ public class ScarletRabbit extends Boss {
 
     public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil");
     private static final Random random = new Random();
+    private int soldiers = 0;
 
     public ScarletRabbit(Location loc) {
         this(loc,true);
@@ -125,8 +127,11 @@ public class ScarletRabbit extends Boss {
     /** Invoque 3 wither squelettes
      */
     private void souls() {
+        if (soldiers > 6) return;
+        soldiers += 2;
         this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),200,2,2,2,0);
         Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
+            List<Integer> tasks = new ArrayList<>();
             for (int i = 0; i < 2; i++) {
                 WitherSkeleton s = (WitherSkeleton) this.getEntity().getLocation().getWorld().spawnEntity(this.getEntity().getLocation(),EntityType.WITHER_SKELETON);
 
@@ -143,6 +148,14 @@ public class ScarletRabbit extends Boss {
                 s.setHealth(80);
 
                 s.addScoreboardTag("Comet");
+
+                int finalI = i;
+                tasks.add(Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
+                    if (!s.isValid()) {
+                        soldiers --;
+                        Bukkit.getScheduler().cancelTask(tasks.get(finalI));
+                    }
+                },100,100).getTaskId());
             }
             this.getEntity().getWorld().spawnParticle(Particle.SOUL,this.getEntity().getLocation(),500,10,10,10,0);
             this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_WITHER_HURT,SoundCategory.HOSTILE,3f,0f);

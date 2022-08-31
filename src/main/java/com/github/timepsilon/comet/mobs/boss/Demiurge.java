@@ -250,6 +250,16 @@ public class Demiurge extends Boss {
     }
 
     private void attackMob() {
+        int soldiers = 0;
+        for (Entity e : entity.getNearbyEntities(50,30,50)) {
+            if (e.getScoreboardTags().contains("Comet")) soldiers ++;
+        }
+        //TODO : check if works
+        if (soldiers > Bukkit.getOnlinePlayers().size()*8) {
+            attack(proxPlayer);
+            return;
+        }
+
         Location loc = this.getEntity().getLocation().add(0,-1,0);
         WeightCollection<String> rc;
         rc = new WeightCollection<String>()
@@ -263,7 +273,7 @@ public class Demiurge extends Boss {
             case 1, 2 -> {
                 this.getEntity().getWorld().playSound(loc, Sound.BLOCK_LAVA_EXTINGUISH, SoundCategory.HOSTILE, 3, 0);
                 this.getEntity().getWorld().spawnParticle(Particle.SMOKE_NORMAL, loc.clone().add(0, -1, 0), 30, 1, 1, 1, 0, null, true);
-                for (int i = 0; i < 4; i++) {
+                for (int i = 0; i < 3; i++) {
                     switch (rc.next()) {
                         case "CreeperBomb" -> new CreeperBomb(loc.clone().add(Vector.getRandom()));
                         case "EvokerSorcerer" -> new EvokerSorcerer(loc.clone().add(Vector.getRandom()));

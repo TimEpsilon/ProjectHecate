@@ -11,6 +11,7 @@ import net.kyori.adventure.text.format.NamedTextColor;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.*;
+import org.bukkit.entity.Player;
 import org.bukkit.entity.SpawnCategory;
 import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
@@ -32,6 +33,8 @@ public class Comet {
     private static final float probaMeteor = 0.04f;
     private static final float probaBee = 0.6f;
     private int lastLine = -1;
+    public boolean finalBoss = false;
+
     public final Map<UUID,Double> DeathCount = new HashMap<>();
     public final Map<UUID,Double> KillCount = new HashMap<>();
     public final Map<UUID,Double> DamageCount = new HashMap<>();
@@ -62,12 +65,9 @@ public class Comet {
         world.setSpawnLimit(SpawnCategory.MONSTER,55);
 
         //team
-        Team scarlet;
-        if (Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet") == null) {
-            scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
-            scarlet.color(NamedTextColor.DARK_RED);
-            scarlet.setAllowFriendlyFire(false);
-        }
+        Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().registerNewTeam("Scarlet");
+        scarlet.color(NamedTextColor.DARK_RED);
+        scarlet.setAllowFriendlyFire(false);
 
         long time = world.getFullTime() % 192000; //Modulo la semaine
         long delay;
@@ -102,7 +102,6 @@ public class Comet {
 
         tickTask = Bukkit.getScheduler().runTaskTimerAsynchronously(ProjectHecate.getPlugin(),()->{
             boolean hasChanged = changePhase(timer.get());
-            //TODO : show boss message spawn to closest players
             playEvent(hasChanged);
             sendText(timer.get());
             timer.addAndGet(tick);
@@ -148,94 +147,91 @@ public class Comet {
 
         Vector eventLoc = new Vector(random.nextGaussian(0, 50), 100, random.nextGaussian(0, 50));
         int n = players/2 + random.nextInt(3) + 1;
-        switch (phase) {
-            case 1 -> {
-                if (spawnBoss) {
-                    for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLaterAsynchronously(ProjectHecate.getPlugin(), () -> {
-                            Vector loc = getRandomLocation();
-                            try {
-                                waitUntilLoaded(loc);
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getZ() + ">")));
-                            Boss.sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":2:false:0:Internal-overworld-waypoints");
-                        }, i*100L);
-                    }
+
+        //Boss Spawn
+        if (spawnBoss) {
+            List<Vector> locs = new ArrayList<>();
+            List<Double> distance = new ArrayList<>();
+            for (int i = 0; i<n; i++) {
+                locs.add(getRandomLocation());
+                try {
+                    waitUntilLoaded(locs.get(locs.size()-1));
+                } catch (ExecutionException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
 
+            //Message of closest Boss
+            switch (phase) {
+                case 1 -> {
+                    for (Player p :Bukkit.getOnlinePlayers()) {
+                        locs.forEach(Vector -> distance.add(p.getLocation().toVector().distance(Vector)));
+                        Vector closest = locs.get(distance.indexOf(Collections.min(distance)));
+
+                        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eUn &2&lKing Slime &ea spawn en &a<" + (int) closest.getX() + " , " + (int) closest.getZ() + ">")));
+                        Boss.sendWaypoint("xaero-waypoint:KingSlime:KS:"+(int) closest.getX()+":"+(int) closest.getY()+":"+(int) closest.getZ()+":2:false:0:Internal-overworld-waypoints");
+                        distance.clear();
+                    }
+                }
+
+                case 2 -> {
+                    for (Player p :Bukkit.getOnlinePlayers()) {
+                        locs.forEach(Vector -> distance.add(p.getLocation().toVector().distance(Vector)));
+                        Vector closest = locs.get(distance.indexOf(Collections.min(distance)));
+
+                        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)closest.getX()+" , "+(int)closest.getZ()+">")));
+                        Boss.sendWaypoint("xaero-waypoint:PhantomOverlord:PO:"+(int) closest.getX()+":"+(int) closest.getY()+":"+(int) closest.getZ()+":1:false:0:Internal-overworld-waypoints");
+                        distance.clear();
+                    }
+                }
+
+                case 3 -> {
+                    for (Player p :Bukkit.getOnlinePlayers()) {
+                        locs.forEach(Vector -> distance.add(p.getLocation().toVector().distance(Vector)));
+                        Vector closest = locs.get(distance.indexOf(Collections.min(distance)));
+
+                        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)closest.getX()+" , "+(int)closest.getZ()+">")));
+                        Boss.sendWaypoint("xaero-waypoint:ScarletRabbit:SR:"+(int) closest.getX()+":"+(int) closest.getY()+":"+(int) closest.getZ()+":4:false:0:Internal-overworld-waypoints");
+                        distance.clear();
+                    }
+                }
+
+                case 4 -> {
+                    for (Player p :Bukkit.getOnlinePlayers()) {
+                        locs.forEach(Vector -> distance.add(p.getLocation().toVector().distance(Vector)));
+                        Vector closest = locs.get(distance.indexOf(Collections.min(distance)));
+
+                        Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)closest.getX()+" , "+(int)closest.getZ()+">")));
+                        Boss.sendWaypoint("xaero-waypoint:Shadow:S:"+(int) closest.getX()+":"+(int) closest.getY()+":"+(int) closest.getZ()+":0:false:0:Internal-overworld-waypoints");
+                        distance.clear();
+                    }
+                }
+            }
+        }
+
+        //Events
+        switch (phase) {
             case 2 -> {
                 if (random.nextFloat() < probaMeteor)
                     Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
-                else if (spawnBoss) {
-                    for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
-                            Vector loc = getRandomLocation();
-                            try {
-                                waitUntilLoaded(loc);
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &1&lPhantom Overlord &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
-                            Boss.sendWaypoint("xaero-waypoint:PhantomOverlord:PO:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":1:false:0:Internal-overworld-waypoints");
-                        }, i*110L);
-                    }
-                }
             }
 
-            case 3 -> {
+            case 3, 4 -> {
                 if (random.nextFloat() < probaMeteor)
                     Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
                 else if (random.nextFloat() < probaBee)
                     Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
-                else if (spawnBoss) {
-                    for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
-                            Vector loc = getRandomLocation();
-                            try {
-                                waitUntilLoaded(loc);
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUn &4&lScarlet Devil &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
-                            Boss.sendWaypoint("xaero-waypoint:ScarletRabbit:SR:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":4:false:0:Internal-overworld-waypoints");
-                        }, i*120L);
-                    }
-                }
-            }
-
-            case 4 -> {
-                if (random.nextFloat() < probaMeteor)
-                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new Meteor((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
-                else if (random.nextFloat() < probaBee)
-                    Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> new QueenBee((Bukkit.getOnlinePlayers().stream().toList().get(random.nextInt(players))).getLocation().add(eventLoc).toHighestLocation()), 0);
-                else if (spawnBoss) {
-                    for (int i = 0; i<n; i++) {
-                        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
-                            Vector loc = getRandomLocation();
-                            try {
-                                waitUntilLoaded(loc);
-                            } catch (ExecutionException | InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                            Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&',"&eUne &0&lShadow &ea spawn en &a<"+(int)loc.getX()+" , "+(int)loc.getZ()+">")));
-                            Boss.sendWaypoint("xaero-waypoint:Shadow:S:"+(int) loc.getX()+":"+(int) loc.getY()+":"+(int) loc.getZ()+":0:false:0:Internal-overworld-waypoints");
-                        }, i*130L);
-                    }
-                }
             }
 
             case 5 -> {
                 if (spawnBoss) {
-                    //TODO : check if all bosses are dead
-                    initRitual();
                     Bukkit.getScheduler().cancelTask(timeSkipTask);
                     Bukkit.getScheduler().cancelTask(tickTask);
+
                     long time = world.getFullTime();
                     long remain = 18000 - (time%24000);
                     Bukkit.getScheduler().runTask(ProjectHecate.getPlugin(),()->world.setFullTime(time + remain));
+                    initRitual();
 
                 }
             }
@@ -255,12 +251,15 @@ public class Comet {
 
         //team
         Team scarlet = Bukkit.getScoreboardManager().getMainScoreboard().getTeam("Scarlet");
-        assert scarlet != null;
-        scarlet.unregister();
+        if (scarlet != null) {
+            scarlet.unregister();
+        }
+
 
         ProjectHecate.isRunningEvent = false;
 
         Bukkit.getScheduler().cancelTask(timeSkipTask);
+        Bukkit.getScheduler().cancelTask(tickTask);
 
         if (isRestarting) return;
 
@@ -290,9 +289,17 @@ public class Comet {
         return new Vector(r*Math.cos(theta),100,r*Math.sin(theta));
     }
 
-    private void initRitual() {
-        Location loc = ConfigManager.getLoc();
-        new CosmicRitual(loc);
+    public void initRitual() {
+        if (Boss.getBossList().size() + TempBoss.getTempBossList().size() != 0) {
+            TextManager.sendSamTextToPlayer(ChatColor.RED + "Il reste " + (Boss.getBossList().size() + TempBoss.getTempBossList().size()) + " boss. Leur présence empêche de localiser l'énergie. (Utilisez /bosslocation)");
+        } else {
+            TextManager.sendSamTextToPlayer(ChatColor.GREEN + "Le dernier boss a été éliminé. Source d'énergie trouvée ! Rendez-vous en " + ChatColor.GOLD + "<"+ConfigManager.getLoc().getX()+","+ConfigManager.getLoc().getZ()+">");
+            finalBoss = true;
+            Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()->{
+                Location loc = ConfigManager.getLoc();
+                new CosmicRitual(loc);
+            },6000);
+        }
     }
 
     private void waitUntilLoaded(Vector vector) throws ExecutionException, InterruptedException {

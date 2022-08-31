@@ -32,7 +32,7 @@ public class BossList implements CommandExecutor {
             }
             for (Boss boss : bossList) {
                 Location loc = boss.getEntity().getLocation();
-                String dist = (p.getWorld().equals(loc.getWorld())) ? ""+loc.distance(p.getLocation()) : "NaN";
+                String dist = (p.getWorld().equals(loc.getWorld())) ? ""+(int)loc.distance(p.getLocation()) : "NaN";
 
                 p.sendMessage(ChatColor.YELLOW + "⚔ : " + boss.getEntity().getCustomName()
                         + ChatColor.YELLOW + ", ♥ : " + ChatColor.RED + (int)((LivingEntity)boss.getEntity()).getHealth()
