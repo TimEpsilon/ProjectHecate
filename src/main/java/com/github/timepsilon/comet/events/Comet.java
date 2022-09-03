@@ -31,7 +31,7 @@ public class Comet {
     private final AtomicInteger timer = new AtomicInteger();
     private static final Random random = new Random();
     private static final float probaMeteor = 0.04f;
-    private static final float probaBee = 0.6f;
+    private static final float probaBee = 0.06f;
     private int lastLine = -1;
     public boolean finalBoss = false;
 

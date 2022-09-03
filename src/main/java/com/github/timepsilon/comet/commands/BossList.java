@@ -32,7 +32,7 @@ public class BossList implements CommandExecutor {
             }
             for (Boss boss : bossList) {
                 Location loc = boss.getEntity().getLocation();
-                String dist = (p.getWorld().equals(loc.getWorld())) ? ""+(int)loc.distance(p.getLocation()) : "NaN";
+                String dist = (p.getWorld().equals(loc.getWorld())) ? ""+Math.round(1000f*(int)loc.distance(p.getLocation()))/1000f : "NaN";
 
                 p.sendMessage(ChatColor.YELLOW + "⚔ : " + boss.getEntity().getCustomName()
                         + ChatColor.YELLOW + ", ♥ : " + ChatColor.RED + (int)((LivingEntity)boss.getEntity()).getHealth()
@@ -56,7 +56,7 @@ public class BossList implements CommandExecutor {
 
             for (TempBoss boss : tempList.values()) {
                 Vector loc = boss.getLocation();
-                String dist = (p.getWorld().getEnvironment().equals(World.Environment.NORMAL)) ? ""+loc.distance(p.getLocation().toVector()) : "NaN";
+                String dist = (p.getWorld().getEnvironment().equals(World.Environment.NORMAL)) ? ""+Math.round(1000f*loc.distance(p.getLocation().toVector()))/1000f : "NaN";
                 p.sendMessage(ChatColor.YELLOW + "⚔ : " + boss.getName()
                         + ChatColor.YELLOW + ", ♥ : " + ChatColor.RED + boss.getHealth()
                         + ChatColor.YELLOW + ", ⌚ : "

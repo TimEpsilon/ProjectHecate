@@ -13,6 +13,7 @@ import com.github.timepsilon.comet.mobs.semiboss.IllusionerMage;
 import com.github.timepsilon.comet.mobs.semiboss.PhantomFurries;
 import com.github.timepsilon.comet.mobs.semiboss.RavagerBeast;
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Monster;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -30,6 +31,7 @@ public class Spawn implements Listener {
         if (!ProjectHecate.isRunningEvent) return;
         if (!(event.getEntity() instanceof Monster) || (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.NATURAL) && (!event.getSpawnReason().equals(CreatureSpawnEvent.SpawnReason.COMMAND)))) return;
         if (event.getLocation().getY() < 60) event.setCancelled(true);
+        if (event.getLocation().getWorld().getEnvironment().equals(World.Environment.NORMAL)) event.setCancelled(true);
 
         int lvl = ProjectHecate.getComet().getPhase();
 

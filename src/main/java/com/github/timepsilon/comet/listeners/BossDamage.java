@@ -78,7 +78,7 @@ public class BossDamage implements Listener {
             e.setCancelled(true);
             p.playSound(boss.getEntity().getLocation(), Sound.BLOCK_BEACON_DEACTIVATE, SoundCategory.HOSTILE,30,2);
         } else {
-            p.playSound(boss.getEntity().getLocation(), Sound.ENTITY_PLAYER_HURT, SoundCategory.HOSTILE,30,0.5f);
+            p.playSound(boss.getEntity().getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, SoundCategory.HOSTILE,30,1);
         }
     }
 

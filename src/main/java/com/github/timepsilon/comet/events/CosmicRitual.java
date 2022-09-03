@@ -142,7 +142,7 @@ public class CosmicRitual {
                 case 3:
                     Bukkit.getScheduler().cancelTask(tasks.get(3));
                     Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> TextManager.sendSamTextToPlayer(ChatColor.GREEN + "La présence du Demiurge vous affaiblit. " +
-                                    "Les feux d'artifices sont désactivés." +
+                                    "Les feux d'artifices sont désactivés. " +
                                     "Utilisez les ventilations alentours pour gagner de l'altitude."
                             , true), 200);
             }
