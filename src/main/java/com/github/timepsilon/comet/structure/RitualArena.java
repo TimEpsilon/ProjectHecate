@@ -35,6 +35,12 @@ public class RitualArena {
         }
     }
 
+    public static void spawnLastArena() {
+        Location loc = ConfigManager.getLoc();
+        pasteSchematic("ritual_final.schem",loc);
+        AvianBoost.spawnBoost();
+    }
+
     public static void spawnPylon(Location loc,boolean isActive) {
         if (isActive) {
             pasteSchematic("pylon_active.schem",loc);

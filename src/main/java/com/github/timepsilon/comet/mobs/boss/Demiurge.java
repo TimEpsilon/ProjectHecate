@@ -2,7 +2,7 @@ package com.github.timepsilon.comet.mobs.boss;
 
 
 import com.github.timepsilon.ProjectHecate;
-import com.github.timepsilon.comet.events.EnergyPylon;
+import com.github.timepsilon.comet.structure.EnergyPylon;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.misc.Laser;
@@ -197,13 +197,13 @@ public class Demiurge extends Boss {
         int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
             TextManager.demiurgeLore(i.get());
             i.getAndIncrement();
-        },0,60).getTaskId();
+        },0,100).getTaskId();
 
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),330);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),600);
 
-        ProjectHecate.getComet().lastWave();
+        //ProjectHecate.getComet().lastWave();
 
-        RitualArena.openBarrier();
+        //RitualArena.openBarrier();
 
     }
 
@@ -254,7 +254,7 @@ public class Demiurge extends Boss {
         for (Entity e : entity.getNearbyEntities(50,30,50)) {
             if (e.getScoreboardTags().contains("Comet")) soldiers ++;
         }
-        //TODO : check if works
+        //TODO : check if fair
         if (soldiers > Bukkit.getOnlinePlayers().size()*8) {
             attack(proxPlayer);
             return;

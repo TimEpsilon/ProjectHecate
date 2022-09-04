@@ -129,15 +129,15 @@ public class TextManager {
                 }
             }
 
-            //TODO Phase 4 et 5
+            //mort?
+            case 18 -> demiurgeTalk("Comment? Votre détermination dépasserait la mienne...");
+            case 19 -> demiurgeTalk("Qui l'aurait cru. Des mortels capables de vaincre un Dieu...");
+            case 20 -> demiurgeTalk("Vous gagnez. Pour l'instant.");
+            case 21 -> demiurgeTalk("Non...");
+            case 22 -> demiurgeTalk("Vous ne gagnerez pas si facilement");
+            case 23 -> demiurgeTalk("Vous viendrez à regretter d'avoir osé défier un dieu!");
 
-            //mort
-            case 18 -> demiurgeTalk("Votre détermination dépasse la mienne");
-            case 19 -> demiurgeTalk("Avec l'éloignement de la Comète, mes forces s'épuisent");
-            case 20 -> demiurgeTalk("Qui l'aurait cru. Des mortels capables de vaincre un Dieu");
-            case 21 -> demiurgeTalk("Vous gagnez. Pour l'instant");
-            case 22 -> demiurgeTalk("D'autres abominations sans nom observent déjà votre monde");
-            case 23 -> demiurgeTalk("J'ose espérer pour vous que vous n'avez pas attiré leur attention");
+            //TODO phase 5
         }
     }
 }

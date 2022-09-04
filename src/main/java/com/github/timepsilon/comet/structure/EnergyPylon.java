@@ -1,11 +1,10 @@
-package com.github.timepsilon.comet.events;
+package com.github.timepsilon.comet.structure;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.misc.Laser;
 import com.github.timepsilon.comet.misc.TextManager;
 import com.github.timepsilon.comet.mobs.boss.*;
-import com.github.timepsilon.comet.structure.RitualArena;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.data.type.RespawnAnchor;

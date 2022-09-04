@@ -182,6 +182,7 @@ public class EnhanceCosmicBlade implements Listener {
 
         item.setAmount(1);
         p.getInventory().removeItem(item);
+        p.getInventory().removeItem(sword);
 
         p.getInventory().addItem(CustomItems.COSMICBLADE_TRUE.getItem());
 

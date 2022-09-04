@@ -1,16 +1,18 @@
 package com.github.timepsilon.comet.commands;
 
 import com.github.timepsilon.ProjectHecate;
-import com.github.timepsilon.comet.events.EnergyPylon;
+import com.github.timepsilon.comet.structure.AvianBoost;
+import com.github.timepsilon.comet.structure.EnergyPylon;
 import com.github.timepsilon.comet.events.Meteor;
 import com.github.timepsilon.comet.events.CosmicRitual;
 import com.github.timepsilon.comet.misc.ConfigManager;
-import com.github.timepsilon.comet.misc.MagicCircle;
+import com.github.timepsilon.comet.structure.MagicCircle;
 import com.github.timepsilon.comet.mobs.boss.*;
 import com.github.timepsilon.comet.structure.RitualArena;
 import net.kyori.adventure.text.Component;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -39,13 +41,16 @@ public class StartComet implements CommandExecutor {
             "meteor",
             "arena_start",
             "arena_end",
+            "arena_final",
             "ritual",
             "magic_circle",
             "start_pylon",
             "set_timer",
             "add_timer",
             "open_barrier",
-            "items"));
+            "items",
+            "boost",
+            "get_boost"));
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
@@ -115,6 +120,7 @@ public class StartComet implements CommandExecutor {
                         case "meteor" -> new Meteor(p.getLocation());
                         case "arena_start" -> RitualArena.spawnRitualArena(false);
                         case "arena_end" -> RitualArena.spawnRitualArena(true);
+                        case "arena_final" -> RitualArena.spawnLastArena();
                         case "ritual" -> new CosmicRitual(ConfigManager.getLoc());
                         case "magic_circle" -> MagicCircle.inCircle(ConfigManager.getLoc().add(0.5, 1, 0.5), 2);
                         case "start_pylon" -> {
@@ -133,6 +139,32 @@ public class StartComet implements CommandExecutor {
                         }
                         case "open_barrier" -> RitualArena.openBarrier();
                         case "items" -> GiveCosmicBlade.getItems(p);
+                        case "boost" -> new AvianBoost(p.getLocation());
+                        case "get_boost" -> {
+                            Location loc = ConfigManager.getLoc();
+
+                            for (int x = -50; x < 51; x++) {
+                                for (int y = -70; y < 0; y++) {
+                                    for (int z = -50; z < 51; z++) {
+                                        Block block = loc.clone().add(x,y,z).getBlock();
+                                        if (block.getType().equals(Material.LIGHT) && ((Levelled)block.getBlockData()).getLevel() == 15) {
+                                            block.getWorld().spawnParticle(Particle.TOTEM,block.getLocation(),100);
+                                            for (int r = 1; r < 10 ; r++) {
+                                                if (!block.getLocation().clone().add(0,0,r).getBlock().getType().equals(Material.AIR) ||
+                                                        !block.getLocation().clone().add(0,r,0).getBlock().getType().equals(Material.AIR) ||
+                                                        !block.getLocation().clone().add(r,0,0).getBlock().getType().equals(Material.AIR)) {
+                                                    Bukkit.broadcastMessage(x + " " + y + " " + z + " : " + r
+                                                            + " " + (!block.getLocation().clone().add(0,0,r).getBlock().getType().equals(Material.AIR) ? "Z " : "")
+                                                            + (!block.getLocation().clone().add(0,r,0).getBlock().getType().equals(Material.AIR) ? "Y " : "")
+                                                            + ((!block.getLocation().clone().add(r,0,0).getBlock().getType().equals(Material.AIR)) ? "X " : ""));
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         default -> p.sendMessage(Component.text(ChatColor.RED + "Argument Invalide"));
                     }
                     return true;

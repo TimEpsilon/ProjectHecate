@@ -2,7 +2,7 @@ package com.github.timepsilon.comet.events;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.Laser;
-import com.github.timepsilon.comet.misc.MagicCircle;
+import com.github.timepsilon.comet.structure.MagicCircle;
 import com.github.timepsilon.comet.misc.TextManager;
 import com.github.timepsilon.comet.mobs.boss.Demiurge;
 import com.github.timepsilon.comet.structure.RitualArena;

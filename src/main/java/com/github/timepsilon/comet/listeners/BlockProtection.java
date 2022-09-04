@@ -1,8 +1,8 @@
-package com.github.timepsilon.comet.structure;
+package com.github.timepsilon.comet.listeners;
 
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.github.timepsilon.ProjectHecate;
-import com.github.timepsilon.comet.events.EnergyPylon;
+import com.github.timepsilon.comet.structure.EnergyPylon;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.mobs.boss.Boss;
 import com.github.timepsilon.comet.mobs.boss.Demiurge;
@@ -34,12 +34,14 @@ public class BlockProtection implements Listener {
             PotionEffectType.POISON,
             PotionEffectType.WEAKNESS));
 
+    public final static int protectionDistance = 80;
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent b) {
         if (!b.getPlayer().getWorld().equals(loc.getWorld())) return;
 
         if (!b.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ) return;
-        if (b.getBlock().getLocation().distance(loc) > 60) return;
+        if (b.getBlock().getLocation().distance(loc) > protectionDistance) return;
         if (b.getBlock().getType().equals(Material.FIRE)) return;
 
         b.setCancelled(true);
@@ -50,7 +52,7 @@ public class BlockProtection implements Listener {
         if (!(e.getEntity() instanceof Player p)) return;
         if (e.getCause().equals(EntityPotionEffectEvent.Cause.PLUGIN)) return;
         if (!p.getWorld().equals(loc.getWorld())) return;
-        if (p.getLocation().distance(loc) > 60) return;
+        if (p.getLocation().distance(loc) > protectionDistance) return;
         if (e.getNewEffect() == null) return;
         if (!debuffList.contains(e.getNewEffect().getType())) return;
         int duration = e.getNewEffect().getDuration();
@@ -62,7 +64,7 @@ public class BlockProtection implements Listener {
     @EventHandler
     public void onAnchorInteract(PlayerInteractEvent e) {
         if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;
-        if (e.getPlayer().getLocation().distance(loc) > 60) return;
+        if (e.getPlayer().getLocation().distance(loc) > protectionDistance) return;
         if (e.getClickedBlock() == null) return;
         if (!e.getClickedBlock().getType().equals(Material.RESPAWN_ANCHOR)) return;
 
@@ -98,7 +100,7 @@ public class BlockProtection implements Listener {
     @EventHandler
     public void onBlockIgnite(BlockIgniteEvent e) {
         if (!e.getBlock().getWorld().equals(loc.getWorld())) return;
-        if (e.getBlock().getLocation().distance(loc) > 60) return;
+        if (e.getBlock().getLocation().distance(loc) > protectionDistance) return;
         Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),() -> {
             e.getBlock().setType(Material.AIR);
         },100);
@@ -106,24 +108,24 @@ public class BlockProtection implements Listener {
 
     @EventHandler
     public void onFireworkUse(PlayerElytraBoostEvent e) {
+        if (!ProjectHecate.isRunningEvent) return;
         if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;
         Player p = e.getPlayer();
 
-        if (p.getLocation().distance(loc) > 80) return;
+        if (p.getLocation().distance(loc) > protectionDistance) return;
         e.setCancelled(true);
     }
 
     @EventHandler
     public void onElytraAboveVent(PlayerMoveEvent e) {
-        if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;
         Player p = e.getPlayer();
         if (!p.isGliding()) return;
-        if (p.getLocation().distance(loc) > 80) return;
 
         boolean isAboveVent = false;
         int distance = 6;
         for (int i = 1; i < 6; i++) {
-            isAboveVent =  (p.getLocation().subtract(0,i,0).getBlock().getType().equals(Material.SOUL_CAMPFIRE));
+            isAboveVent =  (p.getLocation().subtract(0,i,0).getBlock().getType().equals(Material.SOUL_CAMPFIRE)) ||
+                    (p.getLocation().subtract(0,i,0).getBlock().getType().equals(Material.CAMPFIRE));
             if (isAboveVent) {
                 distance = i;
                 break;
@@ -139,7 +141,7 @@ public class BlockProtection implements Listener {
     public void onJumppadWalk(PlayerMoveEvent e) {
         if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;
         Player p = e.getPlayer();
-        if (p.getLocation().distance(loc) > 80) return;
+        if (p.getLocation().distance(loc) > protectionDistance) return;
 
         if (!p.getLocation().subtract(0,1,0).getBlock().getType().equals(Material.EMERALD_BLOCK)) return;
 
@@ -151,7 +153,7 @@ public class BlockProtection implements Listener {
     public void onBlockPlace(BlockPlaceEvent e) {
         if (!e.getPlayer().getGameMode().equals(GameMode.SURVIVAL) ) return;
         if (!e.getPlayer().getWorld().equals(loc.getWorld())) return;
-        if (e.getBlock().getLocation().distance(loc) > 60) return;
+        if (e.getBlock().getLocation().distance(loc) > protectionDistance) return;
 
         e.setCancelled(true);
     }
@@ -159,7 +161,7 @@ public class BlockProtection implements Listener {
     @EventHandler
     public void onPylonMine(BlockBreakEvent b) {
         if (!b.getPlayer().getWorld().equals(loc.getWorld())) return;
-        if (b.getBlock().getLocation().distance(loc) > 60) return;
+        if (b.getBlock().getLocation().distance(loc) > protectionDistance) return;
         if (!b.getBlock().getType().equals(Material.BUDDING_AMETHYST)) return;
         if (b.getPlayer().getGameMode().equals(GameMode.CREATIVE)) EnergyPylon.getClosestPylon(b.getBlock().getLocation()).addProgress(100);
         EnergyPylon.getClosestPylon(b.getBlock().getLocation()).addProgress(1);
@@ -170,7 +172,7 @@ public class BlockProtection implements Listener {
     @EventHandler
     public void onExplosion(EntityExplodeEvent e) {
         if (!e.getEntity().getWorld().equals(loc.getWorld())) return;
-        if (e.getEntity().getLocation().distance(loc) > 60) return;
+        if (e.getEntity().getLocation().distance(loc) > protectionDistance) return;
         e.blockList().clear();
     }
 }

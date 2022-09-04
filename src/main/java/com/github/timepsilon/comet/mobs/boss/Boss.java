@@ -22,7 +22,8 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public abstract class Boss {
-    protected static final List<Boss> bossList = new ArrayList<>();
+    protected static final List<Boss> BOSS_LIST = new ArrayList<>();
+
     protected LivingEntity entity;
     protected final BossBar bossbar;
     private final double maxHealth;
@@ -81,7 +82,7 @@ public abstract class Boss {
         this.entity.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(health);
         this.entity.setHealth(health);
 
-        bossList.add(this);
+        BOSS_LIST.add(this);
 
         this.bossbar.setProgress(this.entity.getHealth() / health);
         CustomBossBar();
@@ -104,7 +105,7 @@ public abstract class Boss {
             i = random.nextInt(3)+1;
         }
 
-        bossList.remove(this);
+        BOSS_LIST.remove(this);
         bossbar.removeAll();
         this.proxPlayer.clear();
         Bukkit.getScheduler().cancelTask(bossbarTask);
@@ -150,7 +151,7 @@ public abstract class Boss {
     }
 
     public static List<Boss> getBossList() {
-        return bossList;
+        return BOSS_LIST;
     }
 
     public Entity getEntity() {
@@ -162,7 +163,7 @@ public abstract class Boss {
     }
 
     public static Boss getBossInList(UUID uuid) {
-        for (Boss boss : bossList) {
+        for (Boss boss : BOSS_LIST) {
             if (boss.getEntity().getUniqueId().equals(uuid)) return boss;
         }
         return null;

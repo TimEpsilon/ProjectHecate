@@ -1,4 +1,4 @@
-package com.github.timepsilon.comet.misc;
+package com.github.timepsilon.comet.structure;
 
 import org.bukkit.Color;
 import org.bukkit.Location;

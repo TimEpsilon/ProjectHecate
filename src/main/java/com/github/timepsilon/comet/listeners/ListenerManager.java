@@ -2,7 +2,6 @@ package com.github.timepsilon.comet.listeners;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.enchants.CosmicEnchant;
-import com.github.timepsilon.comet.structure.BlockProtection;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.PluginManager;
 
@@ -22,5 +21,6 @@ public class ListenerManager {
         pm.registerEvents(new CustomDeath(),plugin);
         pm.registerEvents(new EntityExplosion(),plugin);
         pm.registerEvents(new RemoveLostArrows(),plugin);
+        pm.registerEvents(new FlyingArena(),plugin);
     }
 }
