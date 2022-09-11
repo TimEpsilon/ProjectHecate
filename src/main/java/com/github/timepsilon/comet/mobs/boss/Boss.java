@@ -28,7 +28,6 @@ public abstract class Boss {
     protected final BossBar bossbar;
     private final double maxHealth;
     private final ItemStack soul;
-    private final int lvl;
     private final int bonus;
     protected final String name;
     public List<Player> proxPlayer;
@@ -47,14 +46,12 @@ public abstract class Boss {
      * @param name le nom en couleur
      * @param barcolor couleur de la barre
      * @param soul la soul a drop à la mort
-     * @param lvl niveau de craft de la moonblade
      * @param bonus mcoin à drop en bonus
      */
-    public Boss(Entity e, int health,String name,BarColor barcolor,ItemStack soul,int lvl,int bonus) {
+    public Boss(Entity e, int health,String name,BarColor barcolor,ItemStack soul,int bonus) {
         bossbar = Bukkit.createBossBar(name, barcolor, BarStyle.SOLID, BarFlag.CREATE_FOG,BarFlag.DARKEN_SKY);
         maxHealth = health;
         this.soul = soul;
-        this.lvl = lvl;
         entity = (LivingEntity) e;
         this.name = name;
         this.bonus = bonus;
@@ -113,16 +110,16 @@ public abstract class Boss {
     }
 
     private void giveItemToPlayers(List<Player> proxPlayer) {
+        if (soul == null) return;
         for (Player p : proxPlayer) {
-            HashMap<Integer,ItemStack> remaining =  p.getInventory().addItem(this.soul);
-            p.sendMessage(Component.text(CustomItems.PDAText + this.soul.getItemMeta().getDisplayName() + ChatColor.GOLD + " obtenue !\n" + ChatColor.GREEN +
+            HashMap<Integer,ItemStack> remaining =  p.getInventory().addItem(soul);
+            p.sendMessage(Component.text(CustomItems.PDAText + soul.getItemMeta().getDisplayName() + ChatColor.GOLD + " obtenue !\n" + ChatColor.GREEN +
                     "Une âme vient d'être capturée! \n" +
                     "Son énergie semble pouvoir être exploitée..."));
             p.playSound(p.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, SoundCategory.PLAYERS, 1 ,1);
             for (ItemStack item : remaining.values()) {
                 p.getWorld().dropItem(p.getLocation(),item);
             }
-            if (!p.hasDiscoveredRecipe(new NamespacedKey(ProjectHecate.getPlugin(),"cosmicblade_bless"+this.lvl))) p.discoverRecipe(new NamespacedKey(ProjectHecate.getPlugin(),"cosmicblade_bless"+this.lvl));
         }
     }
 

@@ -30,7 +30,7 @@ public class ScarletRabbit extends Boss {
 
     public ScarletRabbit(Location loc,boolean showMessage) {
 
-        super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,NAME, BarColor.RED, CustomItems.SOUL_WRATH.getItem(),4,20);
+        super(loc.getWorld().spawnEntity(loc, EntityType.RABBIT),300,NAME, BarColor.RED, CustomItems.SOUL_WRATH.getItem(),20);
 
         while (isSuffocating(loc,1)) {
             loc.add(0,1,0);

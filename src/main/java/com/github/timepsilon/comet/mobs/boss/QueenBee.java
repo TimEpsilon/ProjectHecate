@@ -22,7 +22,7 @@ public class QueenBee extends Boss {
     public static final String NAME = ChatColor.BLUE+""+ChatColor.BOLD+"Queen Bee";
 
     public QueenBee(Location loc) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.BEE),200, NAME, BarColor.BLUE, CustomItems.SOUL_GLUTTONY.getItem(),5,25);
+        super(loc.getWorld().spawnEntity(loc, EntityType.BEE),200, NAME, BarColor.BLUE, CustomItems.SOUL_GLUTTONY.getItem(),25);
         this.colony = 0;
 
         this.entity.setCustomName(this.name);

@@ -19,7 +19,7 @@ public class KingSlime extends Boss {
     public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&2&lKing Slime");
 
     public KingSlime(Location loc, boolean showMessage) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,NAME, BarColor.YELLOW, CustomItems.SOUL_SLOTH.getItem(),1,5);
+        super(loc.getWorld().spawnEntity(loc, EntityType.SLIME),250,NAME, BarColor.YELLOW, CustomItems.SOUL_SLOTH.getItem(),5);
 
         while (isSuffocating(loc,4)) {
             loc.add(0,8,0);

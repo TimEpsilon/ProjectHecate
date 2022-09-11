@@ -47,7 +47,7 @@ public class Shadows extends Boss {
     }
 
     public Shadows(Location loc,boolean showMessage) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,NAME, BarColor.WHITE, CustomItems.SOUL_PRIDE.getItem(),6,35);
+        super(loc.getWorld().spawnEntity(loc, EntityType.WITHER_SKELETON),350,NAME, BarColor.WHITE, CustomItems.SOUL_PRIDE.getItem(),35);
 
         while (isSuffocating(loc,1)) {
             loc.add(0,3,0);

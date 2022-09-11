@@ -26,7 +26,7 @@ public class PhantomOverlord extends Boss {
     }
 
     public PhantomOverlord(Location loc,boolean showMessage) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,NAME, BarColor.BLUE, CustomItems.SOUL_GREED.getItem(),2,10);
+        super(loc.getWorld().spawnEntity(loc, EntityType.PHANTOM),280,NAME, BarColor.BLUE, CustomItems.SOUL_GREED.getItem(),10);
 
         while (isSuffocating(loc,7)) {
             loc.add(0,3,0);

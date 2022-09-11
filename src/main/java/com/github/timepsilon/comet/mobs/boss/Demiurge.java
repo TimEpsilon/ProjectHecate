@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Demiurge extends Boss {
 
-    private final Location center;
     private final ArmorStand ring1;
     private final ArmorStand ring2;
     private final ArmorStand core;
@@ -48,21 +47,20 @@ public class Demiurge extends Boss {
     private boolean speedForm = false;
     public int lastLine = 0;
 
+    private static final Location center = ConfigManager.getLoc();
     public static final String NAME = ChatColor.BOLD+""+ChatColor.AQUA+"Demiurge";
 
     private final static Random random = new Random();
 
     /** 3 phases
-     * 1) Le demiurge se téléporte autour de l'arène, lançant divers projectiles et spawnant des mobs + attaques spéciales, -> 75% HP
-     * 2) Le demiurge augmente son armure et devient quasi invinsible, il faut alors tuer les boss qui apparaissent et activer les piliers. -> 50% HP
-     * 3) Le demiurge se téléporte plus souvent et brusquement, spawn des mini-boss, + d'attaques spéciales -> 25% HP, Le demiurge perd ses anneaux et passe en mode vitesse, les joueurs subissent de l'antigravité et sont éjectés
+     * 1) Le demiurge se téléporte autour de l'arène, lançant divers projectiles et spawnant des mobs + attaques spéciales, -> 100% HP
+     * 2) Le demiurge augmente son armure et devient quasi invinsible, il faut alors tuer les boss qui apparaissent et activer les piliers. -> 66% HP
+     * 3) Le demiurge se téléporte plus souvent et brusquement, spawn des mini-boss, + d'attaques spéciales -> 33% HP, Le demiurge perd ses anneaux et passe en mode vitesse, les joueurs subissent de l'antigravité et sont éjectés
      */
     public Demiurge(Location loc) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.MAGMA_CUBE),2040,NAME, BarColor.GREEN, CustomItems.SOUL_ENVY.getItem(),7,100);
+        super(loc.getWorld().spawnEntity(loc, EntityType.MAGMA_CUBE),2040,NAME, BarColor.GREEN, null,0);
 
         Bukkit.broadcast(Component.text(ChatColor.translateAlternateColorCodes('&', "&eLe &k&bDemiurge &ea spawn en &a<" + (int) loc.getX() + " , " + (int) loc.getY() + " , " + (int) loc.getZ() + ">")));
-
-        this.center = ConfigManager.getLoc();
 
         this.entity.setCustomName(this.name);
         this.entity.setAI(true);
@@ -145,7 +143,7 @@ public class Demiurge extends Boss {
             int t = this.entity.getTicksLived();
 
             if (this.isFloating) {
-                Vector move = this.getEntity().getLocation().subtract(this.center.clone()).toVector().normalize().rotateAroundY(Math.PI/2).multiply(this.speed).setY(0);
+                Vector move = this.getEntity().getLocation().subtract(center.clone()).toVector().normalize().rotateAroundY(Math.PI/2).multiply(this.speed).setY(0);
                 this.getEntity().teleport(this.getEntity().getLocation().add(move));
             }
 
@@ -210,7 +208,7 @@ public class Demiurge extends Boss {
     private void randomTeleport() {
         if (this.phase == 2) return;
         this.getEntity().getWorld().spawnParticle(Particle.GLOW_SQUID_INK, this.getEntity().getLocation(), 40, 1, 1, 1, 0, null, true);
-        this.getEntity().teleport(this.center.clone().add(random.nextFloat(48) - 24, 14 + random.nextFloat(5), random.nextFloat(48) - 24));
+        this.getEntity().teleport(center.clone().add(random.nextFloat(48) - 24, 14 + random.nextFloat(5), random.nextFloat(48) - 24));
         this.getEntity().getLocation().setYaw(random.nextFloat(360));
         this.getEntity().getWorld().playSound(this.getEntity().getLocation(), Sound.ENTITY_ENDERMAN_TELEPORT, SoundCategory.HOSTILE, 2, 1);
     }

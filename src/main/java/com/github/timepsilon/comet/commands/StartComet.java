@@ -36,7 +36,8 @@ public class StartComet implements CommandExecutor {
             "ScarletRabbit",
             "Shadows",
             "QueenBee",
-            "Demiurge"));
+            "Demiurge",
+            "TrueDemiurge"));
     public final static ArrayList<String> debugList = new ArrayList<>(List.of(
             "meteor",
             "arena_start",
@@ -107,6 +108,7 @@ public class StartComet implements CommandExecutor {
                         case "Shadows" -> new Shadows(p.getLocation());
                         case "QueenBee" -> new QueenBee(p.getLocation());
                         case "Demiurge" -> new Demiurge(p.getLocation());
+                        case "TrueDemiurge" -> new TrueDemiurge(p.getLocation());
                         default -> p.sendMessage(Component.text(ChatColor.RED + "Argument Invalide"));
                     }
 

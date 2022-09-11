@@ -22,7 +22,7 @@ public class NightFairy extends Boss {
     public static final String NAME = ChatColor.DARK_PURPLE+""+ChatColor.BOLD+"Night Fairy";
 
     public NightFairy(Location loc,int beaconTask) {
-        super(loc.getWorld().spawnEntity(loc, EntityType.ALLAY),20, NAME, BarColor.PINK, CustomItems.SOUL_LUST.getItem(),3,40);
+        super(loc.getWorld().spawnEntity(loc, EntityType.ALLAY),20, NAME, BarColor.PINK, CustomItems.SOUL_LUST.getItem(),40);
         this.beaconTask = beaconTask;
 
         this.entity.setCustomName(this.name);
