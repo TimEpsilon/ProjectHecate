@@ -2,6 +2,7 @@ package com.github.timepsilon.comet.mobs.boss;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.ConfigManager;
+import com.github.timepsilon.comet.misc.Interpolation;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -90,6 +91,22 @@ public class TrueDemiurge extends Boss {
     @Override
     public void attack(List<Player> proxPlayer) {
 
+    }
+
+    private void animationHold() {
+        int time = 30;
+        List<EulerAngle> angleHead = Interpolation.angleLerp(arms.getHeadPose(),new EulerAngle(25*Math.PI/180,0,0),time);
+        List<EulerAngle> leftAngle = Interpolation.angleLerp(arms.getLeftArmPose(),new EulerAngle(310*Math.PI/180,30*Math.PI/180,0),time);
+        List<EulerAngle> rightAngle = Interpolation.angleLerp(arms.getRightLegPose(),new EulerAngle(310*Math.PI/180,30*Math.PI/180,0),time);
+        AtomicInteger i = new AtomicInteger();
+        int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
+            arms.setHeadPose(angleHead.get(i.get()));
+            arms.setLeftArmPose(leftAngle.get(i.get()));
+            arms.setRightArmPose(rightAngle.get(i.get()));
+            i.getAndIncrement();
+        },0,1).getTaskId();
+
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> Bukkit.getScheduler().cancelTask(task),time);
     }
 
     private ArmorStand modelConstruct(int left, int right, int head) {
