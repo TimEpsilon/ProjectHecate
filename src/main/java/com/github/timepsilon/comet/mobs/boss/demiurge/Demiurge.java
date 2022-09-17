@@ -1,7 +1,8 @@
-package com.github.timepsilon.comet.mobs.boss;
+package com.github.timepsilon.comet.mobs.boss.demiurge;
 
 
 import com.github.timepsilon.ProjectHecate;
+import com.github.timepsilon.comet.mobs.boss.Boss;
 import com.github.timepsilon.comet.structure.EnergyPylon;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.ConfigManager;

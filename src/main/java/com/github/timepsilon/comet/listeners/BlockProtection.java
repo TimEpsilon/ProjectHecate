@@ -5,7 +5,7 @@ import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.structure.EnergyPylon;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.mobs.boss.Boss;
-import com.github.timepsilon.comet.mobs.boss.Demiurge;
+import com.github.timepsilon.comet.mobs.boss.demiurge.Demiurge;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.block.data.type.RespawnAnchor;

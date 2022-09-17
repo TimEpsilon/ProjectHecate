@@ -1,6 +1,8 @@
 package com.github.timepsilon.comet.commands;
 
 import com.github.timepsilon.ProjectHecate;
+import com.github.timepsilon.comet.mobs.boss.demiurge.Demiurge;
+import com.github.timepsilon.comet.mobs.boss.demiurge.TrueDemiurge;
 import com.github.timepsilon.comet.structure.AvianBoost;
 import com.github.timepsilon.comet.structure.EnergyPylon;
 import com.github.timepsilon.comet.events.Meteor;
