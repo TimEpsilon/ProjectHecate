@@ -1,4 +1,4 @@
-package com.github.timepsilon.comet.mobs.boss.demiurge;
+package com.github.timepsilon.comet.mobs.boss.demiurge.final_form;
 
 public enum TrueDemiurgeParts {
 

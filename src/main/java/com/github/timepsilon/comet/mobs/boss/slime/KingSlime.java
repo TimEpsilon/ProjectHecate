@@ -1,6 +1,7 @@
-package com.github.timepsilon.comet.mobs.boss;
+package com.github.timepsilon.comet.mobs.boss.slime;
 
 import com.github.timepsilon.comet.item.CustomItems;
+import com.github.timepsilon.comet.mobs.boss.Boss;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;

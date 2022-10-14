@@ -4,7 +4,7 @@ import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.TextManager;
 import com.github.timepsilon.comet.mobs.boss.Boss;
-import com.github.timepsilon.comet.mobs.boss.demiurge.Demiurge;
+import com.github.timepsilon.comet.mobs.boss.demiurge.first_form.Demiurge;
 import org.bukkit.Sound;
 import org.bukkit.SoundCategory;
 import org.bukkit.entity.*;

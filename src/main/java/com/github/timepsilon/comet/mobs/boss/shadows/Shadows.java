@@ -1,8 +1,11 @@
-package com.github.timepsilon.comet.mobs.boss;
+package com.github.timepsilon.comet.mobs.boss.shadows;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.WeightCollection;
+import com.github.timepsilon.comet.mobs.boss.Boss;
+import com.github.timepsilon.comet.mobs.boss.demiurge.final_form.TrueDemiurgeAttack;
+import com.github.timepsilon.comet.mobs.boss.rabbit.ScarletRabbitAttack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -15,10 +18,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class Shadows extends Boss {
     private ArmorStand body;
@@ -29,6 +29,15 @@ public class Shadows extends Boss {
 
     private static final Random random = new Random();
     public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&8&lShadow");
+
+    private static final WeightCollection<ShadowsAttack> ATTACKS = getAttacks();
+
+    private static WeightCollection<ShadowsAttack> getAttacks() {
+        WeightCollection<ShadowsAttack> rc = new WeightCollection<>();
+        Arrays.stream(ShadowsAttack.values()).forEach(attack -> rc.add(attack.getWeight(),attack));
+        return rc;
+    }
+
 
 
     private static ItemStack getBodyPart(int cmd) {
@@ -121,32 +130,24 @@ public class Shadows extends Boss {
      */
     @Override
     public void attack(List<Player> proxPlayer) {
-        WeightCollection<String> rc;
         boolean ismidlife = ((LivingEntity) this.getEntity()).getHealth() <= this.getMaxHealth() / 2;
-        rc = new WeightCollection<String>()
-                .add(50,"despair")
-                .add(40,"teleport")
-                .add(35,"wither")
-                .add(45,"soul")
-                .add(50,"void");
-        String attack = rc.next();
-        switch (attack) {
-            case "despair" -> {
+        switch (ATTACKS.next()) {
+            case DESPAIR -> {
                 attackAnimation();
                 if (ismidlife) anguish(proxPlayer);
                 else despair(proxPlayer);
             }
-            case "teleport" -> {
+            case TELEPORT -> {
                 attackAnimation();
                 if (ismidlife) shadowClone();
                 else shadowTeleport();
             }
-            case "wither" -> {
+            case WITHER -> {
                 attackAnimation();
                 if (ismidlife) strongWitherWave(proxPlayer);
                 else witherWave(proxPlayer);
             }
-            case "soul" -> {
+            case SOUL -> {
                 attackAnimation();
                 if (ismidlife) tormentedSoulSummon(proxPlayer);
                 else soulSummon(proxPlayer);

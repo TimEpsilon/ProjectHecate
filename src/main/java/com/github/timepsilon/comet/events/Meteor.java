@@ -1,7 +1,7 @@
 package com.github.timepsilon.comet.events;
 
 import com.github.timepsilon.ProjectHecate;
-import com.github.timepsilon.comet.mobs.boss.NightFairy;
+import com.github.timepsilon.comet.mobs.boss.fairy.NightFairy;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Particle;

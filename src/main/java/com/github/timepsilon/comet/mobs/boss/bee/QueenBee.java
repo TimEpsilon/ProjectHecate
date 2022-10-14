@@ -1,7 +1,8 @@
-package com.github.timepsilon.comet.mobs.boss;
+package com.github.timepsilon.comet.mobs.boss.bee;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
+import com.github.timepsilon.comet.mobs.boss.Boss;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.boss.BarColor;

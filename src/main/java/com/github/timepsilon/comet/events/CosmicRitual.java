@@ -4,7 +4,7 @@ import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.Laser;
 import com.github.timepsilon.comet.structure.MagicCircle;
 import com.github.timepsilon.comet.misc.TextManager;
-import com.github.timepsilon.comet.mobs.boss.demiurge.Demiurge;
+import com.github.timepsilon.comet.mobs.boss.demiurge.first_form.Demiurge;
 import com.github.timepsilon.comet.structure.RitualArena;
 import org.bukkit.*;
 import org.bukkit.block.data.Lightable;

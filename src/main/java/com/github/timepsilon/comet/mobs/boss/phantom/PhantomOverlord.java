@@ -1,8 +1,11 @@
-package com.github.timepsilon.comet.mobs.boss;
+package com.github.timepsilon.comet.mobs.boss.phantom;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
+import com.github.timepsilon.comet.misc.WeightCollection;
 import com.github.timepsilon.comet.mobs.SkeletonSniper;
+import com.github.timepsilon.comet.mobs.boss.Boss;
+import com.github.timepsilon.comet.mobs.boss.rabbit.ScarletRabbitAttack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -12,6 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -20,6 +24,14 @@ public class PhantomOverlord extends Boss {
     private static final Random random = new Random();
     private int soldiers = 0;
     public static final String NAME = ChatColor.DARK_BLUE + "" + ChatColor.BOLD + "Phantom Overlord";
+
+    private static final WeightCollection<PhantomOverlordAttack> ATTACKS = getAttacks();
+
+    private static WeightCollection<PhantomOverlordAttack> getAttacks() {
+        WeightCollection<PhantomOverlordAttack> rc = new WeightCollection<>();
+        Arrays.stream(PhantomOverlordAttack.values()).forEach(attack -> rc.add(attack.getWeight(),attack));
+        return rc;
+    }
 
     public PhantomOverlord(Location loc) {
         this(loc,true);
@@ -54,10 +66,9 @@ public class PhantomOverlord extends Boss {
 
     @Override
     public void attack(List<Player> proxPlayer) {
-        int n = random.nextInt(7);
-        switch (n) {
-            case 0 -> summonSoldiers();
-            case 1,2 -> succ(proxPlayer);
+        switch (ATTACKS.next()) {
+            case SUMMON -> summonSoldiers();
+            case SUCC -> succ(proxPlayer);
         }
         for (Player p : proxPlayer) {
             if (p.getStatistic(Statistic.TIME_SINCE_REST) > 100000) continue;

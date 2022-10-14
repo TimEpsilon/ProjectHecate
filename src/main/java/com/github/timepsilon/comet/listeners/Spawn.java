@@ -4,10 +4,10 @@ import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.misc.WeightCollection;
 import com.github.timepsilon.comet.mobs.*;
 
-import com.github.timepsilon.comet.mobs.boss.KingSlime;
-import com.github.timepsilon.comet.mobs.boss.PhantomOverlord;
-import com.github.timepsilon.comet.mobs.boss.ScarletRabbit;
-import com.github.timepsilon.comet.mobs.boss.Shadows;
+import com.github.timepsilon.comet.mobs.boss.slime.KingSlime;
+import com.github.timepsilon.comet.mobs.boss.phantom.PhantomOverlord;
+import com.github.timepsilon.comet.mobs.boss.rabbit.ScarletRabbit;
+import com.github.timepsilon.comet.mobs.boss.shadows.Shadows;
 import com.github.timepsilon.comet.mobs.semiboss.DrownedOverlordHorse;
 import com.github.timepsilon.comet.mobs.semiboss.IllusionerMage;
 import com.github.timepsilon.comet.mobs.semiboss.PhantomFurries;

@@ -1,7 +1,8 @@
-package com.github.timepsilon.comet.mobs.boss;
+package com.github.timepsilon.comet.mobs.boss.fairy;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
+import com.github.timepsilon.comet.mobs.boss.Boss;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
 import org.bukkit.entity.EntityType;
@@ -17,7 +18,7 @@ import java.util.Random;
 public class NightFairy extends Boss {
     int taskTick;
     int beaconTask;
-    private Random random = new Random();
+    private final Random random = new Random();
 
     public static final String NAME = ChatColor.DARK_PURPLE+""+ChatColor.BOLD+"Night Fairy";
 

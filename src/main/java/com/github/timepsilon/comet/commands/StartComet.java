@@ -1,15 +1,19 @@
 package com.github.timepsilon.comet.commands;
 
 import com.github.timepsilon.ProjectHecate;
-import com.github.timepsilon.comet.mobs.boss.demiurge.Demiurge;
-import com.github.timepsilon.comet.mobs.boss.demiurge.TrueDemiurge;
+import com.github.timepsilon.comet.mobs.boss.bee.QueenBee;
+import com.github.timepsilon.comet.mobs.boss.demiurge.first_form.Demiurge;
+import com.github.timepsilon.comet.mobs.boss.demiurge.final_form.TrueDemiurge;
+import com.github.timepsilon.comet.mobs.boss.phantom.PhantomOverlord;
+import com.github.timepsilon.comet.mobs.boss.rabbit.ScarletRabbit;
+import com.github.timepsilon.comet.mobs.boss.shadows.Shadows;
+import com.github.timepsilon.comet.mobs.boss.slime.KingSlime;
 import com.github.timepsilon.comet.structure.AvianBoost;
 import com.github.timepsilon.comet.structure.EnergyPylon;
 import com.github.timepsilon.comet.events.Meteor;
 import com.github.timepsilon.comet.events.CosmicRitual;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.structure.MagicCircle;
-import com.github.timepsilon.comet.mobs.boss.*;
 import com.github.timepsilon.comet.structure.RitualArena;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;

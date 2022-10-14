@@ -1,8 +1,10 @@
-package com.github.timepsilon.comet.mobs.boss;
+package com.github.timepsilon.comet.mobs.boss.rabbit;
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.WeightCollection;
+import com.github.timepsilon.comet.mobs.boss.Boss;
+import com.github.timepsilon.comet.mobs.boss.demiurge.final_form.TrueDemiurgeAttack;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -15,6 +17,7 @@ import org.bukkit.scoreboard.Team;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -23,6 +26,14 @@ public class ScarletRabbit extends Boss {
     public static final String NAME = ChatColor.translateAlternateColorCodes('&',"&4&lScarlet Devil");
     private static final Random random = new Random();
     private int soldiers = 0;
+
+    private static final WeightCollection<ScarletRabbitAttack> ATTACKS = getAttacks();
+
+    private static WeightCollection<ScarletRabbitAttack> getAttacks() {
+        WeightCollection<ScarletRabbitAttack> rc = new WeightCollection<>();
+        Arrays.stream(ScarletRabbitAttack.values()).forEach(attack -> rc.add(attack.getWeight(),attack));
+        return rc;
+    }
 
     public ScarletRabbit(Location loc) {
         this(loc,true);
@@ -65,15 +76,12 @@ public class ScarletRabbit extends Boss {
      */
     @Override
     public void attack(List<Player> proxPlayer) {
-        WeightCollection<String> rc;
-        rc = new WeightCollection<String>().add(12,"shockwave").add(11,"lightning").add(10,"spores").add(5,"souls").add(1,"wither").add(60,"void");
-        String attack = rc.next();
-        switch (attack) {
-            case "shockwave" -> shockwave(proxPlayer);
-            case "lightning" -> lightning(proxPlayer);
-            case "spores" -> spores(proxPlayer);
-            case "souls" -> souls();
-            case "wither" -> wither(proxPlayer);
+        switch (ATTACKS.next()) {
+            case SHOCKWAVE -> shockwave(proxPlayer);
+            case LIGHTNING -> lightning(proxPlayer);
+            case SPORES -> spores(proxPlayer);
+            case SOULS -> souls();
+            case WITHER -> wither(proxPlayer);
         }
     }
 

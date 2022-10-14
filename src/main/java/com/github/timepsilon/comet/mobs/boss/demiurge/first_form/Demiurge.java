@@ -1,10 +1,10 @@
-package com.github.timepsilon.comet.mobs.boss.demiurge;
+package com.github.timepsilon.comet.mobs.boss.demiurge.first_form;
 
 
 import com.github.timepsilon.ProjectHecate;
 import com.github.timepsilon.comet.mobs.boss.Boss;
+import com.github.timepsilon.comet.mobs.boss.demiurge.final_form.TrueDemiurgeAttack;
 import com.github.timepsilon.comet.structure.EnergyPylon;
-import com.github.timepsilon.comet.item.CustomItems;
 import com.github.timepsilon.comet.misc.ConfigManager;
 import com.github.timepsilon.comet.misc.Laser;
 import com.github.timepsilon.comet.misc.TextManager;
@@ -14,7 +14,6 @@ import com.github.timepsilon.comet.mobs.semiboss.DrownedOverlordHorse;
 import com.github.timepsilon.comet.mobs.semiboss.IllusionerMage;
 import com.github.timepsilon.comet.mobs.semiboss.PhantomFurries;
 import com.github.timepsilon.comet.mobs.semiboss.RavagerBeast;
-import com.github.timepsilon.comet.structure.RitualArena;
 import net.kyori.adventure.text.Component;
 import org.bukkit.*;
 import org.bukkit.attribute.Attribute;
@@ -28,6 +27,7 @@ import org.bukkit.util.EulerAngle;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -50,6 +50,14 @@ public class Demiurge extends Boss {
 
     private static final Location center = ConfigManager.getLoc();
     public static final String NAME = ChatColor.BOLD+""+ChatColor.AQUA+"Demiurge";
+
+    private static final WeightCollection<DemiurgeAttack> ATTACKS = getAttacks();
+
+    private static WeightCollection<DemiurgeAttack> getAttacks() {
+        WeightCollection<DemiurgeAttack> rc = new WeightCollection<>();
+        Arrays.stream(DemiurgeAttack.values()).forEach(attack -> rc.add(attack.getWeight(),attack));
+        return rc;
+    }
 
     private final static Random random = new Random();
 
@@ -221,30 +229,17 @@ public class Demiurge extends Boss {
             if (random.nextInt(2) == 0) randomTeleport();
         },30);
         if (this.phase == 2 && random.nextInt(20)!=0) return;
-        WeightCollection<String> rc;
-        rc = new WeightCollection<String>()
-                .add(50,"mob")
-                .add(40,"witherwave")
-                .add(35,"laser")
-                .add(50,"fireball")
-                .add(30,"vortex")
-                .add(20,"dash")
-                .add(35,"meteor")
-                .add(30,"bullethell")
-                .add(25,"tp")
-                .add(40,"void");
-        String attack = rc.next();
 
-        switch (attack) {
-            case "mob" -> attackMob();
-            case "laser" -> attackLaser(proxPlayer);
-            case "witherwave" -> attackWither(proxPlayer);
-            case "fireball" -> attackFireball();
-            case "vortex" -> attackVortex(proxPlayer);
-            case "dash" -> attackDash(proxPlayer);
-            case "bullethell" -> attackBulletHell(proxPlayer);
-            case "tp" -> attackTp();
-            case "meteor" -> attackMeteor(proxPlayer);
+        switch (ATTACKS.next()) {
+            case MOB -> attackMob();
+            case LASER -> attackLaser(proxPlayer);
+            case WITHERWAVE -> attackWither(proxPlayer);
+            case FIREBALL -> attackFireball();
+            case VORTEX -> attackVortex(proxPlayer);
+            case DASH -> attackDash(proxPlayer);
+            case BULLET_HELL -> attackBulletHell(proxPlayer);
+            case TELEPORT -> attackTp();
+            case METEOR -> attackMeteor(proxPlayer);
         }
     }
 
