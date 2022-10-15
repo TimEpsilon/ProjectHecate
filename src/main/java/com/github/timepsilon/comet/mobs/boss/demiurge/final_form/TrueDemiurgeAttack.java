@@ -10,7 +10,7 @@ public enum TrueDemiurgeAttack {
     GRAB(1),
     BOOMERANG(1),
     DASH(1),
-    NULL(5);
+    NULL(1);
 
     private final double weight;
 

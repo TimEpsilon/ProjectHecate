@@ -41,6 +41,8 @@ public class TrueDemiurge extends Boss {
     private int taskHead;
     private int taskWings;
 
+    private int attackCount = 0;
+
     private static final Location center = ConfigManager.getLoc();
     public static final String NAME = ChatColor.BOLD+""+ChatColor.DARK_AQUA+"DEMIURGE";
     private static final double degToRad = Math.PI/180;
@@ -75,7 +77,7 @@ public class TrueDemiurge extends Boss {
         wings = modelConstruct(606,606,0);
 
 
-        attackTime = 500;
+        //attackTime = 500;
         tick();
         idle();
     }
@@ -97,7 +99,8 @@ public class TrueDemiurge extends Boss {
 
         int lived = entity.getTicksLived();
 
-        if (!Bukkit.getScheduler().isCurrentlyRunning(taskArmRight)) {
+        if (!Bukkit.getScheduler().isQueued(taskArmRight)) {
+            Bukkit.broadcastMessage("Arm Right");
             taskArmRight = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()->{
                 int t = entity.getTicksLived() - lived;
                 double angleArms = Math.cos(t/Tarms*2*Math.PI)*Math.PI/10;
@@ -105,7 +108,8 @@ public class TrueDemiurge extends Boss {
             },0,1).getTaskId();
         }
 
-        if (!Bukkit.getScheduler().isCurrentlyRunning(taskArmLeft)) {
+        if (!Bukkit.getScheduler().isQueued(taskArmLeft)) {
+            Bukkit.broadcastMessage("Arm Left");
             taskArmLeft = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> {
                 int t = entity.getTicksLived() - lived;
                 double angleArms = Math.cos(t / Tarms * 2 * Math.PI) * Math.PI / 10;
@@ -113,7 +117,7 @@ public class TrueDemiurge extends Boss {
             },0,1).getTaskId();
         }
 
-        if (!Bukkit.getScheduler().isCurrentlyRunning(taskLegRight)) {
+        if (!Bukkit.getScheduler().isQueued(taskLegRight)) {
             taskLegRight = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> {
                 int t = entity.getTicksLived() - lived;
                 double angleLegs = Math.cos(t/Tlegs*2*Math.PI)*Math.PI/18;
@@ -121,15 +125,15 @@ public class TrueDemiurge extends Boss {
             },0,1).getTaskId();
         }
 
-        if (!Bukkit.getScheduler().isCurrentlyRunning(taskLegRight)) {
-            taskLegRight = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> {
+        if (!Bukkit.getScheduler().isQueued(taskLegLeft)) {
+            taskLegLeft = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> {
                 int t = entity.getTicksLived() - lived;
                 double angleLegs = Math.cos(t/Tlegs*2*Math.PI)*Math.PI/18;
                 legs.setLeftArmPose(new EulerAngle(-angleLegs,0,0));
             },0,1).getTaskId();
         }
 
-        if (!Bukkit.getScheduler().isCurrentlyRunning(taskHead)) {
+        if (!Bukkit.getScheduler().isQueued(taskHead)) {
             taskHead = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(),()-> {
                 int t = entity.getTicksLived() - lived;
                 double angleHead = Math.cos(t/Thead*2*Math.PI)*8*degToRad;
@@ -138,7 +142,7 @@ public class TrueDemiurge extends Boss {
         }
 
 
-        if (!Bukkit.getScheduler().isCurrentlyRunning(taskWings)) {
+        if (!Bukkit.getScheduler().isQueued(taskWings)) {
             taskWings = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), ()->{
                 int t = entity.getTicksLived() - lived;
                 double angleWing = Math.cos(t/Twings*2*Math.PI)*Math.PI/6 + Math.PI/4;
@@ -146,14 +150,21 @@ public class TrueDemiurge extends Boss {
                 wings.setLeftArmPose(new EulerAngle(angleWing,0,-Math.PI/2));
             },0,1).getTaskId();
         }
+
     }
 
 
     @Override
     public void attack(List<Player> proxPlayer) {
+        if (attackCount < 3) {
+            attackCount++;
+            return;
+        }
+        attackCount = 0;
+
         if (proxPlayer.isEmpty()) return;
         TrueDemiurgeAttack attack = ATTACKS.next();
-        Bukkit.broadcastMessage(attack.toString());
+        Bukkit.broadcastMessage(ChatColor.RED + attack.toString());
         switch (attack) {
             case SWORD_SWING_VERTICAL -> animationHold();
             case SWORD_SWING_HORIZONTAL -> animationSwing();
@@ -162,16 +173,18 @@ public class TrueDemiurge extends Boss {
             case GRAB -> animationGrab();
             case MAGIC_CIRCLE -> animationMagic();
         }
-
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),()-> returnToNeutral(10),70);
     }
 
     private void playAnimation(EulerAngle start, EulerAngle end, int time, TrueDemiurgeParts part) {
+        Bukkit.broadcastMessage(ChatColor.GRAY + "ANIMATION " + part.toString() + " "
+                + (int)(start.getX()/degToRad) + " " + (int)(start.getY()/degToRad) + " " + (int)(start.getZ()/degToRad) + " -> " +
+                + (int)(end.getX()/degToRad) + " " + (int)(end.getY()/degToRad) + " " + (int)(end.getZ()/degToRad));
         List<EulerAngle> angles = Interpolation.angleLerp(start,end,time);
+
         AtomicInteger i = new AtomicInteger();
         switch (part) {
             case ARM_LEFT -> {
-                if (Bukkit.getScheduler().isCurrentlyRunning(taskArmLeft)) Bukkit.getScheduler().cancelTask(taskArmLeft);
+                if (Bukkit.getScheduler().isQueued(taskArmLeft)) Bukkit.getScheduler().cancelTask(taskArmLeft);
                 int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
                     if (i.get()>=time) return;
                     arms.setLeftArmPose(angles.get(i.get()));
@@ -181,7 +194,7 @@ public class TrueDemiurge extends Boss {
             }
 
             case ARM_RIGHT -> {
-                if (Bukkit.getScheduler().isCurrentlyRunning(taskArmRight)) Bukkit.getScheduler().cancelTask(taskArmRight);
+                if (Bukkit.getScheduler().isQueued(taskArmRight)) Bukkit.getScheduler().cancelTask(taskArmRight);
                 int task = Bukkit.getScheduler().runTaskTimer(ProjectHecate.getPlugin(), () -> {
                     if (i.get()>=time) return;
                     arms.setRightArmPose(angles.get(i.get()));
@@ -222,15 +235,14 @@ public class TrueDemiurge extends Boss {
         }
     }
 
-    private void returnToNeutral(int time) {
-        for (TrueDemiurgeParts part : TrueDemiurgeParts.values()) {
-            switch (part) {
-                case HEAD -> playAnimation(arms.getHeadPose(),new EulerAngle(0,0,0),time,part);
-                case ARM_RIGHT -> playAnimation(arms.getRightArmPose(),new EulerAngle(0,0,0),time,part);
-                case ARM_LEFT -> playAnimation(arms.getLeftArmPose(),new EulerAngle(0,0,0),time,part);
-                case LEG_LEFT -> playAnimation(legs.getLeftArmPose(),new EulerAngle(0,0,0),time,part);
-                case LEG_RIGHT -> playAnimation(legs.getRightArmPose(),new EulerAngle(0,0,0),time,part);
-            }
+    private void returnToNeutral(int time, TrueDemiurgeParts part) {
+        Bukkit.broadcastMessage(ChatColor.BLUE + "NEUTRAL " + part.toString());
+        switch (part) {
+            case HEAD -> playAnimation(arms.getHeadPose(),new EulerAngle(0,0,0),time,part);
+            case ARM_RIGHT -> playAnimation(arms.getRightArmPose(),new EulerAngle(0,0,0),time,part);
+            case ARM_LEFT -> playAnimation(arms.getLeftArmPose(),new EulerAngle(0,0,0),time,part);
+            case LEG_LEFT -> playAnimation(legs.getLeftArmPose(),new EulerAngle(0,0,0),time,part);
+            case LEG_RIGHT -> playAnimation(legs.getRightArmPose(),new EulerAngle(0,0,0),time,part);
         }
         Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(),this::idle,time);
     }
@@ -242,7 +254,11 @@ public class TrueDemiurge extends Boss {
         playAnimation(arms.getLeftArmPose(),new EulerAngle(-50*degToRad,30*degToRad,0),time, TrueDemiurgeParts.ARM_LEFT);
         playAnimation(arms.getRightLegPose(),new EulerAngle(-50*degToRad,-32*degToRad,0),time, TrueDemiurgeParts.ARM_RIGHT);
 
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10),70);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
+            returnToNeutral(10,TrueDemiurgeParts.ARM_LEFT);
+            returnToNeutral(10,TrueDemiurgeParts.ARM_RIGHT);
+            returnToNeutral(10,TrueDemiurgeParts.HEAD);
+        },100);
     }
 
     private void animationGrab() {
@@ -254,7 +270,13 @@ public class TrueDemiurge extends Boss {
         playAnimation(legs.getLeftArmPose(),new EulerAngle(40*degToRad,10*degToRad,0),time, TrueDemiurgeParts.LEG_LEFT);
         playAnimation(legs.getRightLegPose(),new EulerAngle(42*degToRad,-10*degToRad,0),time, TrueDemiurgeParts.LEG_RIGHT);
 
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10),70);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
+            returnToNeutral(10,TrueDemiurgeParts.ARM_LEFT);
+            returnToNeutral(10,TrueDemiurgeParts.HEAD);
+            returnToNeutral(10,TrueDemiurgeParts.ARM_RIGHT);
+            returnToNeutral(10,TrueDemiurgeParts.LEG_LEFT);
+            returnToNeutral(10,TrueDemiurgeParts.LEG_RIGHT);
+        },100);
     }
 
     private void animationSwing() {
@@ -266,7 +288,7 @@ public class TrueDemiurge extends Boss {
             playAnimation(new EulerAngle(165*degToRad,0,-20*degToRad),new EulerAngle(333*degToRad,0,-22*degToRad),time, TrueDemiurgeParts.ARM_RIGHT);
         }, 11);
 
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10),70);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10,TrueDemiurgeParts.ARM_RIGHT),100);
     }
 
     private void animationThrowLeft() {
@@ -277,7 +299,7 @@ public class TrueDemiurge extends Boss {
             playAnimation(new EulerAngle(56*degToRad,0,66*degToRad),new EulerAngle(-120*degToRad,0,42*degToRad),time, TrueDemiurgeParts.ARM_LEFT)
         , 11);
 
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10),70);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10, TrueDemiurgeParts.ARM_LEFT),100);
     }
 
     private void animationThrowRight() {
@@ -288,7 +310,7 @@ public class TrueDemiurge extends Boss {
                 playAnimation(new EulerAngle(44*degToRad,0,-58*degToRad),new EulerAngle(279*degToRad,0,-62*degToRad),time, TrueDemiurgeParts.ARM_RIGHT)
                 , 11);
 
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10),70);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10, TrueDemiurgeParts.ARM_RIGHT),100);
     }
 
     private void animationMagic() {
@@ -298,7 +320,11 @@ public class TrueDemiurge extends Boss {
         playAnimation(arms.getLeftArmPose(),new EulerAngle(-160*degToRad,0,30*degToRad),time, TrueDemiurgeParts.ARM_LEFT);
         playAnimation(arms.getRightLegPose(),new EulerAngle(-161*degToRad,0,-31*degToRad),time, TrueDemiurgeParts.ARM_RIGHT);
 
-        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> returnToNeutral(10),70);
+        Bukkit.getScheduler().runTaskLater(ProjectHecate.getPlugin(), () -> {
+            returnToNeutral(10,TrueDemiurgeParts.ARM_LEFT);
+            returnToNeutral(10,TrueDemiurgeParts.HEAD);
+            returnToNeutral(10,TrueDemiurgeParts.ARM_RIGHT);
+        },100);
     }
 
     private ArmorStand modelConstruct(int left, int right, int head) {

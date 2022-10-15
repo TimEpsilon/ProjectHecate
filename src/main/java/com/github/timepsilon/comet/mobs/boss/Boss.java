@@ -33,7 +33,6 @@ public abstract class Boss {
     public List<Player> proxPlayer;
     private int bossbarTask;
     private int attackTask;
-    protected int attackTime = 110;
 
     private final static int bossBonus = 20;
 
@@ -141,7 +140,7 @@ public abstract class Boss {
             if (!proxPlayer.isEmpty()) {
                 attack(proxPlayer);
             }
-        },0,attackTime).getTaskId();
+        },0,110).getTaskId();
     }
 
     public static void sendWaypoint(String s) {
