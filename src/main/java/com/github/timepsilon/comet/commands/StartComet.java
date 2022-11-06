@@ -114,7 +114,10 @@ public class StartComet implements CommandExecutor {
                         case "Shadows" -> new Shadows(p.getLocation());
                         case "QueenBee" -> new QueenBee(p.getLocation());
                         case "Demiurge" -> new Demiurge(p.getLocation());
-                        case "TrueDemiurge" -> new TrueDemiurge(p.getLocation());
+                        case "TrueDemiurge" -> {
+                            p.sendMessage(Component.text(ChatColor.RED + "Feature currently disabled. [WIP]"));
+                            //new TrueDemiurge(p.getLocation());
+                        }
                         default -> p.sendMessage(Component.text(ChatColor.RED + "Argument Invalide"));
                     }
 
